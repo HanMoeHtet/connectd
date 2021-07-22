@@ -1,5 +1,6 @@
 import { Box, makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
+import AppBrand from 'src/components/AppBrand';
 import LoginForm from 'src/components/LoginForm';
 import RegisterForm from 'src/components/RegisterForm';
 import Page from 'src/layouts/Page';
@@ -24,8 +25,8 @@ const Login: React.FC = () => {
 
   return (
     <Page>
-      <Box position="absolute" top="0">
-        Connectd
+      <Box position="absolute" top="0" margin="10px">
+        <AppBrand />
       </Box>
       <Box
         width="100%"
