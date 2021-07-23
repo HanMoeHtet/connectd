@@ -12,7 +12,7 @@ const Brand: React.FC<Props> = ({ fill, width = '200px' }) => {
         id="Connectd"
         fill={fill}
         stroke={fill}
-        stroke-width="1"
+        strokeWidth="1"
         d="M 45.97,40.16
            C 45.97,40.16 54.94,43.00 54.94,43.00
              53.56,48.00 51.27,51.71 48.08,54.14

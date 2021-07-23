@@ -12,7 +12,7 @@ const Logo: React.FC<Props> = ({ fill, width = '1.70667in' }) => {
         id="C"
         fill={fill}
         stroke={fill}
-        stroke-width="1"
+        strokeWidth="1"
         d="M 340.75,312.25
              C 340.75,312.25 412.50,335.00 412.50,335.00
                401.50,375.00 383.21,404.71 357.62,424.12

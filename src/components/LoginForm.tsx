@@ -5,6 +5,7 @@ import {
   Button,
   Link,
   IconButton,
+  Divider,
 } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import React, { useState } from 'react';
@@ -50,8 +51,8 @@ const LoginForm: React.FC<Props> = ({ setIsLogginIn }) => {
         variant="outlined"
         margin="normal"
         fullWidth
-        type="email"
-        label="Email"
+        type="text"
+        label="Email or phone number"
         name="email"
         value={formData.email}
         onChange={handleChange}
@@ -76,37 +77,44 @@ const LoginForm: React.FC<Props> = ({ setIsLogginIn }) => {
         value={formData.password}
         onChange={handleChange}
       />
-      <Box
-        width="100%"
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        padding="10px"
+      <Link
+        href="/login"
+        onClick={(e: any) => {
+          e.preventDefault();
+          setIsLogginIn(false);
+        }}
+        underline="hover"
       >
-        <Box>
-          <Link
-            href="/login"
-            onClick={(e: any) => {
-              e.preventDefault();
-              setIsLogginIn(false);
-            }}
-          >
-            <Box fontWeight="bold">Forgot password</Box>
-          </Link>
-          <Link
-            href="/login"
-            onClick={(e: any) => {
-              e.preventDefault();
-              setIsLogginIn(false);
-            }}
-          >
-            <Box fontWeight="bold">Register</Box>
-          </Link>
+        <Box fontWeight="bold" marginTop="15px">
+          Forgot password?
         </Box>
-        <Button type="submit" size="large" variant="contained" color="primary">
+      </Link>
+      <Box marginTop="15px">
+        <Button
+          fullWidth
+          type="submit"
+          size="large"
+          variant="contained"
+          color="primary"
+        >
           Log in
         </Button>
       </Box>
+      <Divider />
+      <Link
+        href="/login"
+        onClick={(e: any) => {
+          e.preventDefault();
+          setIsLogginIn(false);
+        }}
+        underline="hover"
+      >
+        <Typography>
+          <Box fontWeight="bold" marginTop="15px" textAlign="center">
+            Create new account
+          </Box>
+        </Typography>
+      </Link>
     </form>
   );
 };

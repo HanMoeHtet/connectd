@@ -6,7 +6,15 @@ import RegisterForm from 'src/components/RegisterForm';
 import Page from 'src/layouts/Page';
 
 const useStyles = makeStyles((theme) => ({
+  brandContainer: {
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center',
+    },
+  },
+
   formContainer: {
+    marginTop: '50px',
     width: '100%',
 
     [theme.breakpoints.up('md')]: {
@@ -14,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     [theme.breakpoints.up('lg')]: {
-      width: '33%',
+      width: '35%',
     },
   },
 }));
@@ -25,7 +33,12 @@ const Login: React.FC = () => {
 
   return (
     <Page>
-      <Box position="absolute" top="0" margin="10px">
+      <Box
+        position="absolute"
+        top="0"
+        padding="10px"
+        className={classes.brandContainer}
+      >
         <AppBrand />
       </Box>
       <Box
