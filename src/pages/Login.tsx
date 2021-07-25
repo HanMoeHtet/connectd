@@ -1,18 +1,11 @@
 import { Box, makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
-import AppBrand from 'src/components/AppBrand';
+import BrandContainer from 'src/components/BrandContainer';
 import LoginForm from 'src/components/LoginForm';
 import RegisterForm from 'src/components/RegisterForm';
 import Page from 'src/layouts/Page';
 
 const useStyles = makeStyles((theme) => ({
-  brandContainer: {
-    width: '100%',
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center',
-    },
-  },
-
   formContainer: {
     marginTop: '50px',
     width: '100%',
@@ -33,14 +26,7 @@ const Login: React.FC = () => {
 
   return (
     <Page>
-      <Box
-        position="absolute"
-        top="0"
-        padding="10px"
-        className={classes.brandContainer}
-      >
-        <AppBrand />
-      </Box>
+      <BrandContainer />
       <Box
         width="100%"
         minHeight="100vh"

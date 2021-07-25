@@ -109,11 +109,11 @@ const LoginForm: React.FC<Props> = ({ setIsLogginIn }) => {
         }}
         underline="hover"
       >
-        <Typography>
-          <Box fontWeight="bold" marginTop="15px" textAlign="center">
+        <Box marginTop="15px" textAlign="center">
+          <Typography style={{ fontWeight: 'bold' }}>
             Create new account
-          </Box>
-        </Typography>
+          </Typography>
+        </Box>
       </Link>
     </form>
   );

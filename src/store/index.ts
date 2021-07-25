@@ -1,8 +1,12 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import authStore from './auth';
+import verificationStore from './verification';
 
 export const store = configureStore({
   reducer: {
+    authStore,
+    verificationStore,
   },
 });
 
