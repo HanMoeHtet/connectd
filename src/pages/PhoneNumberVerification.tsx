@@ -16,9 +16,8 @@ import { resendOTP, verifyPhoneNumber } from 'src/store/verification';
 const PhoneNumberVerification: React.FC = () => {
   const classes = useProgressButtonStyles();
 
-  const { message, isLoading } = useAppSelector(
-    (state) => state.verificationStore
-  );
+  const { isLoading } = useAppSelector((state) => state.authStore);
+  const { message } = useAppSelector((state) => state.verificationStore);
 
   const history = useHistory();
   const dispatch = useAppDispatch();

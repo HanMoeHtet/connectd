@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { verifyEmail } from 'src/store/verification';
 
 const EmailVerificationEndPoint: React.FC = () => {
-  const { isLoading } = useAppSelector((state) => state.verificationStore);
+  const { isLoading } = useAppSelector((state) => state.authStore);
 
   const dispatch = useAppDispatch();
   const history = useHistory();

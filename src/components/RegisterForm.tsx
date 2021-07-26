@@ -211,7 +211,6 @@ const RegisterForm: React.FC<Props> = ({ setIsLogginIn }) => {
           error={errors.birthday && errors.birthday.length !== 0}
           helperText={errors.birthday && errors.birthday.join(', ')}
           maxDate={maxDate}
-          defaultValue={maxDate}
         />
       </MuiPickersUtilsProvider>
       <Box marginTop="20px">

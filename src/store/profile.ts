@@ -35,7 +35,7 @@ export const fetchBasicProfile =
       throw e;
     }
 
-    const { data } = response.data;
+    const { data } = response;
     dispatch(setProfile(data));
   };
 

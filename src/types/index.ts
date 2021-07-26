@@ -6,7 +6,6 @@ export interface AuthState {
 }
 
 export interface VerificationState {
-  isLoading: boolean;
   message: string | null;
 }
 

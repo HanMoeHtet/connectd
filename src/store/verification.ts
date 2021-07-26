@@ -18,9 +18,9 @@ import {
 import { showToast } from 'src/services/notification';
 import { setToken } from 'src/services/jwt';
 import { fetchBasicProfile } from './profile';
+import { setIsLoading } from './auth';
 
 const initialState: VerificationState = {
-  isLoading: false,
   message: null,
 };
 
@@ -28,17 +28,13 @@ const verificationSlice = createSlice({
   name: 'verification',
   initialState,
   reducers: {
-    setIsLoading(state, action: PayloadAction<boolean>) {
-      state.isLoading = action.payload;
-    },
-
     setMessage(state, action: PayloadAction<string | null>) {
       state.message = action.payload;
     },
   },
 });
 
-export const { setIsLoading, setMessage } = verificationSlice.actions;
+export const { setMessage } = verificationSlice.actions;
 
 export const verifyEmail =
   (token: string): AppThunk =>
@@ -60,7 +56,7 @@ export const verifyEmail =
         showToast('error', message);
       }
 
-      history.push('/login');
+      history.replace('/login');
       dispatch(setIsLoading(false));
       return;
     }
@@ -73,11 +69,12 @@ export const verifyEmail =
     } catch (e) {
       // FIXME: replace with i18next
       showToast('error', 'Failed to load user profile');
-      history.push('/login');
+      history.replace('/login');
       dispatch(setIsLoading(false));
+      return;
     }
 
-    history.push('/newsfeed');
+    history.replace('/newsfeed');
     dispatch(setIsLoading(false));
   };
 
@@ -86,7 +83,7 @@ export const resendEmail = (): AppThunk => async (dispatch, getState) => {
 
   if (!userId) {
     showToast('error', 'An error occurred.');
-    return history.push('/login');
+    return history.replace('/login');
   }
 
   dispatch(setIsLoading(true));
@@ -133,7 +130,7 @@ export const verifyPhoneNumber =
     if (!userId) {
       // FIXME: replace message with i18n
       showToast('error', 'An error occurred.');
-      return history.push('/login');
+      return history.replace('/login');
     }
 
     dispatch(setIsLoading(true));
@@ -157,7 +154,6 @@ export const verifyPhoneNumber =
         showToast('error', message);
       }
 
-      history.push('/login');
       dispatch(setIsLoading(false));
       return;
     }
@@ -170,8 +166,8 @@ export const verifyPhoneNumber =
     } catch (e) {
       // FIXME: replace with i18next
       showToast('error', 'Failed to load user profile');
-      history.push('/login');
       dispatch(setIsLoading(false));
+      return;
     }
 
     history.push('/newsfeed');
@@ -184,7 +180,7 @@ export const resendOTP = (): AppThunk => async (dispatch, getState) => {
   if (!userId) {
     // FIXME: replace message with i18n
     showToast('error', 'An error occurred.');
-    return history.push('/login');
+    return history.replace('/login');
   }
 
   dispatch(setIsLoading(true));

@@ -15,6 +15,9 @@ import history from 'src/services/history';
 import { setMessage } from './verification';
 import { BAD_REQUEST, SERVER_ERROR } from 'src/constants';
 import { showToast } from 'src/services/notification';
+import { fetchBasicProfile } from './profile';
+import { getToken } from 'src/services/jwt';
+import { setToken } from 'src/services/api';
 
 const initialState: AuthState = {
   isLoading: false,
@@ -117,5 +120,24 @@ export const registerWithPhoneNumber =
 
     dispatch(setIsLoading(false));
   };
+
+export const checkAuth = (): AppThunk<Promise<void>> => async (dispatch) => {
+  let token = getToken();
+
+  if (!token) return;
+
+  setToken(token);
+
+  dispatch(setIsLoading(true));
+
+  try {
+    await dispatch(fetchBasicProfile());
+  } catch (e) {
+    history.replace('/login');
+    dispatch(setIsLoading(false));
+    return;
+  }
+  dispatch(setIsLoading(false));
+};
 
 export default authSlice.reducer;
