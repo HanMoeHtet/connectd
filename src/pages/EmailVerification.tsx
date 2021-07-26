@@ -55,6 +55,7 @@ const EmailVerification: React.FC = () => {
               onClick={handleClick}
               variant="contained"
               size="large"
+              color="primary"
               disabled={isLoading}
             >
               RESEND

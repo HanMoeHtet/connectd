@@ -43,26 +43,37 @@ export const registerWithEmail =
   ): AppThunk<Promise<RegistrationError | undefined>> =>
   async (dispatch) => {
     dispatch(setIsLoading(true));
+
+    let response;
+
     try {
-      const { data, message } = (await _registerWithEmail(formData)).data;
-      const { userId } = data;
-      dispatch(setUserId(userId));
-      dispatch(setMessage(message));
-      history.push('/verify/email');
+      response = await _registerWithEmail(formData);
     } catch (e) {
       const { status, data } = e.response as AxiosResponse<{
-        errors: RegistrationError;
+        errors?: RegistrationError;
+        message?: string;
       }>;
 
       if (status === BAD_REQUEST) {
         const { errors } = data;
+        dispatch(setIsLoading(false));
         return errors;
       }
 
       if (status === SERVER_ERROR) {
-        showToast('error', 'An error occurred.');
+        const { message } = data;
+        showToast('error', message!);
       }
+
+      dispatch(setIsLoading(false));
+      return;
     }
+
+    const { data, message } = response.data;
+    const { userId } = data;
+    dispatch(setUserId(userId));
+    dispatch(setMessage(message));
+    history.push('/verify/email');
     dispatch(setIsLoading(false));
   };
 
@@ -72,26 +83,38 @@ export const registerWithPhoneNumber =
   ): AppThunk<Promise<RegistrationError | undefined>> =>
   async (dispatch) => {
     dispatch(setIsLoading(true));
+
+    let response;
+
     try {
-      const { data, message } = (await _registerWithPhoneNumber(formData)).data;
-      const { userId } = data;
-      dispatch(setUserId(userId));
-      dispatch(setMessage(message));
-      history.push('/verify/phone-number');
+      response = await _registerWithPhoneNumber(formData);
     } catch (e) {
       const { status, data } = e.response as AxiosResponse<{
-        errors: RegistrationError;
+        errors?: RegistrationError;
+        message?: string;
       }>;
 
       if (status === BAD_REQUEST) {
         const { errors } = data;
+        dispatch(setIsLoading(false));
         return errors;
       }
 
       if (status === SERVER_ERROR) {
-        showToast('error', 'An error occurred.');
+        const { message } = data;
+        showToast('error', message!);
       }
+
+      dispatch(setIsLoading(false));
+      return;
     }
+
+    const { data, message } = response.data;
+    const { userId } = data;
+    dispatch(setUserId(userId));
+    dispatch(setMessage(message));
+    history.push('/verify/phone-number');
+
     dispatch(setIsLoading(false));
   };
 

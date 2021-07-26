@@ -8,7 +8,6 @@ import {
 } from 'src/services/auth';
 import { VerificationState } from 'src/types';
 import history from 'src/services/history';
-import { setUserId } from './auth';
 import { AxiosResponse } from 'axios';
 import {
   BAD_REQUEST,
@@ -18,6 +17,7 @@ import {
 } from 'src/constants';
 import { showToast } from 'src/services/notification';
 import { setToken } from 'src/services/jwt';
+import { fetchBasicProfile } from './profile';
 
 const initialState: VerificationState = {
   isLoading: false,
@@ -45,11 +45,10 @@ export const verifyEmail =
   async (dispatch, getState) => {
     dispatch(setIsLoading(true));
 
+    let response;
+
     try {
-      const { token: accessToken } = (await _verifyEmail(token)).data;
-      setToken(accessToken);
-      // TODO: login user
-      history.push('/newsfeed');
+      response = await _verifyEmail(token);
     } catch (e) {
       const { status, data } = e.response as AxiosResponse<{
         message: string;
@@ -60,7 +59,26 @@ export const verifyEmail =
       if (status === BAD_REQUEST) {
         showToast('error', message);
       }
+
+      history.push('/login');
+      dispatch(setIsLoading(false));
+      return;
     }
+
+    const { token: accessToken } = response.data.data;
+    setToken(accessToken);
+
+    try {
+      await dispatch(fetchBasicProfile());
+    } catch (e) {
+      // FIXME: replace with i18next
+      showToast('error', 'Failed to load user profile');
+      history.push('/login');
+      dispatch(setIsLoading(false));
+    }
+
+    history.push('/newsfeed');
+    dispatch(setIsLoading(false));
   };
 
 export const resendEmail = (): AppThunk => async (dispatch, getState) => {
@@ -72,11 +90,11 @@ export const resendEmail = (): AppThunk => async (dispatch, getState) => {
   }
 
   dispatch(setIsLoading(true));
+
+  let response;
+
   try {
-    const { message } = (await _resendEmail(userId)).data;
-    dispatch(setMessage(message));
-    showToast('success', message);
-    history.replace('/verify/email');
+    response = await _resendEmail(userId);
   } catch (e) {
     const { status, data } = e.response as AxiosResponse<{
       message: string;
@@ -95,7 +113,16 @@ export const resendEmail = (): AppThunk => async (dispatch, getState) => {
     if (status === SERVER_ERROR) {
       showToast('error', message);
     }
+
+    dispatch(setIsLoading(false));
+    return;
   }
+
+  const { message } = response.data;
+  dispatch(setMessage(message));
+  showToast('success', message);
+  history.replace('/verify/email');
+
   dispatch(setIsLoading(false));
 };
 
@@ -111,11 +138,10 @@ export const verifyPhoneNumber =
 
     dispatch(setIsLoading(true));
 
+    let response;
+
     try {
-      const { token } = (await _verifyPhoneNumber(userId, otp)).data;
-      setToken(token);
-      // TODO: login user
-      history.push('/newsfeed');
+      response = await _verifyPhoneNumber(userId, otp);
     } catch (e) {
       const { status, data } = e.response as AxiosResponse<{
         message: string;
@@ -130,7 +156,26 @@ export const verifyPhoneNumber =
       if (status === UNAUTHORIZED) {
         showToast('error', message);
       }
+
+      history.push('/login');
+      dispatch(setIsLoading(false));
+      return;
     }
+
+    const { token } = response.data.data;
+    setToken(token);
+
+    try {
+      await dispatch(fetchBasicProfile());
+    } catch (e) {
+      // FIXME: replace with i18next
+      showToast('error', 'Failed to load user profile');
+      history.push('/login');
+      dispatch(setIsLoading(false));
+    }
+
+    history.push('/newsfeed');
+    dispatch(setIsLoading(false));
   };
 
 export const resendOTP = (): AppThunk => async (dispatch, getState) => {
@@ -143,11 +188,11 @@ export const resendOTP = (): AppThunk => async (dispatch, getState) => {
   }
 
   dispatch(setIsLoading(true));
+
+  let response;
+
   try {
-    const { message } = (await _resendOTP(userId)).data;
-    dispatch(setMessage(message));
-    showToast('success', message);
-    history.replace('/verify/email');
+    response = await _resendOTP(userId);
   } catch (e) {
     const { status, data } = e.response as AxiosResponse<{
       message: string;
@@ -166,7 +211,16 @@ export const resendOTP = (): AppThunk => async (dispatch, getState) => {
     if (status === SERVER_ERROR) {
       showToast('error', message);
     }
+
+    dispatch(setIsLoading(false));
+    return;
   }
+
+  const { message } = response.data;
+  dispatch(setMessage(message));
+  showToast('success', message);
+  history.replace('/verify/email');
+
   dispatch(setIsLoading(false));
 };
 

@@ -1,13 +1,42 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  PayloadAction,
+  SliceCaseReducers,
+} from '@reduxjs/toolkit';
+import { fetchBasicProfile as _fetchBasicProfile } from 'src/services/profile';
+import { ProfileState } from 'src/types';
+import { AppThunk } from '.';
 
-const initialState = {};
+const initialState = null;
 
-const profileSlice = createSlice({
+const profileSlice = createSlice<
+  ProfileState | null,
+  SliceCaseReducers<ProfileState | null>,
+  string
+>({
   name: 'profile',
   initialState,
-  reducers: {},
+  reducers: {
+    setProfile(state, action: PayloadAction<ProfileState | null>) {
+      return action.payload;
+    },
+  },
 });
 
-export const {} = profileSlice.actions;
+export const { setProfile } = profileSlice.actions;
+
+export const fetchBasicProfile =
+  (): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    let response;
+
+    try {
+      response = await _fetchBasicProfile();
+    } catch (e) {
+      throw e;
+    }
+
+    const { data } = response.data;
+    dispatch(setProfile(data));
+  };
 
 export default profileSlice.reducer;

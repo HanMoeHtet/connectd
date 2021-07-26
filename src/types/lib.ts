@@ -40,5 +40,9 @@ export interface ResendResponse {
 }
 
 export interface VerifySuccessResponse {
-  token: string;
+  data: { token: string };
+}
+
+export interface BasicProfileResponse {
+  data: { id: string; username: string; avatar?: string };
 }
