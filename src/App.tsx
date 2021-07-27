@@ -33,7 +33,7 @@ const App: React.FC = () => {
           <Route path="/verify/phone-number" exact>
             <PhoneNumberVerification />
           </Route>
-          <Route path="/newsfeed" exact>
+          <Route path="/" exact>
             <Newsfeed />
           </Route>
         </Switch>
