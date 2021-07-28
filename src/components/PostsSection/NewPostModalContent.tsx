@@ -31,7 +31,6 @@ import avatarImg from 'src/assets/images/avatar2.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // border: 'none',
     padding: 0,
 
     '& .MuiOutlinedInput-multiline': {
@@ -70,10 +69,7 @@ const NewPostModalContent = React.forwardRef(() => {
       justifyContent="center"
       minHeight="100vh"
     >
-      <ClickAwayListener
-        onClickAway={() => setContent(null)}
-        // mouseEvent="onMouseUp"
-      >
+      <ClickAwayListener onClickAway={() => setContent(null)}>
         <Card style={{ width: '512px' }}>
           <CardHeader
             style={{ textAlign: 'center', padding: '10px 5px' }}

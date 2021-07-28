@@ -7,6 +7,7 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Collapse,
   Link,
   makeStyles,
   Typography,
@@ -14,7 +15,19 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import React from 'react';
 import avatarImg from 'src/assets/images/avatar2.png';
-import { ThumbUp, Comment, Share } from '@material-ui/icons';
+import {
+  ThumbUp,
+  Comment,
+  Share,
+  Public,
+  SentimentDissatisfied,
+  SentimentVerySatisfied,
+  Favorite,
+} from '@material-ui/icons';
+import { formatDistance } from 'date-fns';
+import ReactButton from './ReactButton';
+import CommentsButton from './CommentsButton';
+import ReactionsButton from './ReactionsButton';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -26,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Post: React.FC = () => {
   const classes = useStyles();
-
   return (
     <Card>
       <CardHeader
@@ -40,7 +52,18 @@ const Post: React.FC = () => {
             <span>Han Moe Htet</span>
           </Link>
         }
-        subheader="September 14, 2016"
+        subheader={
+          <Box display="flex" alignItems="center">
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              style={{ marginRight: 10 }}
+            >
+              {formatDistance(new Date(), new Date(), { addSuffix: true })}
+            </Typography>
+            <Public fontSize="small" />
+          </Box>
+        }
       />
       <CardContent style={{ paddingTop: 0, paddingBottom: 5 }}>
         <Typography>
@@ -53,16 +76,13 @@ const Post: React.FC = () => {
       {/* <CardMedia image={avatarImg} component="img" /> */}
       <CardActions>
         <Box flexGrow="1" display="flex" justifyContent="center">
-          <Button style={{ padding: '5px 10px' }}>
-            <ThumbUp style={{ marginRight: 10 }} />
-            <Typography>300</Typography>
-          </Button>
+          <ReactionsButton />
         </Box>
         <Box flexGrow="1" display="flex" justifyContent="center">
-          <Button style={{ padding: '5px 10px' }}>
-            <Comment style={{ marginRight: 10 }} />
-            <Typography>300</Typography>
-          </Button>
+          <ReactButton />
+        </Box>
+        <Box flexGrow="1" display="flex" justifyContent="center">
+          <CommentsButton />
         </Box>
         <Box flexGrow="1" display="flex" justifyContent="center">
           <Button style={{ padding: '5px 10px' }}>

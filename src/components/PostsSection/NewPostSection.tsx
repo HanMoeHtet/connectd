@@ -46,9 +46,7 @@ const NewPostSection: React.FC = () => {
               padding: '8px',
             }}
           >
-            <Videocam
-              style={{ color: '#f04149', marginRight: 10, fontSize: '2rem' }}
-            />
+            <Videocam style={{ color: '#f04149', marginRight: 10 }} />
             <Typography>Live</Typography>
           </Button>
           <Button
@@ -58,9 +56,7 @@ const NewPostSection: React.FC = () => {
               padding: '8px',
             }}
           >
-            <VideoLibrary
-              style={{ color: '#52bd62', marginRight: 10, fontSize: '2rem' }}
-            />
+            <VideoLibrary style={{ color: '#52bd62', marginRight: 10 }} />
             <Typography>Videos</Typography>
           </Button>
           <Button
@@ -70,9 +66,7 @@ const NewPostSection: React.FC = () => {
               padding: '8px',
             }}
           >
-            <Image
-              style={{ color: '#1877f2', marginRight: 10, fontSize: '2rem' }}
-            />
+            <Image style={{ color: '#1877f2', marginRight: 10 }} />
             <Typography>Photos</Typography>
           </Button>
         </Box>
