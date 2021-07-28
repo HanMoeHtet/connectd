@@ -1,31 +1,11 @@
+import { AppBar as MuiAppBar, makeStyles, Toolbar } from '@material-ui/core';
 import React from 'react';
-import {
-  AppBar as MuiAppBar,
-  Badge,
-  IconButton,
-  Toolbar,
-  makeStyles,
-  Avatar,
-  Typography,
-  Button,
-  InputBase,
-  alpha,
-  Menu,
-  MenuItem,
-  Box,
-} from '@material-ui/core';
 import AppLogo from './AppLogo';
-import {
-  More as MoreIcon,
-  Settings,
-  Notifications as NotificationsIcon,
-  Search as SearchIcon,
-} from '@material-ui/icons';
-import SettingsIconButton from './SettingsIconButton';
 import NotificationsIconButton from './NotificationsIconButton';
-import SearchBar from './SearchBar';
 import ProfileIconButton from './ProfileIconButton';
+import SearchBar from './SearchBar';
 import SearchIconButton from './SearchIconButton';
+import SettingsIconButton from './SettingsIconButton';
 
 const useStyles = makeStyles((theme) => ({
   grow: {

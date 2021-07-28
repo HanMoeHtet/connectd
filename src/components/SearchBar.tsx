@@ -1,17 +1,13 @@
 import {
   alpha,
-  Avatar,
   Box,
   InputBase,
   makeStyles,
-  Menu,
-  MenuItem,
   Popover,
   Typography,
 } from '@material-ui/core';
 import { Search as SearchIcon } from '@material-ui/icons';
 import React from 'react';
-import avatarImg from 'src/assets/images/avatar2.png';
 
 const useStyles = makeStyles((theme) => ({
   search: {
