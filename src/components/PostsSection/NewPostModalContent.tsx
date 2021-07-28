@@ -74,9 +74,9 @@ const NewPostModalContent = React.forwardRef(() => {
         onClickAway={() => setContent(null)}
         // mouseEvent="onMouseUp"
       >
-        <Card style={{ minWidth: '33.33%', padding: 5 }}>
+        <Card style={{ width: '512px' }}>
           <CardHeader
-            style={{ textAlign: 'center', padding: 5 }}
+            style={{ textAlign: 'center', padding: '10px 5px' }}
             title="Create post"
             action={
               <IconButton aria-label="close" onClick={() => setContent(null)}>
@@ -84,7 +84,7 @@ const NewPostModalContent = React.forwardRef(() => {
               </IconButton>
             }
           />
-          <Divider />
+          <Divider style={{ margin: '0 16px' }} />
           <CardContent>
             <Box display="flex" alignItems="center">
               <Avatar src={avatarImg} style={{ marginRight: 5 }} />

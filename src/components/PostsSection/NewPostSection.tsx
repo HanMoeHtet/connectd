@@ -38,53 +38,44 @@ const NewPostSection: React.FC = () => {
           </Button>
         </Box>
         <Divider style={{ margin: '10px 0' }} />
-        <Grid container style={{ width: '100%' }}>
-          <Grid item xs={4}>
-            <Button
-              style={{
-                width: '100%',
-                alignItems: 'center',
-                textTransform: 'none',
-                padding: '12px 0',
-              }}
-            >
-              <Videocam
-                style={{ color: '#f04149', marginRight: 10, fontSize: '2rem' }}
-              />
-              <Typography>Live</Typography>
-            </Button>
-          </Grid>
-          <Grid item xs={4}>
-            <Button
-              style={{
-                width: '100%',
-                alignItems: 'center',
-                textTransform: 'none',
-                padding: '12px 0',
-              }}
-            >
-              <VideoLibrary
-                style={{ color: '#52bd62', marginRight: 10, fontSize: '2rem' }}
-              />
-              <Typography>Videos</Typography>
-            </Button>
-          </Grid>
-          <Grid item xs={4}>
-            <Button
-              style={{
-                width: '100%',
-                alignItems: 'center',
-                textTransform: 'none',
-                padding: '12px 0',
-              }}
-            >
-              <Image
-                style={{ color: '#1877f2', marginRight: 10, fontSize: '2rem' }}
-              />
-              <Typography>Photos</Typography>
-            </Button>
-          </Grid>
-        </Grid>
+        <Box display="flex">
+          <Button
+            style={{
+              alignItems: 'center',
+              textTransform: 'none',
+              padding: '8px',
+            }}
+          >
+            <Videocam
+              style={{ color: '#f04149', marginRight: 10, fontSize: '2rem' }}
+            />
+            <Typography>Live</Typography>
+          </Button>
+          <Button
+            style={{
+              alignItems: 'center',
+              textTransform: 'none',
+              padding: '8px',
+            }}
+          >
+            <VideoLibrary
+              style={{ color: '#52bd62', marginRight: 10, fontSize: '2rem' }}
+            />
+            <Typography>Videos</Typography>
+          </Button>
+          <Button
+            style={{
+              alignItems: 'center',
+              textTransform: 'none',
+              padding: '8px',
+            }}
+          >
+            <Image
+              style={{ color: '#1877f2', marginRight: 10, fontSize: '2rem' }}
+            />
+            <Typography>Photos</Typography>
+          </Button>
+        </Box>
       </CardContent>
     </Card>
   );
