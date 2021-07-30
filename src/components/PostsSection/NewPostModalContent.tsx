@@ -1,33 +1,30 @@
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
+  ClickAwayListener,
   Divider,
-  FormControl,
   IconButton,
-  InputLabel,
   makeStyles,
   MenuItem,
   Select,
   TextField,
   Typography,
-  ClickAwayListener,
-  Button,
 } from '@material-ui/core';
 import {
   Close,
-  Public,
-  People,
-  Lock,
-  VideoLibrary,
-  Videocam,
   Image,
+  Lock,
+  People,
+  Public,
+  VideoLibrary,
 } from '@material-ui/icons';
 import React, { useContext, useState } from 'react';
-import { ModalContext } from 'src/composables/AppModal';
 import avatarImg from 'src/assets/images/avatar2.png';
+import { ModalContext } from 'src/composables/AppModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {

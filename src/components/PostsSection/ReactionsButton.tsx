@@ -4,15 +4,19 @@ import {
   SentimentVerySatisfied,
   SentimentDissatisfied,
 } from '@material-ui/icons';
-import React from 'react';
+import React, { useContext } from 'react';
+import { ModalContext } from 'src/composables/AppModal';
+import Reactions from './Reactions';
 
 interface ReactionsButtonProps {
   fontSize?: 'default' | 'inherit' | 'large' | 'medium' | 'small';
 }
 
 const ReactionsButton: React.FC<ReactionsButtonProps> = ({ fontSize }) => {
+  const { setContent } = useContext(ModalContext);
+
   return (
-    <Button>
+    <Button onClick={() => setContent(<Reactions />)}>
       <Box display="flex" style={{ marginRight: 5 }}>
         <Favorite fontSize={fontSize} style={{ color: '#ef4561' }} />
         <SentimentVerySatisfied

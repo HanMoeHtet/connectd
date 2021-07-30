@@ -5,10 +5,9 @@ import {
   Card,
   CardContent,
   Divider,
-  Grid,
   Typography,
 } from '@material-ui/core';
-import { Videocam, Image, VideoLibrary } from '@material-ui/icons';
+import { Image, Videocam, VideoLibrary } from '@material-ui/icons';
 import React, { useContext } from 'react';
 import avatarImg from 'src/assets/images/avatar2.png';
 import { ModalContext } from 'src/composables/AppModal';

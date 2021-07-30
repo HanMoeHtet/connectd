@@ -9,6 +9,10 @@ const PostsSection: React.FC = () => {
       <NewPostSection />
       <Divider style={{ margin: '15px auto', width: '80px' }} />
       <Post />
+      <Box height="10px" />
+      <Post />
+      <Box height="10px" />
+      <Post />
     </Box>
   );
 };

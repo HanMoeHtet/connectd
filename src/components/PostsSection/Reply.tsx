@@ -3,19 +3,15 @@ import {
   Box,
   CardActions,
   CardContent,
-  Collapse,
   Link,
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import avatarImg from 'src/assets/images/avatar2.png';
-import CommentEditor from './CommentEditor';
 import ReactButton from './ReactButton';
 import ReactionsButton from './ReactionsButton';
-import RepliesButton from './RepliesButton';
-import Reply from './Reply';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -25,10 +21,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Comment: React.FC = () => {
+const Reply: React.FC = () => {
   const classes = useStyles();
-
-  const [isShowingReplies, setIsShowingReplies] = useState(false);
 
   return (
     <CardContent>
@@ -56,21 +50,11 @@ const Comment: React.FC = () => {
           <CardActions>
             <ReactionsButton />
             <ReactButton />
-            <RepliesButton
-              onClick={() => {
-                console.log('clicked');
-                setIsShowingReplies((prev) => !prev);
-              }}
-            />
           </CardActions>
-          <Collapse in={isShowingReplies} timeout="auto">
-            <Reply />
-            <CommentEditor />
-          </Collapse>
         </Box>
       </Box>
     </CardContent>
   );
 };
 
-export default Comment;
+export default Reply;

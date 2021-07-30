@@ -6,28 +6,22 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  CardMedia,
   Collapse,
+  Divider,
   Link,
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
-import React from 'react';
-import avatarImg from 'src/assets/images/avatar2.png';
-import {
-  ThumbUp,
-  Comment,
-  Share,
-  Public,
-  SentimentDissatisfied,
-  SentimentVerySatisfied,
-  Favorite,
-} from '@material-ui/icons';
+import { Comment, Public } from '@material-ui/icons';
 import { formatDistance } from 'date-fns';
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import avatarImg from 'src/assets/images/avatar2.png';
+import CommentEditor from './CommentEditor';
+import Comments from './Comments';
 import ReactButton from './ReactButton';
-import CommentsButton from './CommentsButton';
 import ReactionsButton from './ReactionsButton';
+import ShareButton from './ShareButton';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -39,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Post: React.FC = () => {
   const classes = useStyles();
+
+  const [isShowingComments, setIsShowingComments] = React.useState(false);
+
   return (
     <Card>
       <CardHeader
@@ -74,6 +71,7 @@ const Post: React.FC = () => {
         </Typography>
       </CardContent>
       {/* <CardMedia image={avatarImg} component="img" /> */}
+      <Divider style={{ margin: '0 15px', marginTop: 10 }} />
       <CardActions>
         <Box flexGrow="1" display="flex" justifyContent="center">
           <ReactionsButton />
@@ -82,15 +80,23 @@ const Post: React.FC = () => {
           <ReactButton />
         </Box>
         <Box flexGrow="1" display="flex" justifyContent="center">
-          <CommentsButton />
-        </Box>
-        <Box flexGrow="1" display="flex" justifyContent="center">
-          <Button style={{ padding: '5px 10px' }}>
-            <Share style={{ marginRight: 10 }} />
+          <Button
+            style={{ padding: '5px 10px' }}
+            onClick={() => setIsShowingComments((old) => !old)}
+          >
+            <Comment style={{ marginRight: 10 }} />
             <Typography>300</Typography>
           </Button>
         </Box>
+        <Box flexGrow="1" display="flex" justifyContent="center">
+          <ShareButton />
+        </Box>
       </CardActions>
+      <Collapse in={isShowingComments} timeout="auto">
+        <Divider style={{ margin: '0 15px' }} />
+        <CommentEditor />
+        <Comments />
+      </Collapse>
     </Card>
   );
 };

@@ -1,16 +1,14 @@
 import { Button, Typography } from '@material-ui/core';
-import { Close, Reply, ThumbUp } from '@material-ui/icons';
-import React, { useContext } from 'react';
-import { ModalContext } from 'src/composables/AppModal';
-import avatarImg from 'src/assets/images/avatar2.png';
-import ReactButton from './ReactButton';
-import ReactionsButton from './ReactionsButton';
+import { Reply } from '@material-ui/icons';
+import React from 'react';
 
-const RepliesButton: React.FC = () => {
-  const { setContent } = useContext(ModalContext);
+interface RepliesButtonProps {
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
 
+const RepliesButton: React.FC<RepliesButtonProps> = ({ onClick }) => {
   return (
-    <Button style={{ padding: '5px 10px' }}>
+    <Button onClick={onClick} style={{ padding: '5px 10px' }}>
       <Reply style={{ marginRight: 10 }} />
       <Typography>300</Typography>
     </Button>
