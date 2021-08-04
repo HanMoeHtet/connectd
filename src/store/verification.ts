@@ -74,7 +74,7 @@ export const verifyEmail =
       return;
     }
 
-    history.replace('/newsfeed');
+    history.replace('/');
     dispatch(setIsLoading(false));
   };
 
@@ -170,7 +170,7 @@ export const verifyPhoneNumber =
       return;
     }
 
-    history.push('/newsfeed');
+    history.push('/');
     dispatch(setIsLoading(false));
   };
 

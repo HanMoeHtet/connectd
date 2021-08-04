@@ -1,7 +1,10 @@
 import { AppThunk } from 'src/store';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
+  EmailLogInFormData,
   EmailRegistrationFormData,
+  LogInError,
+  PhoneNumberLogInFormData,
   PhoneNumberRegistrationFormData,
   RegistrationError,
 } from 'src/types/lib';
@@ -9,15 +12,21 @@ import { AuthState } from 'src/types';
 import {
   registerWithEmail as _registerWithEmail,
   registerWithPhoneNumber as _registerWithPhoneNumber,
+  logInWithEmail as _logInWithEmail,
+  logInWithPhoneNumber as _logInWithPhoneNumber,
 } from 'src/services/auth';
 import { AxiosResponse } from 'axios';
 import history from 'src/services/history';
 import { setMessage } from './verification';
-import { BAD_REQUEST, SERVER_ERROR } from 'src/constants';
+import {
+  BAD_REQUEST,
+  NOT_FOUND,
+  SERVER_ERROR,
+  UNAUTHORIZED,
+} from 'src/constants';
 import { showToast } from 'src/services/notification';
 import { fetchBasicProfile } from './profile';
-import { getToken } from 'src/services/jwt';
-import { setToken } from 'src/services/api';
+import { getToken, setToken } from 'src/services/jwt';
 
 const initialState: AuthState = {
   isLoading: false,
@@ -80,6 +89,108 @@ export const registerWithEmail =
     dispatch(setIsLoading(false));
   };
 
+export const logInWithEmail =
+  (formData: EmailLogInFormData): AppThunk<Promise<LogInError | undefined>> =>
+  async (dispatch) => {
+    dispatch(setIsLoading(true));
+
+    let response;
+
+    try {
+      response = await _logInWithEmail(formData);
+    } catch (e) {
+      const { status, data } = e.response as AxiosResponse<{
+        errors?: LogInError;
+        message?: string;
+      }>;
+
+      if (
+        status === BAD_REQUEST ||
+        status === NOT_FOUND ||
+        status === UNAUTHORIZED
+      ) {
+        const { errors } = data;
+        dispatch(setIsLoading(false));
+        return errors;
+      }
+
+      if (status === SERVER_ERROR) {
+        const { message } = data;
+        showToast('error', message!);
+      }
+
+      dispatch(setIsLoading(false));
+      return;
+    }
+
+    const { token } = response.data.data;
+    setToken(token);
+
+    try {
+      await dispatch(fetchBasicProfile());
+    } catch (e) {
+      // FIXME: replace with i18next
+      showToast('error', 'Failed to load user profile');
+      dispatch(setIsLoading(false));
+      return;
+    }
+
+    history.push('/');
+    dispatch(setIsLoading(false));
+  };
+
+export const logInWithPhoneNumber =
+  (
+    formData: PhoneNumberLogInFormData
+  ): AppThunk<Promise<LogInError | undefined>> =>
+  async (dispatch) => {
+    dispatch(setIsLoading(true));
+
+    let response;
+
+    try {
+      response = await _logInWithPhoneNumber(formData);
+    } catch (e) {
+      const { status, data } = e.response as AxiosResponse<{
+        errors?: LogInError;
+        message?: string;
+      }>;
+
+      if (
+        status === BAD_REQUEST ||
+        status === NOT_FOUND ||
+        status === UNAUTHORIZED
+      ) {
+        const { errors } = data;
+        dispatch(setIsLoading(false));
+        return errors;
+      }
+
+      if (status === SERVER_ERROR) {
+        const { message } = data;
+        showToast('error', message!);
+      }
+
+      dispatch(setIsLoading(false));
+      return;
+    }
+
+    const { token } = response.data.data;
+    setToken(token);
+
+    try {
+      await dispatch(fetchBasicProfile());
+    } catch (e) {
+      // FIXME: replace with i18next
+      showToast('error', 'Failed to load user profile');
+      dispatch(setIsLoading(false));
+      return;
+    }
+
+    history.push('/');
+    dispatch(setIsLoading(false));
+  };
+
 export const registerWithPhoneNumber =
   (
     formData: PhoneNumberRegistrationFormData
@@ -133,7 +244,6 @@ export const checkAuth = (): AppThunk<Promise<void>> => async (dispatch) => {
   try {
     await dispatch(fetchBasicProfile());
   } catch (e) {
-    history.replace('/login');
     dispatch(setIsLoading(false));
     return;
   }

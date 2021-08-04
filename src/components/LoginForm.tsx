@@ -9,14 +9,17 @@ import {
 } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import React, { useState } from 'react';
+import { useAppDispatch } from 'src/store';
+import { logInWithEmail, logInWithPhoneNumber } from 'src/store/auth';
+import { LogInError } from 'src/types/lib';
 
 interface FormData {
-  email: string;
+  emailOrPhoneNumber: string;
   password: string;
 }
 
 const initialFormData: FormData = {
-  email: '',
+  emailOrPhoneNumber: '',
   password: '',
 };
 
@@ -25,8 +28,11 @@ interface Props {
 }
 
 const LoginForm: React.FC<Props> = ({ setIsLogginIn }) => {
+  const dispatch = useAppDispatch();
+
   const [formData, setFormData] = React.useState<FormData>(initialFormData);
   const [isShowingPassword, setIsShowingPassword] = useState(false);
+  const [errors, setErrors] = useState<LogInError>({});
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const propName = event.target.name;
@@ -37,8 +43,34 @@ const LoginForm: React.FC<Props> = ({ setIsLogginIn }) => {
     }));
   };
 
-  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const { emailOrPhoneNumber, password } = formData;
+
+    const regex = /^\d+$/;
+    if (regex.test(emailOrPhoneNumber)) {
+      const errors = await dispatch(
+        logInWithPhoneNumber({
+          phoneNumber: emailOrPhoneNumber,
+          password,
+        })
+      );
+
+      if (errors) {
+        setErrors(errors);
+      }
+    } else {
+      const errors = await dispatch(
+        logInWithEmail({
+          email: emailOrPhoneNumber,
+          password,
+        })
+      );
+
+      if (errors) {
+        setErrors(errors);
+      }
+    }
   };
 
   return (
@@ -53,9 +85,17 @@ const LoginForm: React.FC<Props> = ({ setIsLogginIn }) => {
         fullWidth
         type="text"
         label="Email or phone number"
-        name="email"
-        value={formData.email}
+        name="emailOrPhoneNumber"
+        value={formData.emailOrPhoneNumber}
         onChange={handleChange}
+        error={
+          (errors.email && errors.email.length !== 0) ||
+          (errors.phoneNumber && errors.phoneNumber.length !== 0)
+        }
+        helperText={
+          (errors.email && errors.email.join(', ')) ||
+          (errors.phoneNumber && errors.phoneNumber.join(', '))
+        }
       />
       <TextField
         color="primary"
@@ -76,6 +116,8 @@ const LoginForm: React.FC<Props> = ({ setIsLogginIn }) => {
         name="password"
         value={formData.password}
         onChange={handleChange}
+        error={errors.password && errors.password.length !== 0}
+        helperText={errors.password && errors.password.join(', ')}
       />
       <Link
         href="/login"

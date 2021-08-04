@@ -1,6 +1,9 @@
 import api from 'src/services/api';
 import {
+  EmailLogInFormData,
   EmailRegistrationFormData,
+  LogInSuccessResponse,
+  PhoneNumberLogInFormData,
   PhoneNumberRegistrationFormData,
   RegisterSuccessResponse,
   ResendResponse,
@@ -17,6 +20,10 @@ export const resendEmail = (userId: string) => {
 
 export const verifyEmail = (token: string) => {
   return api.post<VerifySuccessResponse>('/auth/verify/email', { token });
+};
+
+export const logInWithEmail = (formData: EmailLogInFormData) => {
+  return api.post<LogInSuccessResponse>('/auth/login/email', formData);
 };
 
 export const registerWithPhoneNumber = (
@@ -39,4 +46,8 @@ export const verifyPhoneNumber = (userId: string, otp: string) => {
     userId,
     otp,
   });
+};
+
+export const logInWithPhoneNumber = (formData: PhoneNumberLogInFormData) => {
+  return api.post<LogInSuccessResponse>('/auth/login/phone-number', formData);
 };

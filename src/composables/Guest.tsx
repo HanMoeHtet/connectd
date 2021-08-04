@@ -11,7 +11,7 @@ const Guest: React.FC = ({ children }) => {
   if (isLoading) return null;
 
   if (profile) {
-    history.replace('/newsfeed');
+    history.replace('/');
     return null;
   }
 

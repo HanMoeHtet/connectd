@@ -2,7 +2,10 @@ import { Button, Divider, Menu, MenuItem, Typography } from '@material-ui/core';
 import { Share } from '@material-ui/icons';
 import React from 'react';
 
-const ShareButton: React.FC = () => {
+interface ShareButtonProps {
+  shareIds: string[];
+}
+const ShareButton: React.FC<ShareButtonProps> = ({ shareIds }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -42,7 +45,7 @@ const ShareButton: React.FC = () => {
         onClick={handleMenuOpen}
       >
         <Share style={{ marginRight: 10 }} />
-        <Typography>300</Typography>
+        <Typography>{shareIds.length}</Typography>
       </Button>
       {renderSettings}
     </>

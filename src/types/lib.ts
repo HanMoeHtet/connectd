@@ -43,6 +43,36 @@ export interface VerifySuccessResponse {
   data: { token: string };
 }
 
+export interface LogInFormData {
+  password: string;
+}
+
+export interface EmailLogInFormData extends LogInFormData {
+  email: string;
+}
+
+export interface PhoneNumberLogInFormData extends LogInFormData {
+  phoneNumber: string;
+}
+
+export interface LogInError {
+  password?: string[];
+  email?: string[];
+  phoneNumber?: string[];
+}
+
+export interface LogInSuccessResponse {
+  data: { token: string };
+}
+
+export interface BasicProfile {
+  id: string;
+  username: string;
+  avatar?: string;
+}
+
 export interface BasicProfileResponse {
-  data: { id: string; username: string; avatar?: string };
+  data: {
+    user: BasicProfile;
+  };
 }

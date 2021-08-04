@@ -10,9 +10,13 @@ import Reactions from './Reactions';
 
 interface ReactionsButtonProps {
   fontSize?: 'default' | 'inherit' | 'large' | 'medium' | 'small';
+  reactionIds?: string[];
 }
 
-const ReactionsButton: React.FC<ReactionsButtonProps> = ({ fontSize }) => {
+const ReactionsButton: React.FC<ReactionsButtonProps> = ({
+  fontSize,
+  reactionIds,
+}) => {
   const { setContent } = useContext(ModalContext);
 
   return (
@@ -28,7 +32,7 @@ const ReactionsButton: React.FC<ReactionsButtonProps> = ({ fontSize }) => {
           style={{ color: '#f07611' }}
         />
       </Box>
-      <Typography>300</Typography>
+      <Typography>{reactionIds?.length}</Typography>
     </Button>
   );
 };
