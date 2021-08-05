@@ -37,7 +37,7 @@ const ReactButton: React.FC<ReactButtonProps> = ({ fontSize }) => {
 
     icons.forEach((value, key) => {
       const iconButton = (
-        <IconButton onMouseOver={() => setHoveredIcon(key)}>
+        <IconButton onMouseOver={() => setHoveredIcon(key)} key={key}>
           <value.Icon
             fontSize="small"
             style={{
