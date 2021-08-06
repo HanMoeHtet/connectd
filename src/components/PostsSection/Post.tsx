@@ -14,16 +14,14 @@ import {
 } from '@material-ui/core';
 import { Comment, Public } from '@material-ui/icons';
 import { formatDistance } from 'date-fns';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import avatarImg from 'src/assets/images/avatar2.png';
 import CommentEditor from './CommentEditor';
 import Comments from './Comments';
 import ReactButton from './ReactButton';
 import ReactionsButton from './ReactionsButton';
 import ShareButton from './ShareButton';
 import { Post as PostType } from 'src/types/post';
-import { fetchUserBasicProfile } from 'src/services/user';
 import { BasicProfile } from 'src/types/lib';
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type PostProps = PostType & {
-  onPostLoaded: () => void;
+  user: BasicProfile;
 };
 
 const Post: React.FC<PostProps> = React.memo(
@@ -48,28 +46,11 @@ const Post: React.FC<PostProps> = React.memo(
     reactionIds,
     commentIds,
     shareIds,
-    onPostLoaded,
+    user,
   }) => {
     const classes = useStyles();
 
     const [isShowingComments, setIsShowingComments] = React.useState(false);
-    const [user, setUser] = React.useState<BasicProfile | null>(null);
-
-    useEffect(
-      () => {
-        (async () => {
-          const response = await fetchUserBasicProfile(userId);
-          const { user } = response.data.data;
-          setUser(user);
-          onPostLoaded();
-        })();
-      }, // eslint-disable-next-line react-hooks/exhaustive-deps
-      [userId]
-    );
-
-    if (!user) {
-      return null;
-    }
 
     return (
       <>

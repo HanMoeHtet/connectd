@@ -18,7 +18,7 @@ const AppBar: React.FC = () => {
 
   return (
     <>
-      <MuiAppBar position="static" color="transparent">
+      <MuiAppBar position="sticky" style={{ backgroundColor: '#424242' }}>
         <Toolbar>
           <AppLogo linkTo="/" />
           <SearchBar />

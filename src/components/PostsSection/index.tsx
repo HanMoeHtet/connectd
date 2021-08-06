@@ -1,54 +1,49 @@
 import { Box, Divider } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { fetchNewsfeedPosts } from 'src/services/newsfeed';
-import { NormalPost, Post, PostType } from 'src/types/post';
+import { fetchUserBasicProfile } from 'src/services/user';
+import { BasicProfile } from 'src/types/lib';
+import { Post } from 'src/types/post';
 import NewPostSection from './NewPostSection';
 import PostComponent from './Post';
+import { CircularProgress } from '@material-ui/core';
 
 const PostsSection: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingPosts, setLoadingPosts] = useState(new Set<string>());
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<(Post & { user: BasicProfile })[]>([]);
   const [skip, setSkip] = useState(0);
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(10);
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
   const loadMore = useCallback(async () => {
     const response = await fetchNewsfeedPosts({ skip, limit });
     const { posts: newPosts } = response.data.data;
 
-    setPosts((prev) => {
-      console.log(prev);
-      return [...prev, ...newPosts];
-    });
+    const newPostsWithUsers = await Promise.all(
+      newPosts.map(async (post): Promise<Post & { user: BasicProfile }> => {
+        const { user } = (await fetchUserBasicProfile(post.userId)).data.data;
+        return { ...post, user };
+      })
+    );
 
-    return newPosts.map((post) => post.id);
+    setPosts((prev) => [...prev, ...newPostsWithUsers]);
+    setSkip((prev) => prev + limit);
   }, [skip, limit]);
 
-  const onPostLoaded = (postId: string) => {
-    setLoadingPosts((prev) => {
-      console.log(prev.delete(postId));
-      return new Set(prev);
-    });
-  };
-
   useEffect(() => {
-    console.log(isLoading, loadingPosts.size);
-    if (!isLoading && loadingPosts.size === 0) {
-      const observer = new IntersectionObserver(async (entries) => {
-        const firstEntry = entries[0];
-        if (
-          firstEntry.isIntersecting &&
-          !isLoading &&
-          loadingPosts.size === 0
-        ) {
-          setIsLoading(true);
-          const postIds = await loadMore();
-          setSkip((prev) => prev + limit);
-          setLoadingPosts(new Set(postIds));
-          setIsLoading(false);
-        }
-      });
+    if (!isLoading) {
+      const observer = new IntersectionObserver(
+        async (entries) => {
+          const firstEntry = entries[0];
+          if (firstEntry.isIntersecting && !isLoading) {
+            setIsLoading(true);
+            await loadMore();
+            setIsLoading(false);
+          }
+        },
+        // FIXME: check if network is wifi or not and set the threshold accordingly
+        { rootMargin: '1000px' }
+      );
 
       if (loadMoreRef.current) {
         observer.observe(loadMoreRef.current);
@@ -58,20 +53,18 @@ const PostsSection: React.FC = () => {
         observer.disconnect();
       };
     }
-  }, [loadMore, isLoading, loadingPosts, limit]);
+  }, [loadMore, isLoading, limit, posts]);
 
   return (
     <Box width="512px" margin="auto" padding="15px 0">
       <NewPostSection />
       <Divider style={{ margin: '15px auto', width: '80px' }} />
       {posts.map((post) => (
-        <PostComponent
-          {...post}
-          key={post.id}
-          onPostLoaded={() => onPostLoaded(post.id)}
-        />
+        <PostComponent {...post} key={post.id} />
       ))}
-      <div ref={loadMoreRef}></div>
+      <Box display="flex" justifyContent="center">
+        <CircularProgress color="primary" ref={loadMoreRef} />
+      </Box>
     </Box>
   );
 };
