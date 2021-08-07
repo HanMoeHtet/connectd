@@ -1,3 +1,5 @@
+import { BasicProfile } from './lib';
+
 export enum Privacy {
   PUBLIC = 'PUBLIC',
   FRIENDS = 'FRIENDS',
@@ -12,15 +14,15 @@ export enum PostType {
 export interface BasePost {
   id: string;
   userId: string;
+  user: BasicProfile;
   createdAt: Date;
   privacy: Privacy;
   content: string;
-  reactionIds: string[];
-  commentIds: string[];
-  /**
-   * Store shared post ids
-   */
-  shareIds: string[];
+  reactionCounts: {
+    [key in ReactionType]: number;
+  };
+  commentCount: number;
+  shareCount: number;
 }
 
 export interface NormalPost extends BasePost {
@@ -33,3 +35,10 @@ export interface SharedPost extends BasePost {
 }
 
 export type Post = NormalPost | SharedPost;
+
+export enum ReactionType {
+  LIKE = 'LIKE',
+  FAVORITE = 'FAVORITE',
+  SATISFIED = 'SATISFIED',
+  DISSATISFIED = 'DISSATISFIED',
+}

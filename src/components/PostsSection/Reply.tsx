@@ -48,7 +48,7 @@ const Reply: React.FC = () => {
             </Typography>
           </CardContent>
           <CardActions>
-            <ReactionsButton />
+            {/* <ReactionsButton /> */}
             <ReactButton />
           </CardActions>
         </Box>

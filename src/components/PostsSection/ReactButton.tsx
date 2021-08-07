@@ -1,18 +1,7 @@
 import { Box, Button, IconButton, Popover } from '@material-ui/core';
-import {
-  Favorite,
-  SentimentDissatisfied,
-  SentimentVerySatisfied,
-  ThumbUp,
-} from '@material-ui/icons';
+import { ThumbUp } from '@material-ui/icons';
 import React, { useState } from 'react';
-
-const icons = new Map([
-  ['thumbup', { Icon: ThumbUp, color: '#0b86ee' }],
-  ['favorite', { Icon: Favorite, color: '#ef4561' }],
-  ['satisfied', { Icon: SentimentVerySatisfied, color: '#fbcd58' }],
-  ['dissatisfied', { Icon: SentimentDissatisfied, color: '#f07611' }],
-]);
+import { reactionIcons } from './shared';
 
 interface ReactButtonProps {
   fontSize?: 'default' | 'inherit' | 'large' | 'medium' | 'small';
@@ -35,7 +24,7 @@ const ReactButton: React.FC<ReactButtonProps> = ({ fontSize }) => {
   const renderIconButtons = () => {
     const iconButtons: any[] = [];
 
-    icons.forEach((value, key) => {
+    reactionIcons.forEach((value, key) => {
       const iconButton = (
         <IconButton onMouseOver={() => setHoveredIcon(key)} key={key}>
           <value.Icon

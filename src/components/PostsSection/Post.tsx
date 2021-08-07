@@ -23,6 +23,7 @@ import ReactionsButton from './ReactionsButton';
 import ShareButton from './ShareButton';
 import { Post as PostType } from 'src/types/post';
 import { BasicProfile } from 'src/types/lib';
+import { privacyIcons } from './shared';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -43,14 +44,16 @@ const Post: React.FC<PostProps> = React.memo(
     createdAt,
     privacy,
     content,
-    reactionIds,
-    commentIds,
-    shareIds,
+    reactionCounts,
+    commentCount,
+    shareCount,
     user,
   }) => {
     const classes = useStyles();
 
     const [isShowingComments, setIsShowingComments] = React.useState(false);
+
+    const PrivacyIcon = privacyIcons.get(privacy)!.Icon;
 
     return (
       <>
@@ -83,7 +86,7 @@ const Post: React.FC<PostProps> = React.memo(
                     addSuffix: true,
                   })}
                 </Typography>
-                <Public fontSize="small" />
+                <PrivacyIcon fontSize="small" />
               </Box>
             }
           />
@@ -94,7 +97,7 @@ const Post: React.FC<PostProps> = React.memo(
           <Divider style={{ margin: '0 15px', marginTop: 10 }} />
           <CardActions>
             <Box flexGrow="1" display="flex" justifyContent="center">
-              <ReactionsButton reactionIds={reactionIds} />
+              <ReactionsButton counts={reactionCounts} />
             </Box>
             <Box flexGrow="1" display="flex" justifyContent="center">
               <ReactButton />
@@ -105,11 +108,11 @@ const Post: React.FC<PostProps> = React.memo(
                 onClick={() => setIsShowingComments((old) => !old)}
               >
                 <Comment style={{ marginRight: 10 }} />
-                <Typography>{commentIds.length}</Typography>
+                <Typography>{commentCount}</Typography>
               </Button>
             </Box>
             <Box flexGrow="1" display="flex" justifyContent="center">
-              <ShareButton shareIds={shareIds} />
+              <ShareButton count={shareCount} />
             </Box>
           </CardActions>
           <Collapse in={isShowingComments} timeout="auto">

@@ -3,9 +3,9 @@ import { Share } from '@material-ui/icons';
 import React from 'react';
 
 interface ShareButtonProps {
-  shareIds: string[];
+  count: number;
 }
-const ShareButton: React.FC<ShareButtonProps> = ({ shareIds }) => {
+const ShareButton: React.FC<ShareButtonProps> = ({ count }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -45,7 +45,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ shareIds }) => {
         onClick={handleMenuOpen}
       >
         <Share style={{ marginRight: 10 }} />
-        <Typography>{shareIds.length}</Typography>
+        <Typography>{count}</Typography>
       </Button>
       {renderSettings}
     </>

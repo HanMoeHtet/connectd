@@ -27,6 +27,7 @@ import {
 import React, { useContext, useState } from 'react';
 import avatarImg from 'src/assets/images/avatar2.png';
 import { ModalContext } from 'src/composables/AppModal';
+import { ReactionType } from 'src/types/post';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -84,7 +85,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Reactions = React.forwardRef(() => {
+interface ReactionsProps {}
+
+const Reactions: React.FC<ReactionsProps> = React.forwardRef(({}) => {
   const classes = useStyles();
 
   const { setContent } = useContext(ModalContext);
@@ -122,22 +125,22 @@ const Reactions = React.forwardRef(() => {
               <Tab
                 style={{ minWidth: 'auto' }}
                 icon={<ThumbUp />}
-                aria-label="phone"
+                aria-label="liked"
               />
               <Tab
                 style={{ minWidth: 'auto' }}
                 icon={<Favorite />}
-                aria-label="favorite"
+                aria-label="favorited"
               />
               <Tab
                 style={{ minWidth: 'auto' }}
                 icon={<SentimentVerySatisfied />}
-                aria-label="person"
+                aria-label="enjoyed"
               />
               <Tab
                 style={{ minWidth: 'auto' }}
                 icon={<SentimentDissatisfied />}
-                aria-label="person"
+                aria-label="hated"
               />
             </Tabs>
           </CardContent>

@@ -54,7 +54,7 @@ const Comment: React.FC = () => {
             </Typography>
           </CardContent>
           <CardActions>
-            <ReactionsButton />
+            {/* <ReactionsButton /> */}
             <ReactButton />
             <RepliesButton
               onClick={() => {
