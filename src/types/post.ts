@@ -42,3 +42,13 @@ export enum ReactionType {
   SATISFIED = 'SATISFIED',
   DISSATISFIED = 'DISSATISFIED',
 }
+
+export interface UpdatedFieldsInPost {
+  privacy?: Privacy;
+  content?: string;
+  reactionCounts?: {
+    [key in ReactionType]: number;
+  };
+  commentCount?: number;
+  shareCount?: number;
+}

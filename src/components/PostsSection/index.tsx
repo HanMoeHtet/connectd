@@ -1,12 +1,9 @@
-import { Box, Divider } from '@material-ui/core';
+import { Box, CircularProgress, Divider } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { fetchNewsfeedPosts } from 'src/services/newsfeed';
-import { fetchUserBasicProfile } from 'src/services/user';
-import { BasicProfile } from 'src/types/lib';
-import { Post } from 'src/types/post';
+import { Post, UpdatedFieldsInPost } from 'src/types/post';
 import NewPostSection from './NewPostSection';
 import PostComponent from './Post';
-import { CircularProgress } from '@material-ui/core';
 
 const PostsSection: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -52,12 +49,25 @@ const PostsSection: React.FC = () => {
     }
   }, [loadMore, isLoading, limit, posts]);
 
+  const onUpdate = useCallback(
+    (updatedPostId: string, updatedFieldsInPost: UpdatedFieldsInPost) =>
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post.id === updatedPostId) {
+            return { ...post, ...updatedFieldsInPost };
+          }
+          return post;
+        })
+      ),
+    []
+  );
+
   return (
     <Box width="512px" margin="auto" padding="15px 0">
       <NewPostSection />
       <Divider style={{ margin: '15px auto', width: '80px' }} />
       {posts.map((post) => (
-        <PostComponent {...post} key={post.id} />
+        <PostComponent {...post} key={post.id} onUpdate={onUpdate} />
       ))}
       <Box display="flex" justifyContent="center">
         <CircularProgress color="primary" ref={loadMoreRef} />

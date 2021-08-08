@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   ClickAwayListener,
   IconButton,
   List,
@@ -13,6 +14,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
+  SvgIcon,
   Tab,
   Tabs,
 } from '@material-ui/core';
@@ -24,19 +26,34 @@ import {
   SentimentVerySatisfied,
   ThumbUp,
 } from '@material-ui/icons';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import avatarImg from 'src/assets/images/avatar2.png';
 import { ModalContext } from 'src/composables/AppModal';
-import { ReactionType } from 'src/types/post';
+import { ReactionType, UpdatedFieldsInPost } from 'src/types/post';
+import { formatCount } from 'src/utils/helpers';
+import { reactionIcons } from './shared';
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
   value: any;
+  reactionType: ReactionType | 'ALL';
+  postId: string;
+  onUpdate: (postId: string, updatedFieldsInPost: UpdatedFieldsInPost) => void;
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const classes = useStyles();
+
+  const { value, index, reactionType, postId, onUpdate } = props;
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+  }, []);
 
   return (
     <div
@@ -44,9 +61,52 @@ function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
     >
-      {value === index && <>{children}</>}
+      {value === index && (
+        <List
+          style={{ overflowY: 'auto', height: '300px' }}
+          disablePadding
+          classes={{ root: classes.root }}
+        >
+          {isLoading ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="300px"
+            >
+              <CircularProgress color="primary" />
+            </Box>
+          ) : (
+            Array(10)
+              .fill({})
+              .map((_) => (
+                <ListItem>
+                  <ListItemAvatar>
+                    <Badge
+                      badgeContent={<ThumbUp style={{ fontSize: '0.75rem' }} />}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                      }}
+                      classes={{
+                        badge: classes.badge,
+                      }}
+                    >
+                      <Avatar src={avatarImg} />
+                    </Badge>
+                  </ListItemAvatar>
+                  <ListItemText primary="Han Moe Htet" />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="delete">
+                      <PersonAdd />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))
+          )}
+        </List>
+      )}
     </div>
   );
 }
@@ -55,25 +115,13 @@ const useStyles = makeStyles((theme) => ({
   root: {
     padding: 0,
 
-    '& .MuiOutlinedInput-multiline': {
-      padding: 0,
+    '&::-webkit-scrollbar': {
+      display: 'block',
+      width: 8,
     },
 
-    '& fieldset': {
-      border: 'none',
-    },
-
-    '& textarea': {
-      cursor: 'auto',
-
-      '&::-webkit-scrollbar': {
-        display: 'block',
-        width: 8,
-      },
-
-      '&::-webkit-scrollbar-thumb': {
-        backgroundColor: theme.palette.primary.main,
-      },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: theme.palette.primary.main,
     },
   },
 
@@ -85,115 +133,119 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface ReactionsProps {}
+interface ReactionsProps {
+  postId: string;
+  counts: {
+    [key in ReactionType]: number;
+  };
+  onUpdate: (postId: string, updatedFieldsInPost: UpdatedFieldsInPost) => void;
+}
 
-const Reactions: React.FC<ReactionsProps> = React.forwardRef(({}) => {
-  const classes = useStyles();
+const Reactions: React.FC<ReactionsProps> = React.forwardRef(
+  ({ postId, onUpdate, counts }) => {
+    const { setContent } = useContext(ModalContext);
 
-  const { setContent } = useContext(ModalContext);
+    const [openedTabIndex, setOpenedTabIndex] = useState(0);
+    const [openedTabs, setOpenedTabs] = useState<Set<number>>(new Set([0]));
 
-  const [value, setValue] = useState(0);
-
-  return (
-    <Box
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      style={{ minHeight: '100vh' }}
-    >
-      <ClickAwayListener onClickAway={() => setContent(null)}>
-        <Card style={{ width: '512px' }}>
-          <CardHeader
-            style={{ textAlign: 'center', padding: '10px 5px' }}
-            title="People who reacted"
-            action={
-              <IconButton aria-label="close" onClick={() => setContent(null)}>
-                <Close />
-              </IconButton>
-            }
-          />
-          <CardContent style={{ paddingTop: 0, paddingBottom: 0 }}>
-            <Tabs
-              value={value}
-              onChange={(_, newValue) => setValue(newValue)}
-              variant="fullWidth"
-              indicatorColor="primary"
-              textColor="primary"
-              aria-label="icon tabs example"
-            >
-              <Tab style={{ minWidth: 'auto' }} label="All" value={0} />
-              <Tab
-                style={{ minWidth: 'auto' }}
-                icon={<ThumbUp />}
-                aria-label="liked"
-              />
-              <Tab
-                style={{ minWidth: 'auto' }}
-                icon={<Favorite />}
-                aria-label="favorited"
-              />
-              <Tab
-                style={{ minWidth: 'auto' }}
-                icon={<SentimentVerySatisfied />}
-                aria-label="enjoyed"
-              />
-              <Tab
-                style={{ minWidth: 'auto' }}
-                icon={<SentimentDissatisfied />}
-                aria-label="hated"
-              />
-            </Tabs>
-          </CardContent>
-          <CardContent>
-            <TabPanel value={value} index={0}>
-              <List style={{ overflowY: 'auto', height: '300px' }}>
-                {Array(10)
-                  .fill({})
-                  .map((_) => (
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Badge
-                          badgeContent={
-                            <ThumbUp style={{ fontSize: '0.75rem' }} />
+    return (
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: '100vh' }}
+      >
+        <ClickAwayListener onClickAway={() => setContent(null)}>
+          <Card style={{ width: '512px' }}>
+            <CardHeader
+              style={{ textAlign: 'center', padding: '10px 5px' }}
+              title="People who reacted"
+              action={
+                <IconButton aria-label="close" onClick={() => setContent(null)}>
+                  <Close />
+                </IconButton>
+              }
+            />
+            <>
+              <CardContent style={{ paddingTop: 0, paddingBottom: 0 }}>
+                <Tabs
+                  value={openedTabIndex}
+                  onChange={(_, newValue) => {
+                    setOpenedTabs((prev) => {
+                      if (prev.has(newValue)) {
+                        return prev;
+                      }
+                      return new Set([...Array.from(prev), newValue]);
+                    });
+                    setOpenedTabIndex(newValue);
+                  }}
+                  variant="fullWidth"
+                  indicatorColor="primary"
+                  textColor="primary"
+                  aria-label="icon tabs example"
+                >
+                  {['ALL', ...Object.values(ReactionType)].map(
+                    (reactionType, index) => {
+                      let count;
+                      if (reactionType === 'ALL') {
+                        count = Object.values(counts).reduce(
+                          (acc, curr) => acc + curr,
+                          0
+                        );
+                      } else {
+                        count = counts[reactionType as ReactionType];
+                      }
+                      const Icon = reactionIcons.get(
+                        reactionType as ReactionType
+                      )?.Icon;
+                      return (
+                        <Tab
+                          style={{ minWidth: 'auto' }}
+                          label={
+                            !Icon && (
+                              <Box display="flex">
+                                <span style={{ marginRight: 10 }}>All</span>
+                                <span>{formatCount(count)}</span>
+                              </Box>
+                            )
                           }
-                          anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right',
-                          }}
-                          classes={{
-                            badge: classes.badge,
-                          }}
-                        >
-                          <Avatar src={avatarImg} />
-                        </Badge>
-                      </ListItemAvatar>
-                      <ListItemText primary="Han Moe Htet" />
-                      <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete">
-                          <PersonAdd />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  ))}
-              </List>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              <List style={{ overflowY: 'auto', height: '300px' }}></List>
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-              Love
-            </TabPanel>
-            <TabPanel value={value} index={3}>
-              Satisfied
-            </TabPanel>
-            <TabPanel value={value} index={4}>
-              Dissatisfied
-            </TabPanel>
-          </CardContent>
-        </Card>
-      </ClickAwayListener>
-    </Box>
-  );
-});
+                          aria-label={reactionType}
+                          icon={
+                            Icon && (
+                              <Box display="flex" justifyContent="space-around">
+                                <Icon style={{ marginRight: 10 }} />
+                                <span>{formatCount(count)}</span>
+                              </Box>
+                            )
+                          }
+                          value={index}
+                        />
+                      );
+                    }
+                  )}
+                </Tabs>
+              </CardContent>
+              <CardContent>
+                {['ALL', ...Object.values(ReactionType)].map(
+                  (reactionType, index) =>
+                    openedTabs.has(index) && (
+                      <TabPanel
+                        value={openedTabIndex}
+                        index={index}
+                        key={index}
+                        reactionType={reactionType as ReactionType | 'ALL'}
+                        postId={postId}
+                        onUpdate={onUpdate}
+                      />
+                    )
+                )}
+              </CardContent>
+            </>
+          </Card>
+        </ClickAwayListener>
+      </Box>
+    );
+  }
+);
 
 export default Reactions;

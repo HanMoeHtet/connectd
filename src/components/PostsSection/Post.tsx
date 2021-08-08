@@ -21,7 +21,7 @@ import Comments from './Comments';
 import ReactButton from './ReactButton';
 import ReactionsButton from './ReactionsButton';
 import ShareButton from './ShareButton';
-import { Post as PostType } from 'src/types/post';
+import { Post as PostType, UpdatedFieldsInPost } from 'src/types/post';
 import { BasicProfile } from 'src/types/lib';
 import { privacyIcons } from './shared';
 
@@ -34,11 +34,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type PostProps = PostType & {
-  user: BasicProfile;
+  onUpdate: (id: string, updatedPost: UpdatedFieldsInPost) => void;
 };
 
 const Post: React.FC<PostProps> = React.memo(
   ({
+    id,
     userId,
     type,
     createdAt,
@@ -48,6 +49,7 @@ const Post: React.FC<PostProps> = React.memo(
     commentCount,
     shareCount,
     user,
+    onUpdate,
   }) => {
     const classes = useStyles();
 
@@ -97,7 +99,11 @@ const Post: React.FC<PostProps> = React.memo(
           <Divider style={{ margin: '0 15px', marginTop: 10 }} />
           <CardActions>
             <Box flexGrow="1" display="flex" justifyContent="center">
-              <ReactionsButton counts={reactionCounts} />
+              <ReactionsButton
+                counts={reactionCounts}
+                postId={id}
+                onUpdate={onUpdate}
+              />
             </Box>
             <Box flexGrow="1" display="flex" justifyContent="center">
               <ReactButton />
