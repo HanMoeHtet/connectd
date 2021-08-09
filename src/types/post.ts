@@ -12,7 +12,7 @@ export enum PostType {
 }
 
 export interface BasePost {
-  id: string;
+  _id: string;
   userId: string;
   user: BasicProfile;
   createdAt: Date;

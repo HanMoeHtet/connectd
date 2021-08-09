@@ -57,6 +57,8 @@ const ReactionsButton: React.FC<ReactionsButtonProps> = ({
     0
   );
 
+  if (totalReactions === 0) return null;
+
   return (
     <Button
       onClick={() =>

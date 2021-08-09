@@ -66,7 +66,7 @@ export interface LogInSuccessResponse {
 }
 
 export interface BasicProfile {
-  id: string;
+  _id: string;
   username: string;
   avatar?: string;
 }

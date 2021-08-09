@@ -53,7 +53,7 @@ const PostsSection: React.FC = () => {
     (updatedPostId: string, updatedFieldsInPost: UpdatedFieldsInPost) =>
       setPosts((prev) =>
         prev.map((post) => {
-          if (post.id === updatedPostId) {
+          if (post._id === updatedPostId) {
             return { ...post, ...updatedFieldsInPost };
           }
           return post;
@@ -67,7 +67,7 @@ const PostsSection: React.FC = () => {
       <NewPostSection />
       <Divider style={{ margin: '15px auto', width: '80px' }} />
       {posts.map((post) => (
-        <PostComponent {...post} key={post.id} onUpdate={onUpdate} />
+        <PostComponent {...post} key={post._id} onUpdate={onUpdate} />
       ))}
       <Box display="flex" justifyContent="center">
         <CircularProgress color="primary" ref={loadMoreRef} />

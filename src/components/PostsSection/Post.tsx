@@ -39,7 +39,7 @@ type PostProps = PostType & {
 
 const Post: React.FC<PostProps> = React.memo(
   ({
-    id,
+    _id,
     userId,
     type,
     createdAt,
@@ -98,13 +98,18 @@ const Post: React.FC<PostProps> = React.memo(
           {/* <CardMedia image={avatarImg} component="img" /> */}
           <Divider style={{ margin: '0 15px', marginTop: 10 }} />
           <CardActions>
-            <Box flexGrow="1" display="flex" justifyContent="center">
-              <ReactionsButton
-                counts={reactionCounts}
-                postId={id}
-                onUpdate={onUpdate}
-              />
-            </Box>
+            {Object.values(reactionCounts).reduce(
+              (acc, curr) => acc + curr,
+              0
+            ) !== 0 && (
+              <Box flexGrow="1" display="flex" justifyContent="center">
+                <ReactionsButton
+                  counts={reactionCounts}
+                  postId={_id}
+                  onUpdate={onUpdate}
+                />
+              </Box>
+            )}
             <Box flexGrow="1" display="flex" justifyContent="center">
               <ReactButton />
             </Box>

@@ -26,9 +26,17 @@ import {
   SentimentVerySatisfied,
   ThumbUp,
 } from '@material-ui/icons';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from 'react';
 import avatarImg from 'src/assets/images/avatar2.png';
 import { ModalContext } from 'src/composables/AppModal';
+import { fetchReactionsInPost } from 'src/services/post';
+import { BasicProfile } from 'src/types/lib';
 import { ReactionType, UpdatedFieldsInPost } from 'src/types/post';
 import { formatCount } from 'src/utils/helpers';
 import { reactionIcons } from './shared';
@@ -40,20 +48,74 @@ interface TabPanelProps {
   reactionType: ReactionType | 'ALL';
   postId: string;
   onUpdate: (postId: string, updatedFieldsInPost: UpdatedFieldsInPost) => void;
+  counts: {
+    [key in ReactionType]: number;
+  };
 }
 
 function TabPanel(props: TabPanelProps) {
   const classes = useStyles();
 
-  const { value, index, reactionType, postId, onUpdate } = props;
+  const { value, index, reactionType, postId, onUpdate, counts } = props;
+
   const [isLoading, setIsLoading] = useState(false);
+  const [skip, setSkip] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [reactions, setReactions] = useState<
+    { _id: string; userId: string; type: ReactionType; user: BasicProfile }[]
+  >([]);
+  const loadMoreRef = React.useRef<HTMLDivElement>(null);
+
+  const loadMore = useCallback(async () => {
+    setIsLoading(true);
+    const response = await fetchReactionsInPost({
+      postId,
+      reactionType,
+      skip,
+      limit,
+    });
+    const { reactions, post } = response.data.data;
+    onUpdate(postId, post);
+    setReactions((prev) => [...prev, ...reactions]);
+    setSkip((prevSkip) => prevSkip + limit);
+    setIsLoading(false);
+  }, [limit, onUpdate, postId, skip, reactionType]);
 
   useEffect(() => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-  }, []);
+    if (!isLoading) {
+      const observer = new IntersectionObserver(
+        async (entries) => {
+          const firstEntry = entries[0];
+          if (firstEntry.isIntersecting && !isLoading) {
+            await loadMore();
+          }
+        },
+        // FIXME: check if network is wifi or not and set the threshold accordingly
+        { rootMargin: '200px' }
+      );
+
+      if (loadMoreRef.current) {
+        observer.observe(loadMoreRef.current);
+      }
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [isLoading, loadMore]);
+
+  const hasMore = () => {
+    let reactionCount;
+    if (reactionType === 'ALL') {
+      reactionCount = Object.values(counts).reduce(
+        (prev, curr) => prev + curr,
+        0
+      );
+    } else {
+      reactionCount = counts[reactionType];
+    }
+    return reactions.length < reactionCount;
+  };
 
   return (
     <div
@@ -68,42 +130,45 @@ function TabPanel(props: TabPanelProps) {
           disablePadding
           classes={{ root: classes.root }}
         >
-          {isLoading ? (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              height="300px"
-            >
-              <CircularProgress color="primary" />
+          {reactions.map((reaction) => {
+            const value = reactionIcons.get(reaction.type);
+            return (
+              <ListItem key={reaction._id}>
+                <ListItemAvatar>
+                  <Badge
+                    badgeContent={
+                      value && (
+                        <value.Icon
+                          style={{ fontSize: '1rem', color: value.color }}
+                        />
+                      )
+                    }
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    classes={{
+                      badge: classes.badge,
+                    }}
+                  >
+                    <Avatar src={reaction.user.avatar}>
+                      {reaction.user.username[0].toUpperCase()}
+                    </Avatar>
+                  </Badge>
+                </ListItemAvatar>
+                <ListItemText primary={reaction.user.username} />
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" aria-label="delete">
+                    <PersonAdd />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+          {hasMore() && (
+            <Box display="flex" justifyContent="center" overflow="hidden">
+              <CircularProgress color="primary" ref={loadMoreRef} />
             </Box>
-          ) : (
-            Array(10)
-              .fill({})
-              .map((_) => (
-                <ListItem>
-                  <ListItemAvatar>
-                    <Badge
-                      badgeContent={<ThumbUp style={{ fontSize: '0.75rem' }} />}
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                      }}
-                      classes={{
-                        badge: classes.badge,
-                      }}
-                    >
-                      <Avatar src={avatarImg} />
-                    </Badge>
-                  </ListItemAvatar>
-                  <ListItemText primary="Han Moe Htet" />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
-                      <PersonAdd />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))
           )}
         </List>
       )}
@@ -127,9 +192,8 @@ const useStyles = makeStyles((theme) => ({
 
   badge: {
     right: 2,
-    bottom: 2,
-    background: 'red',
-    padding: 2,
+    bottom: 4,
+    padding: 0,
   },
 }));
 
@@ -235,6 +299,7 @@ const Reactions: React.FC<ReactionsProps> = React.forwardRef(
                         key={index}
                         reactionType={reactionType as ReactionType | 'ALL'}
                         postId={postId}
+                        counts={counts}
                         onUpdate={onUpdate}
                       />
                     )

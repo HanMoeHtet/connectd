@@ -10,7 +10,7 @@ export interface VerificationState {
 }
 
 export interface ProfileState {
-  id: string;
+  _id: string;
   username: string;
   avatar: string;
   email?: string;
