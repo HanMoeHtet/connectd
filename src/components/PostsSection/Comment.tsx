@@ -12,8 +12,6 @@ import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import avatarImg from 'src/assets/images/avatar2.png';
 import CommentEditor from './CommentEditor';
-import ReactButton from './ReactButton';
-import ReactionsButton from './ReactionsButton';
 import RepliesButton from './RepliesButton';
 import Reply from './Reply';
 

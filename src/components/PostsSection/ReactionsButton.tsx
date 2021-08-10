@@ -1,9 +1,4 @@
 import { Box, Button, Typography } from '@material-ui/core';
-import {
-  Favorite,
-  SentimentVerySatisfied,
-  SentimentDissatisfied,
-} from '@material-ui/icons';
 import React, { useContext } from 'react';
 import { ModalContext } from 'src/composables/AppModal';
 import { ReactionType, UpdatedFieldsInPost } from 'src/types/post';

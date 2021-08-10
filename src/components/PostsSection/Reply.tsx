@@ -10,8 +10,6 @@ import {
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import avatarImg from 'src/assets/images/avatar2.png';
-import ReactButton from './ReactButton';
-import ReactionsButton from './ReactionsButton';
 
 const useStyles = makeStyles((theme) => ({
   author: {

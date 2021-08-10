@@ -58,7 +58,7 @@ const ReactButton: React.FC<ReactButtonProps> = ({
   };
 
   const onDefaultReactButtonClicked = () => {
-    clearTimeout(interval);
+    handleClose();
     if (!userReactedReactionType) {
       addReactionToPost({ postId, type: defaultReactionType }).then(
         ({ data }) => {
@@ -77,6 +77,7 @@ const ReactButton: React.FC<ReactButtonProps> = ({
   };
 
   const onReactButtonClicked = (type: ReactionType) => () => {
+    handleClose();
     addReactionToPost({ postId, type }).then(({ data }) => {
       const { post } = data.data;
       onUpdate(postId, post);
