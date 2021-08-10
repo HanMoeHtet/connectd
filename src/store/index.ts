@@ -3,12 +3,14 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import authStore from './auth';
 import verificationStore from './verification';
 import profileStore from './profile';
+import postsStore from './posts';
 
 export const store = configureStore({
   reducer: {
     authStore,
     verificationStore,
     profileStore,
+    postsStore,
   },
 });
 

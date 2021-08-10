@@ -6,9 +6,15 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { ReactionType, UpdatedFieldsInPost } from 'src/types/post';
+import {
+  ReactionSourceType,
+  ReactionType,
+  UpdatedFieldsInPost,
+} from 'src/types/post';
 import { reactionIcons } from './shared';
 import { addReactionToPost, removeReactionFromPost } from 'src/services/post';
+import { useAppDispatch } from 'src/store';
+import { updatePost } from 'src/store/posts';
 
 const MOUSE_OVER_DELAY = 400;
 
@@ -25,17 +31,19 @@ const useStyles = makeStyles((theme) => ({
 interface ReactButtonProps {
   fontSize?: 'default' | 'inherit' | 'large' | 'medium' | 'small';
   userReactedReactionType?: ReactionType;
-  postId: string;
-  onUpdate: (id: string, updatedPost: UpdatedFieldsInPost) => void;
+  sourceId: string;
+  sourceType: ReactionSourceType;
 }
 
 const ReactButton: React.FC<ReactButtonProps> = ({
   fontSize,
   userReactedReactionType,
-  postId,
-  onUpdate,
+  sourceId,
+  sourceType,
 }) => {
   const classes = useStyles();
+
+  const dispatch = useAppDispatch();
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -47,42 +55,51 @@ const ReactButton: React.FC<ReactButtonProps> = ({
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     const target = event.currentTarget;
     interval = setTimeout(() => {
-      console.log(target);
       setAnchorEl(target);
     }, MOUSE_OVER_DELAY);
+    document.addEventListener('scroll', handleClose);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
     clearTimeout(interval);
+    document.removeEventListener('scroll', handleClose);
   };
 
   const onDefaultReactButtonClicked = () => {
     handleClose();
     if (!userReactedReactionType) {
-      addReactionToPost({ postId, type: defaultReactionType }).then(
-        ({ data }) => {
-          const { post } = data.data;
-          onUpdate(postId, post);
-        }
-      );
-      onUpdate(postId, { userReactedReactionType: defaultReactionType });
+      if (sourceType === ReactionSourceType.POST) {
+        addReactionToPost({ postId: sourceId, type: defaultReactionType }).then(
+          ({ data }) => {
+            const { post } = data.data;
+            dispatch(updatePost(sourceId, post));
+          }
+        );
+        dispatch(
+          updatePost(sourceId, { userReactedReactionType: defaultReactionType })
+        );
+      }
     } else {
-      removeReactionFromPost({ postId }).then(({ data }) => {
-        const { post } = data.data;
-        onUpdate(postId, post);
-      });
-      onUpdate(postId, { userReactedReactionType: undefined });
+      if (sourceType === ReactionSourceType.POST) {
+        removeReactionFromPost({ postId: sourceId }).then(({ data }) => {
+          const { post } = data.data;
+          dispatch(updatePost(sourceId, post));
+        });
+        dispatch(updatePost(sourceId, { userReactedReactionType: undefined }));
+      }
     }
   };
 
   const onReactButtonClicked = (type: ReactionType) => () => {
     handleClose();
-    addReactionToPost({ postId, type }).then(({ data }) => {
-      const { post } = data.data;
-      onUpdate(postId, post);
-    });
-    onUpdate(postId, { userReactedReactionType: type });
+    if (sourceType === ReactionSourceType.POST) {
+      addReactionToPost({ postId: sourceId, type }).then(({ data }) => {
+        const { post } = data.data;
+        dispatch(updatePost(sourceId, post));
+      });
+      dispatch(updatePost(sourceId, { userReactedReactionType: type }));
+    }
   };
 
   const renderIconButtons = () => {
@@ -152,6 +169,7 @@ const ReactButton: React.FC<ReactButtonProps> = ({
           vertical: 'bottom',
           horizontal: 'center',
         }}
+        container={anchorEl?.parentElement}
       >
         <Box
           onMouseOut={() => {

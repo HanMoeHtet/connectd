@@ -14,6 +14,9 @@ import avatarImg from 'src/assets/images/avatar2.png';
 import CommentEditor from './CommentEditor';
 import RepliesButton from './RepliesButton';
 import Reply from './Reply';
+import ReactionsButton from './ReactionsButton';
+import { ReactionSourceType } from 'src/types/post';
+import ReactButton from './ReactButton';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -52,8 +55,15 @@ const Comment: React.FC = () => {
             </Typography>
           </CardContent>
           <CardActions>
-            {/* <ReactionsButton /> */}
-            {/* <ReactButton /> */}
+            <ReactionsButton
+              counts={{ LIKE: 1, FAVORITE: 0, SATISFIED: 0, DISSATISFIED: 0 }}
+              sourceId={'1'}
+              sourceType={ReactionSourceType.COMMENT}
+            />
+            <ReactButton
+              sourceId={'1'}
+              sourceType={ReactionSourceType.COMMENT}
+            />
             <RepliesButton
               onClick={() => {
                 console.log('clicked');

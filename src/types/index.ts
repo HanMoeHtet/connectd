@@ -1,4 +1,5 @@
 import { Pronouns } from './lib';
+import { Post } from './post';
 
 export interface AuthState {
   isLoading: boolean;
@@ -17,4 +18,8 @@ export interface ProfileState {
   phoneNumber?: string;
   birthday?: string;
   pronouns?: Pronouns;
+}
+
+export interface PostsState {
+  posts: Post[];
 }

@@ -21,7 +21,11 @@ import Comments from './Comments';
 import ReactButton from './ReactButton';
 import ReactionsButton from './ReactionsButton';
 import ShareButton from './ShareButton';
-import { Post as PostType, UpdatedFieldsInPost } from 'src/types/post';
+import {
+  Post as PostType,
+  ReactionSourceType,
+  UpdatedFieldsInPost,
+} from 'src/types/post';
 import { BasicProfile } from 'src/types/lib';
 import { privacyIcons } from './shared';
 
@@ -33,9 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type PostProps = PostType & {
-  onUpdate: (id: string, updatedPost: UpdatedFieldsInPost) => void;
-};
+type PostProps = PostType & {};
 
 const Post: React.FC<PostProps> = React.memo(
   ({
@@ -50,7 +52,6 @@ const Post: React.FC<PostProps> = React.memo(
     shareCount,
     user,
     userReactedReactionType,
-    onUpdate,
   }) => {
     const classes = useStyles();
 
@@ -106,16 +107,16 @@ const Post: React.FC<PostProps> = React.memo(
               <Box flexGrow="1" display="flex" justifyContent="center">
                 <ReactionsButton
                   counts={reactionCounts}
-                  postId={_id}
-                  onUpdate={onUpdate}
+                  sourceId={_id}
+                  sourceType={ReactionSourceType.POST}
                 />
               </Box>
             )}
             <Box flexGrow="1" display="flex" justifyContent="center">
               <ReactButton
                 userReactedReactionType={userReactedReactionType}
-                postId={_id}
-                onUpdate={onUpdate}
+                sourceId={_id}
+                sourceType={ReactionSourceType.POST}
               />
             </Box>
             <Box flexGrow="1" display="flex" justifyContent="center">
@@ -135,6 +136,7 @@ const Post: React.FC<PostProps> = React.memo(
             <Divider style={{ margin: '0 15px' }} />
             <CommentEditor />
             <Comments />
+            <CommentEditor />
           </Collapse>
         </Card>
         <Box height="10px" />

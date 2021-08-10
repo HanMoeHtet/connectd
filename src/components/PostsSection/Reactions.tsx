@@ -36,8 +36,14 @@ import React, {
 import avatarImg from 'src/assets/images/avatar2.png';
 import { ModalContext } from 'src/composables/AppModal';
 import { fetchReactionsInPost } from 'src/services/post';
+import { useAppDispatch } from 'src/store';
+import { updatePost } from 'src/store/posts';
 import { BasicProfile } from 'src/types/lib';
-import { ReactionType, UpdatedFieldsInPost } from 'src/types/post';
+import {
+  ReactionSourceType,
+  ReactionType,
+  UpdatedFieldsInPost,
+} from 'src/types/post';
 import { formatCount } from 'src/utils/helpers';
 import { reactionIcons } from './shared';
 
@@ -46,8 +52,8 @@ interface TabPanelProps {
   index: any;
   value: any;
   reactionType: ReactionType | 'ALL';
-  postId: string;
-  onUpdate: (postId: string, updatedFieldsInPost: UpdatedFieldsInPost) => void;
+  sourceId: string;
+  sourceType: ReactionSourceType;
   counts: {
     [key in ReactionType]: number;
   };
@@ -56,7 +62,9 @@ interface TabPanelProps {
 function TabPanel(props: TabPanelProps) {
   const classes = useStyles();
 
-  const { value, index, reactionType, postId, onUpdate, counts } = props;
+  const dispatch = useAppDispatch();
+
+  const { value, index, reactionType, sourceId, counts, sourceType } = props;
 
   const [isLoading, setIsLoading] = useState(false);
   const [skip, setSkip] = useState(0);
@@ -68,18 +76,20 @@ function TabPanel(props: TabPanelProps) {
 
   const loadMore = useCallback(async () => {
     setIsLoading(true);
-    const response = await fetchReactionsInPost({
-      postId,
-      reactionType,
-      skip,
-      limit,
-    });
-    const { reactions, post } = response.data.data;
-    onUpdate(postId, post);
-    setReactions((prev) => [...prev, ...reactions]);
-    setSkip((prevSkip) => prevSkip + limit);
+    if (sourceType === ReactionSourceType.POST) {
+      const response = await fetchReactionsInPost({
+        postId: sourceId,
+        reactionType,
+        skip,
+        limit,
+      });
+      const { reactions, post } = response.data.data;
+      dispatch(updatePost(sourceId, post));
+      setReactions((prev) => [...prev, ...reactions]);
+      setSkip((prevSkip) => prevSkip + limit);
+    }
     setIsLoading(false);
-  }, [limit, onUpdate, postId, skip, reactionType]);
+  }, [limit, sourceId, sourceType, skip, reactionType, dispatch]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -198,15 +208,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface ReactionsProps {
-  postId: string;
+  sourceId: string;
+  sourceType: ReactionSourceType;
   counts: {
     [key in ReactionType]: number;
   };
-  onUpdate: (postId: string, updatedFieldsInPost: UpdatedFieldsInPost) => void;
 }
 
 const Reactions: React.FC<ReactionsProps> = React.forwardRef(
-  ({ postId, onUpdate, counts }) => {
+  ({ sourceId: postId, counts, sourceType }) => {
     const { setContent } = useContext(ModalContext);
 
     const [openedTabIndex, setOpenedTabIndex] = useState(0);
@@ -298,9 +308,9 @@ const Reactions: React.FC<ReactionsProps> = React.forwardRef(
                         index={index}
                         key={index}
                         reactionType={reactionType as ReactionType | 'ALL'}
-                        postId={postId}
+                        sourceId={postId}
+                        sourceType={sourceType}
                         counts={counts}
-                        onUpdate={onUpdate}
                       />
                     )
                 )}

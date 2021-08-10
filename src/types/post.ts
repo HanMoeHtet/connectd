@@ -54,3 +54,8 @@ export interface UpdatedFieldsInPost {
   shareCount?: number;
   userReactedReactionType?: ReactionType;
 }
+
+export enum ReactionSourceType {
+  POST = 'Post',
+  COMMENT = 'Comment',
+}

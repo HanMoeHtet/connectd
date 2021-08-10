@@ -1,13 +1,18 @@
 import { Box, CircularProgress, Divider } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { fetchNewsfeedPosts } from 'src/services/newsfeed';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { setPosts } from 'src/store/posts';
 import { Post, UpdatedFieldsInPost } from 'src/types/post';
 import NewPostSection from './NewPostSection';
 import PostComponent from './Post';
 
 const PostsSection: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  const { posts } = useAppSelector((state) => state.postsStore);
+
   const [isLoading, setIsLoading] = useState(false);
-  const [posts, setPosts] = useState<Post[]>([]);
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(10);
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
@@ -19,12 +24,12 @@ const PostsSection: React.FC = () => {
     const { posts: newPosts } = response.data.data;
 
     if (newPosts.length !== 0) {
-      setPosts((prev) => [...prev, ...newPosts]);
+      dispatch(setPosts([...posts, ...newPosts]));
       setSkip((prev) => prev + limit);
 
       setIsLoading(false);
     }
-  }, [skip, limit]);
+  }, [skip, limit, dispatch, posts]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -49,25 +54,12 @@ const PostsSection: React.FC = () => {
     }
   }, [loadMore, isLoading, limit, posts]);
 
-  const onUpdate = useCallback(
-    (updatedPostId: string, updatedFieldsInPost: UpdatedFieldsInPost) =>
-      setPosts((prev) =>
-        prev.map((post) => {
-          if (post._id === updatedPostId) {
-            return { ...post, ...updatedFieldsInPost };
-          }
-          return post;
-        })
-      ),
-    []
-  );
-
   return (
     <Box width="512px" margin="auto" padding="15px 0">
       <NewPostSection />
       <Divider style={{ margin: '15px auto', width: '80px' }} />
       {posts.map((post) => (
-        <PostComponent {...post} key={post._id} onUpdate={onUpdate} />
+        <PostComponent {...post} key={post._id} />
       ))}
       <Box display="flex" justifyContent="center">
         <CircularProgress color="primary" ref={loadMoreRef} />
