@@ -49,7 +49,7 @@ const Reply: React.FC = () => {
           </CardContent>
           <CardActions>
             {/* <ReactionsButton /> */}
-            <ReactButton />
+            {/* <ReactButton /> */}
           </CardActions>
         </Box>
       </Box>

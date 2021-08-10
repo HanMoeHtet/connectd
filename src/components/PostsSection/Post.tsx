@@ -49,6 +49,7 @@ const Post: React.FC<PostProps> = React.memo(
     commentCount,
     shareCount,
     user,
+    userReactedReactionType,
     onUpdate,
   }) => {
     const classes = useStyles();
@@ -111,7 +112,11 @@ const Post: React.FC<PostProps> = React.memo(
               </Box>
             )}
             <Box flexGrow="1" display="flex" justifyContent="center">
-              <ReactButton />
+              <ReactButton
+                userReactedReactionType={userReactedReactionType}
+                postId={_id}
+                onUpdate={onUpdate}
+              />
             </Box>
             <Box flexGrow="1" display="flex" justifyContent="center">
               <Button

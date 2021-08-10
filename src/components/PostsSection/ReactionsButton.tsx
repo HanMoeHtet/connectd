@@ -36,17 +36,20 @@ const ReactionsButton: React.FC<ReactionsButtonProps> = ({
 
     const reactionComponents: JSX.Element[] = [];
 
-    sortedReactionKeyValuePairs.forEach(([reactionType]) => {
-      const value = reactionIcons.get(reactionType as ReactionType)!;
-      const reaction = (
-        <value.Icon
-          fontSize={fontSize}
-          style={{
-            color: value.color,
-          }}
-        />
-      );
-      reactionComponents.push(reaction);
+    sortedReactionKeyValuePairs.forEach(([reactionType, count]) => {
+      if (count) {
+        const value = reactionIcons.get(reactionType as ReactionType)!;
+        const reaction = (
+          <value.Icon
+            key={reactionType}
+            fontSize={fontSize}
+            style={{
+              color: value.color,
+            }}
+          />
+        );
+        reactionComponents.push(reaction);
+      }
     });
 
     return reactionComponents;

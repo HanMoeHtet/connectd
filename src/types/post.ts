@@ -23,6 +23,7 @@ export interface BasePost {
   };
   commentCount: number;
   shareCount: number;
+  userReactedReactionType?: ReactionType;
 }
 
 export interface NormalPost extends BasePost {
@@ -51,4 +52,5 @@ export interface UpdatedFieldsInPost {
   };
   commentCount?: number;
   shareCount?: number;
+  userReactedReactionType?: ReactionType;
 }

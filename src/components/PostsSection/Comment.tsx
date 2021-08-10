@@ -55,7 +55,7 @@ const Comment: React.FC = () => {
           </CardContent>
           <CardActions>
             {/* <ReactionsButton /> */}
-            <ReactButton />
+            {/* <ReactButton /> */}
             <RepliesButton
               onClick={() => {
                 console.log('clicked');

@@ -1,5 +1,5 @@
 import { BasicProfile } from 'src/types/lib';
-import { Privacy, ReactionType } from 'src/types/post';
+import { ReactionType, UpdatedFieldsInPost } from 'src/types/post';
 import api from './api';
 
 interface FetchReactionsInPostOptions {
@@ -16,16 +16,7 @@ export interface FetchReactionsInPostResponse {
       type: ReactionType;
       user: BasicProfile;
     }[];
-    post: {
-      _id: string;
-      content: string;
-      privacy: Privacy;
-      reactionCounts: {
-        [key in ReactionType]: number;
-      };
-      commentCount: number;
-      shareCount: number;
-    };
+    post: UpdatedFieldsInPost;
   };
 }
 export const fetchReactionsInPost = ({
@@ -36,5 +27,39 @@ export const fetchReactionsInPost = ({
 }: FetchReactionsInPostOptions) => {
   return api.get<FetchReactionsInPostResponse>(
     `/posts/${postId}/reactions?skip=${skip}&limit=${limit}&reactionType=${reactionType}`
+  );
+};
+
+interface AddReactionToPostOptions {
+  postId: string;
+  type: ReactionType;
+}
+export interface AddReactionToPostResponse {
+  data: {
+    post: UpdatedFieldsInPost;
+  };
+}
+export const addReactionToPost = ({
+  postId,
+  type,
+}: AddReactionToPostOptions) => {
+  return api.post<AddReactionToPostResponse>(`/posts/${postId}/reactions`, {
+    type,
+  });
+};
+
+interface RemoveReactionFromPostOptions {
+  postId: string;
+}
+export interface RemoveReactionFromPostResponse {
+  data: {
+    post: UpdatedFieldsInPost;
+  };
+}
+export const removeReactionFromPost = ({
+  postId,
+}: RemoveReactionFromPostOptions) => {
+  return api.delete<RemoveReactionFromPostResponse>(
+    `/posts/${postId}/reactions`
   );
 };
