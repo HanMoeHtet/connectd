@@ -5,7 +5,7 @@ import api from './api';
 interface FetchReactionsInPostOptions {
   postId: string;
   limit: number;
-  skip: number;
+  lastReactionId?: string;
   reactionType: ReactionType | 'ALL';
 }
 export interface FetchReactionsInPostResponse {
@@ -22,11 +22,13 @@ export interface FetchReactionsInPostResponse {
 export const fetchReactionsInPost = ({
   postId,
   limit,
-  skip,
+  lastReactionId,
   reactionType,
 }: FetchReactionsInPostOptions) => {
   return api.get<FetchReactionsInPostResponse>(
-    `/posts/${postId}/reactions?skip=${skip}&limit=${limit}&reactionType=${reactionType}`
+    `/posts/${postId}/reactions?lastReactionId=${
+      lastReactionId || ''
+    }&limit=${limit}&reactionType=${reactionType}`
   );
 };
 

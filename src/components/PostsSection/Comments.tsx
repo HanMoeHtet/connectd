@@ -1,37 +1,44 @@
 import { Box, Button, CircularProgress } from '@material-ui/core';
 import React, { useCallback } from 'react';
-import CommentComponent from './Comment';
+import {
+  fetchCommentsInPost,
+  Comment as CommentType,
+} from 'src/services/comment';
+import { useAppDispatch } from 'src/store';
+import { updatePost } from 'src/store/posts';
+import Comment from './Comment';
 
 const MAX_COMMENTS_PER_REQUEST = 10;
 
-const Comments: React.FC = () => {
-  const [skip, setSkip] = React.useState(0);
+interface CommentsProps {
+  postId: string;
+}
+const Comments: React.FC<CommentsProps> = ({ postId }) => {
+  const dispatch = useAppDispatch();
+
   const [limit, setLimit] = React.useState(MAX_COMMENTS_PER_REQUEST);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [comments, setComments] = React.useState<CommentType[]>([]);
 
   const loadMore = async () => {
     setIsLoading(true);
+    const response = await fetchCommentsInPost({
+      lastCommentId: comments[comments.length - 1]?._id,
+      limit,
+      postId,
+    });
+    const { comments: newComments, post } = response.data.data;
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    // const response = await fetchNewsfeedPosts({ skip, limit });
-    // const { posts: newPosts } = response.data.data;
-
-    // if (newPosts.length !== 0) {
-    //   dispatch(setPosts([...posts, ...newPosts]));
-    //   setSkip((prev) => prev + limit);
-
-    //   setIsLoading(false);
-    // }
+    setComments([...comments, ...newComments]);
+    dispatch(updatePost(postId, post));
+    setIsLoading(false);
   };
 
   return (
     <Box>
-      <CommentComponent />
-      <CommentComponent />
-      <CommentComponent />
+      {comments.map((comment) => (
+        <Comment {...comment} key={comment._id} />
+      ))}
       <Box display="flex" justifyContent="center">
         {isLoading ? (
           <CircularProgress color="primary" />

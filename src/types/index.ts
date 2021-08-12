@@ -1,3 +1,4 @@
+import { Comment } from 'src/services/comment';
 import { Pronouns } from './lib';
 import { Post } from './post';
 
@@ -22,4 +23,8 @@ export interface ProfileState {
 
 export interface PostsState {
   posts: Post[];
+}
+
+export interface CommentsState {
+  comments: Map<string, Comment[]>;
 }

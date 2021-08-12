@@ -132,10 +132,10 @@ const Post: React.FC<PostProps> = React.memo(
               <ShareButton count={shareCount} />
             </Box>
           </CardActions>
-          <Collapse in={isShowingComments} timeout="auto">
+          <Collapse in={isShowingComments} timeout={500}>
             <Divider style={{ margin: '0 15px' }} />
             <CommentEditor />
-            <Comments />
+            <Comments postId={_id} />
             <CommentEditor />
           </Collapse>
         </Card>

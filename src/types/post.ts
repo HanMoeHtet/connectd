@@ -59,3 +59,12 @@ export enum ReactionSourceType {
   POST = 'Post',
   COMMENT = 'Comment',
 }
+
+export interface UpdatedFieldsInComment {
+  content?: string;
+  reactionCounts?: {
+    [key in ReactionType]: number;
+  };
+  replyCount?: number;
+  userReactedReactionType?: ReactionType;
+}

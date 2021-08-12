@@ -17,6 +17,7 @@ import Reply from './Reply';
 import ReactionsButton from './ReactionsButton';
 import { ReactionSourceType } from 'src/types/post';
 import ReactButton from './ReactButton';
+import { Comment as CommentType } from 'src/services/comment';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -26,7 +27,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Comment: React.FC = () => {
+interface CommentProps extends CommentType {}
+
+export const Comment: React.FC<CommentProps> = ({
+  _id,
+  content,
+  replyCount,
+  reactionCounts,
+  user,
+  userId,
+}) => {
   const classes = useStyles();
 
   const [isShowingReplies, setIsShowingReplies] = useState(false);

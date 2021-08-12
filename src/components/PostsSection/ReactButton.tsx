@@ -6,13 +6,12 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import {
-  ReactionSourceType,
-  ReactionType,
-  UpdatedFieldsInPost,
-} from 'src/types/post';
+import { ReactionSourceType, ReactionType } from 'src/types/post';
 import { reactionIcons } from './shared';
-import { addReactionToPost, removeReactionFromPost } from 'src/services/post';
+import {
+  addReactionToPost,
+  removeReactionFromPost,
+} from 'src/services/reaction-in-post';
 import { useAppDispatch } from 'src/store';
 import { updatePost } from 'src/store/posts';
 

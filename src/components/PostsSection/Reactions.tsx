@@ -14,61 +14,60 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
-  SvgIcon,
   Tab,
   Tabs,
 } from '@material-ui/core';
-import {
-  Close,
-  Favorite,
-  PersonAdd,
-  SentimentDissatisfied,
-  SentimentVerySatisfied,
-  ThumbUp,
-} from '@material-ui/icons';
-import React, {
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  useRef,
-} from 'react';
-import avatarImg from 'src/assets/images/avatar2.png';
+import { Close, PersonAdd } from '@material-ui/icons';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { ModalContext } from 'src/composables/AppModal';
-import { fetchReactionsInPost } from 'src/services/post';
+import { fetchReactionsInComment } from 'src/services/reaction-in-comment';
+import { fetchReactionsInPost } from 'src/services/reaction-in-post';
 import { useAppDispatch } from 'src/store';
+import { updateComment } from 'src/store/comments';
 import { updatePost } from 'src/store/posts';
 import { BasicProfile } from 'src/types/lib';
 import {
   ReactionSourceType,
   ReactionType,
+  UpdatedFieldsInComment,
   UpdatedFieldsInPost,
 } from 'src/types/post';
 import { formatCount } from 'src/utils/helpers';
 import { reactionIcons } from './shared';
 
-interface TabPanelProps {
+interface BaseTabPanelProps {
   children?: React.ReactNode;
   index: any;
   value: any;
   reactionType: ReactionType | 'ALL';
-  sourceId: string;
-  sourceType: ReactionSourceType;
   counts: {
     [key in ReactionType]: number;
   };
+  postId: string;
+  commentId: undefined;
 }
+
+type TabPanelProps = BaseTabPanelProps &
+  (
+    | {
+        sourceType: ReactionSourceType.POST;
+      }
+    | {
+        sourceType: ReactionSourceType.COMMENT;
+        commentId: string;
+      }
+  );
 
 function TabPanel(props: TabPanelProps) {
   const classes = useStyles();
 
   const dispatch = useAppDispatch();
 
-  const { value, index, reactionType, sourceId, counts, sourceType } = props;
+  const { value, index, reactionType, postId, counts, sourceType, commentId } =
+    props;
 
   const [isLoading, setIsLoading] = useState(false);
-  const [skip, setSkip] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
   const [reactions, setReactions] = useState<
     { _id: string; userId: string; type: ReactionType; user: BasicProfile }[]
   >([]);
@@ -78,18 +77,27 @@ function TabPanel(props: TabPanelProps) {
     setIsLoading(true);
     if (sourceType === ReactionSourceType.POST) {
       const response = await fetchReactionsInPost({
-        postId: sourceId,
+        postId: postId,
         reactionType,
-        skip,
+        lastReactionId: reactions[reactions.length - 1]?._id,
         limit,
       });
-      const { reactions, post } = response.data.data;
-      dispatch(updatePost(sourceId, post));
-      setReactions((prev) => [...prev, ...reactions]);
-      setSkip((prevSkip) => prevSkip + limit);
+      const { reactions: newReactions, post } = response.data.data;
+      dispatch(updatePost(postId, post));
+      setReactions((prev) => [...prev, ...newReactions]);
+    } else if (sourceType === ReactionSourceType.COMMENT) {
+      const response = await fetchReactionsInComment({
+        commentId: postId,
+        reactionType,
+        lastReactionId: reactions[reactions.length - 1]?._id,
+        limit,
+      });
+      const { reactions: newReactions, comment } = response.data.data;
+      dispatch(updateComment(commentId!, postId, comment));
+      setReactions((prev) => [...prev, ...newReactions]);
     }
     setIsLoading(false);
-  }, [limit, sourceId, sourceType, skip, reactionType, dispatch]);
+  }, [limit, postId, commentId, sourceType, reactionType, dispatch, reactions]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -207,8 +215,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// FIXME:  split reactions in post and commmet
 interface ReactionsProps {
-  sourceId: string;
+  postId: string;
   sourceType: ReactionSourceType;
   counts: {
     [key in ReactionType]: number;
@@ -216,7 +225,7 @@ interface ReactionsProps {
 }
 
 const Reactions: React.FC<ReactionsProps> = React.forwardRef(
-  ({ sourceId: postId, counts, sourceType }) => {
+  ({ postId, counts, sourceType }) => {
     const { setContent } = useContext(ModalContext);
 
     const [openedTabIndex, setOpenedTabIndex] = useState(0);
@@ -308,8 +317,9 @@ const Reactions: React.FC<ReactionsProps> = React.forwardRef(
                         index={index}
                         key={index}
                         reactionType={reactionType as ReactionType | 'ALL'}
-                        sourceId={postId}
+                        postId={postId}
                         sourceType={sourceType}
+                        commentId={sourceId}
                         counts={counts}
                       />
                     )
