@@ -2,7 +2,7 @@ import { Box, Button, Typography } from '@material-ui/core';
 import React, { useContext } from 'react';
 import { ModalContext } from 'src/composables/AppModal';
 import { ReactionSourceType, ReactionType } from 'src/types/post';
-import Reactions from './Reactions';
+import ReactionsInComment from './ReactionsInComment';
 import { reactionIcons } from './shared';
 
 interface ReactionsButtonProps {
@@ -10,17 +10,17 @@ interface ReactionsButtonProps {
   counts: {
     [key in ReactionType]: number;
   };
-  sourceId: string;
-  sourceType: ReactionSourceType;
+  postId: string;
+  commentId: string;
 }
 
 const MAX_REACTION_SIZE = 3;
 
-const ReactionsButton: React.FC<ReactionsButtonProps> = ({
+const ReactionsInPostButton: React.FC<ReactionsButtonProps> = ({
   fontSize,
   counts,
-  sourceId,
-  sourceType,
+  postId,
+  commentId,
 }) => {
   const { setContent } = useContext(ModalContext);
 
@@ -61,10 +61,10 @@ const ReactionsButton: React.FC<ReactionsButtonProps> = ({
     <Button
       onClick={() =>
         setContent(
-          <Reactions
-            sourceId={sourceId}
+          <ReactionsInComment
+            commentId={commentId}
+            postId={postId}
             counts={counts}
-            sourceType={sourceType}
           />
         )
       }
@@ -77,4 +77,4 @@ const ReactionsButton: React.FC<ReactionsButtonProps> = ({
   );
 };
 
-export default ReactionsButton;
+export default ReactionsInPostButton;

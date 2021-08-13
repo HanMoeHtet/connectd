@@ -9,14 +9,16 @@ interface FetchCommentsInPostOptions {
 }
 export interface Comment {
   _id: string;
+  postId: string;
   userId: string;
   content: string;
   reactionCounts: {
     [key in ReactionType]: number;
   };
-  userReactedReaction: ReactionType;
+  userReactedReactionType: ReactionType;
   replyCount: number;
   user: BasicProfile;
+  createdAt: Date;
 }
 export interface FetchCommentsInPostResponse {
   data: {

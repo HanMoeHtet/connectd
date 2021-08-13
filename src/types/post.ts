@@ -1,3 +1,4 @@
+import { Comment } from 'src/services/comment';
 import { BasicProfile } from './lib';
 
 export enum Privacy {
@@ -22,6 +23,7 @@ export interface BasePost {
     [key in ReactionType]: number;
   };
   commentCount: number;
+  comments?: Comment[];
   shareCount: number;
   userReactedReactionType?: ReactionType;
 }

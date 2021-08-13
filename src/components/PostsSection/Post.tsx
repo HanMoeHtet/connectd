@@ -18,8 +18,8 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import CommentEditor from './CommentEditor';
 import Comments from './Comments';
-import ReactButton from './ReactButton';
-import ReactionsButton from './ReactionsButton';
+import ReactInPostButton from './ReactInPostButton';
+import ReactionsInPostButton from './ReactionsInPostButton';
 import ShareButton from './ShareButton';
 import {
   Post as PostType,
@@ -105,18 +105,13 @@ const Post: React.FC<PostProps> = React.memo(
               0
             ) !== 0 && (
               <Box flexGrow="1" display="flex" justifyContent="center">
-                <ReactionsButton
-                  counts={reactionCounts}
-                  sourceId={_id}
-                  sourceType={ReactionSourceType.POST}
-                />
+                <ReactionsInPostButton counts={reactionCounts} postId={_id} />
               </Box>
             )}
             <Box flexGrow="1" display="flex" justifyContent="center">
-              <ReactButton
+              <ReactInPostButton
                 userReactedReactionType={userReactedReactionType}
-                sourceId={_id}
-                sourceType={ReactionSourceType.POST}
+                postId={_id}
               />
             </Box>
             <Box flexGrow="1" display="flex" justifyContent="center">

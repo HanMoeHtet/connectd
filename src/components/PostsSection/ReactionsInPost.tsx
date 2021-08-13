@@ -23,8 +23,7 @@ import { ModalContext } from 'src/composables/AppModal';
 import { fetchReactionsInComment } from 'src/services/reaction-in-comment';
 import { fetchReactionsInPost } from 'src/services/reaction-in-post';
 import { useAppDispatch } from 'src/store';
-import { updateComment } from 'src/store/comments';
-import { updatePost } from 'src/store/posts';
+import { updatePost, updateComment } from 'src/store/posts';
 import { BasicProfile } from 'src/types/lib';
 import {
   ReactionSourceType,
@@ -35,7 +34,7 @@ import {
 import { formatCount } from 'src/utils/helpers';
 import { reactionIcons } from './shared';
 
-interface BaseTabPanelProps {
+interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
   value: any;
@@ -44,27 +43,14 @@ interface BaseTabPanelProps {
     [key in ReactionType]: number;
   };
   postId: string;
-  commentId: undefined;
 }
-
-type TabPanelProps = BaseTabPanelProps &
-  (
-    | {
-        sourceType: ReactionSourceType.POST;
-      }
-    | {
-        sourceType: ReactionSourceType.COMMENT;
-        commentId: string;
-      }
-  );
 
 function TabPanel(props: TabPanelProps) {
   const classes = useStyles();
 
   const dispatch = useAppDispatch();
 
-  const { value, index, reactionType, postId, counts, sourceType, commentId } =
-    props;
+  const { value, index, reactionType, postId, counts } = props;
 
   const [isLoading, setIsLoading] = useState(false);
   const [limit] = useState(10);
@@ -75,29 +61,18 @@ function TabPanel(props: TabPanelProps) {
 
   const loadMore = useCallback(async () => {
     setIsLoading(true);
-    if (sourceType === ReactionSourceType.POST) {
-      const response = await fetchReactionsInPost({
-        postId: postId,
-        reactionType,
-        lastReactionId: reactions[reactions.length - 1]?._id,
-        limit,
-      });
-      const { reactions: newReactions, post } = response.data.data;
-      dispatch(updatePost(postId, post));
-      setReactions((prev) => [...prev, ...newReactions]);
-    } else if (sourceType === ReactionSourceType.COMMENT) {
-      const response = await fetchReactionsInComment({
-        commentId: postId,
-        reactionType,
-        lastReactionId: reactions[reactions.length - 1]?._id,
-        limit,
-      });
-      const { reactions: newReactions, comment } = response.data.data;
-      dispatch(updateComment(commentId!, postId, comment));
-      setReactions((prev) => [...prev, ...newReactions]);
-    }
+    const response = await fetchReactionsInPost({
+      postId: postId,
+      reactionType,
+      lastReactionId: reactions[reactions.length - 1]?._id,
+      limit,
+    });
+    const { reactions: newReactions, post } = response.data.data;
+    dispatch(updatePost(postId, post));
+    setReactions((prev) => [...prev, ...newReactions]);
+
     setIsLoading(false);
-  }, [limit, postId, commentId, sourceType, reactionType, dispatch, reactions]);
+  }, [limit, postId, reactionType, dispatch, reactions]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -216,16 +191,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // FIXME:  split reactions in post and commmet
-interface ReactionsProps {
+interface ReactionsInPostProps {
   postId: string;
-  sourceType: ReactionSourceType;
   counts: {
     [key in ReactionType]: number;
   };
 }
 
-const Reactions: React.FC<ReactionsProps> = React.forwardRef(
-  ({ postId, counts, sourceType }) => {
+const ReactionsInPost: React.FC<ReactionsInPostProps> = React.forwardRef(
+  ({ postId, counts }) => {
     const { setContent } = useContext(ModalContext);
 
     const [openedTabIndex, setOpenedTabIndex] = useState(0);
@@ -318,8 +292,6 @@ const Reactions: React.FC<ReactionsProps> = React.forwardRef(
                         key={index}
                         reactionType={reactionType as ReactionType | 'ALL'}
                         postId={postId}
-                        sourceType={sourceType}
-                        commentId={sourceId}
                         counts={counts}
                       />
                     )
@@ -333,4 +305,4 @@ const Reactions: React.FC<ReactionsProps> = React.forwardRef(
   }
 );
 
-export default Reactions;
+export default ReactionsInPost;

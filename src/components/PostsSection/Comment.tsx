@@ -8,16 +8,15 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { formatDistance } from 'date-fns';
 import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import avatarImg from 'src/assets/images/avatar2.png';
+import { Comment as CommentType } from 'src/services/comment';
 import CommentEditor from './CommentEditor';
+import ReactInCommentButton from './ReactInCommentButton';
+import ReactionsInCommentButton from './ReactionsInCommentButton';
 import RepliesButton from './RepliesButton';
 import Reply from './Reply';
-import ReactionsButton from './ReactionsButton';
-import { ReactionSourceType } from 'src/types/post';
-import ReactButton from './ReactButton';
-import { Comment as CommentType } from 'src/services/comment';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -31,11 +30,14 @@ interface CommentProps extends CommentType {}
 
 export const Comment: React.FC<CommentProps> = ({
   _id,
+  postId,
   content,
   replyCount,
   reactionCounts,
   user,
   userId,
+  userReactedReactionType,
+  createdAt,
 }) => {
   const classes = useStyles();
 
@@ -45,38 +47,35 @@ export const Comment: React.FC<CommentProps> = ({
     <CardContent>
       <Box display="flex">
         <Link to="/" component={RouterLink}>
-          <Avatar src={avatarImg} />
+          <Avatar src={user.avatar}>{user.username[0].toUpperCase()}</Avatar>
         </Link>
         <Box>
           <CardContent style={{ paddingTop: 0, paddingBottom: 10 }}>
             <Link to="/" component={RouterLink} className={classes.author}>
-              <span>Han Moe Htet</span>
+              <span>{user.username}</span>
             </Link>
             <Typography variant="body2" color="textSecondary">
-              a few minutes ago
+              {formatDistance(new Date(createdAt), new Date(), {
+                addSuffix: true,
+              })}
             </Typography>
           </CardContent>
           <CardContent style={{ paddingTop: 0, paddingBottom: 5 }}>
-            <Typography>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis
-              quaerat, inventore dignissimos fugiat pariatur consequatur,
-              distinctio vel autem quia blanditiis officiis asperiores illo,
-              officia ea expedita iure a? Voluptatem, doloremque.
-            </Typography>
+            <Typography>{content}</Typography>
           </CardContent>
           <CardActions>
-            <ReactionsButton
-              counts={{ LIKE: 1, FAVORITE: 0, SATISFIED: 0, DISSATISFIED: 0 }}
-              sourceId={'1'}
-              sourceType={ReactionSourceType.COMMENT}
+            <ReactionsInCommentButton
+              counts={reactionCounts}
+              postId={postId}
+              commentId={_id}
             />
-            <ReactButton
-              sourceId={'1'}
-              sourceType={ReactionSourceType.COMMENT}
+            <ReactInCommentButton
+              userReactedReactionType={userReactedReactionType}
+              postId={postId}
+              commentId={_id}
             />
             <RepliesButton
               onClick={() => {
-                console.log('clicked');
                 setIsShowingReplies((prev) => !prev);
               }}
             />

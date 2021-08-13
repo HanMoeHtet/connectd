@@ -1,10 +1,14 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import {
+  configureStore,
+  ThunkAction,
+  Action,
+  createSelector,
+} from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import authStore from './auth';
 import verificationStore from './verification';
 import profileStore from './profile';
 import postsStore from './posts';
-import commentsStore from './comments';
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +16,6 @@ export const store = configureStore({
     verificationStore,
     profileStore,
     postsStore,
-    commentsStore
   },
 });
 

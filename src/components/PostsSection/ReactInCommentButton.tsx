@@ -6,7 +6,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { ReactionSourceType, ReactionType } from 'src/types/post';
+import { ReactionType } from 'src/types/post';
 import { reactionIcons } from './shared';
 import {
   addReactionToPost,
@@ -14,6 +14,11 @@ import {
 } from 'src/services/reaction-in-post';
 import { useAppDispatch } from 'src/store';
 import { updatePost } from 'src/store/posts';
+import {
+  addReactionToComment,
+  removeReactionFromComment,
+} from 'src/services/reaction-in-comment';
+import { updateComment } from 'src/store/posts';
 
 const MOUSE_OVER_DELAY = 400;
 
@@ -27,18 +32,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface ReactButtonProps {
+interface ReactInCommentButtonProps {
   fontSize?: 'default' | 'inherit' | 'large' | 'medium' | 'small';
   userReactedReactionType?: ReactionType;
-  sourceId: string;
-  sourceType: ReactionSourceType;
+  postId: string;
+  commentId: string;
 }
 
-const ReactButton: React.FC<ReactButtonProps> = ({
+const ReactInCommentButton: React.FC<ReactInCommentButtonProps> = ({
   fontSize,
   userReactedReactionType,
-  sourceId,
-  sourceType,
+  postId,
+  commentId,
 }) => {
   const classes = useStyles();
 
@@ -68,37 +73,37 @@ const ReactButton: React.FC<ReactButtonProps> = ({
   const onDefaultReactButtonClicked = () => {
     handleClose();
     if (!userReactedReactionType) {
-      if (sourceType === ReactionSourceType.POST) {
-        addReactionToPost({ postId: sourceId, type: defaultReactionType }).then(
-          ({ data }) => {
-            const { post } = data.data;
-            dispatch(updatePost(sourceId, post));
-          }
-        );
-        dispatch(
-          updatePost(sourceId, { userReactedReactionType: defaultReactionType })
-        );
-      }
+      addReactionToComment({ commentId, type: defaultReactionType }).then(
+        ({ data }) => {
+          const { comment } = data.data;
+          dispatch(updateComment(commentId, postId, comment));
+        }
+      );
+      dispatch(
+        updateComment(commentId, postId, {
+          userReactedReactionType: defaultReactionType,
+        })
+      );
     } else {
-      if (sourceType === ReactionSourceType.POST) {
-        removeReactionFromPost({ postId: sourceId }).then(({ data }) => {
-          const { post } = data.data;
-          dispatch(updatePost(sourceId, post));
-        });
-        dispatch(updatePost(sourceId, { userReactedReactionType: undefined }));
-      }
+      removeReactionFromComment({ commentId }).then(({ data }) => {
+        const { comment } = data.data;
+        dispatch(updateComment(commentId, postId, comment));
+      });
+      dispatch(
+        updateComment(commentId, postId, { userReactedReactionType: undefined })
+      );
     }
   };
 
   const onReactButtonClicked = (type: ReactionType) => () => {
     handleClose();
-    if (sourceType === ReactionSourceType.POST) {
-      addReactionToPost({ postId: sourceId, type }).then(({ data }) => {
-        const { post } = data.data;
-        dispatch(updatePost(sourceId, post));
-      });
-      dispatch(updatePost(sourceId, { userReactedReactionType: type }));
-    }
+    addReactionToComment({ commentId, type }).then(({ data }) => {
+      const { comment } = data.data;
+      dispatch(updateComment(commentId, postId, comment));
+    });
+    dispatch(
+      updateComment(commentId, postId, { userReactedReactionType: type })
+    );
   };
 
   const renderIconButtons = () => {
@@ -182,4 +187,4 @@ const ReactButton: React.FC<ReactButtonProps> = ({
   );
 };
 
-export default ReactButton;
+export default ReactInCommentButton;

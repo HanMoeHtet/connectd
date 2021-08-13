@@ -1,11 +1,8 @@
 import { Box, Button, CircularProgress } from '@material-ui/core';
 import React, { useCallback } from 'react';
-import {
-  fetchCommentsInPost,
-  Comment as CommentType,
-} from 'src/services/comment';
-import { useAppDispatch } from 'src/store';
-import { updatePost } from 'src/store/posts';
+import { fetchCommentsInPost } from 'src/services/comment';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { selectComments, setComments, updatePost } from 'src/store/posts';
 import Comment from './Comment';
 
 const MAX_COMMENTS_PER_REQUEST = 10;
@@ -18,7 +15,7 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
 
   const [limit, setLimit] = React.useState(MAX_COMMENTS_PER_REQUEST);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [comments, setComments] = React.useState<CommentType[]>([]);
+  const comments = useAppSelector(selectComments(postId));
 
   const loadMore = async () => {
     setIsLoading(true);
@@ -29,7 +26,7 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
     });
     const { comments: newComments, post } = response.data.data;
 
-    setComments([...comments, ...newComments]);
+    dispatch(setComments({ postId, comments: [...comments, ...newComments] }));
     dispatch(updatePost(postId, post));
     setIsLoading(false);
   };

@@ -64,7 +64,7 @@ export interface RemoveReactionFromCommentResponse {
 export const removeReactionFromComment = ({
   commentId,
 }: RemoveReactionFromCommentOptions) => {
-  return api.delete<RemoveReactionFromCommentOptions>(
+  return api.delete<RemoveReactionFromCommentResponse>(
     `/comments/${commentId}/reactions`
   );
 };
