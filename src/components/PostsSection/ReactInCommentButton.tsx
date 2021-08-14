@@ -2,23 +2,18 @@ import {
   Box,
   Button,
   IconButton,
-  Popover,
   makeStyles,
+  Popover,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { ReactionType } from 'src/types/post';
-import { reactionIcons } from './shared';
-import {
-  addReactionToPost,
-  removeReactionFromPost,
-} from 'src/services/reaction-in-post';
-import { useAppDispatch } from 'src/store';
-import { updatePost } from 'src/store/posts';
 import {
   addReactionToComment,
   removeReactionFromComment,
 } from 'src/services/reaction-in-comment';
+import { useAppDispatch } from 'src/store';
 import { updateComment } from 'src/store/posts';
+import { ReactionType } from 'src/types/post';
+import { reactionIcons } from './shared';
 
 const MOUSE_OVER_DELAY = 400;
 

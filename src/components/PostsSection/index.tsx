@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { fetchNewsfeedPosts } from 'src/services/newsfeed';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { setPosts } from 'src/store/posts';
-import { Post, UpdatedFieldsInPost } from 'src/types/post';
 import NewPostSection from './NewPostSection';
 import PostComponent from './Post';
 
@@ -14,7 +13,7 @@ const PostsSection: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [skip, setSkip] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
 
   const loadMore = useCallback(async () => {

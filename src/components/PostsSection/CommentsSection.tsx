@@ -1,5 +1,6 @@
+import React, { useEffect, useCallback } from 'react';
+import CommentEditor from './CommentEditor';
 import { Box, Button, CircularProgress } from '@material-ui/core';
-import React, { useCallback } from 'react';
 import { fetchCommentsInPost } from 'src/services/comment';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { selectComments, setComments, updatePost } from 'src/store/posts';
@@ -7,17 +8,22 @@ import Comment from './Comment';
 
 const MAX_COMMENTS_PER_REQUEST = 10;
 
-interface CommentsProps {
+interface CommentsSectionProps {
   postId: string;
+  isShowingComments: boolean;
 }
-const Comments: React.FC<CommentsProps> = ({ postId }) => {
+
+const CommentsSection: React.FC<CommentsSectionProps> = ({
+  postId,
+  isShowingComments,
+}) => {
   const dispatch = useAppDispatch();
 
-  const [limit, setLimit] = React.useState(MAX_COMMENTS_PER_REQUEST);
+  const [limit] = React.useState(MAX_COMMENTS_PER_REQUEST);
   const [isLoading, setIsLoading] = React.useState(false);
   const comments = useAppSelector(selectComments(postId));
 
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     setIsLoading(true);
     const response = await fetchCommentsInPost({
       lastCommentId: comments[comments.length - 1]?._id,
@@ -29,10 +35,19 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
     dispatch(setComments({ postId, comments: [...comments, ...newComments] }));
     dispatch(updatePost(postId, post));
     setIsLoading(false);
-  };
+  }, [comments, dispatch, limit, postId]);
+
+  useEffect(() => {
+    (async () => {
+      if (isShowingComments && comments.length === 0) {
+        loadMore();
+      }
+    })();
+  }, [isShowingComments, loadMore, comments]);
 
   return (
-    <Box>
+    <>
+      <CommentEditor />
       {comments.map((comment) => (
         <Comment {...comment} key={comment._id} />
       ))}
@@ -43,8 +58,9 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
           <Button onClick={loadMore}>Load more</Button>
         )}
       </Box>
-    </Box>
+      {comments.length >= MAX_COMMENTS_PER_REQUEST && <CommentEditor />}
+    </>
   );
 };
 
-export default Comments;
+export default CommentsSection;

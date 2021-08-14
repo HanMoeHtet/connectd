@@ -21,17 +21,10 @@ import { Close, PersonAdd } from '@material-ui/icons';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { ModalContext } from 'src/composables/AppModal';
 import { fetchReactionsInComment } from 'src/services/reaction-in-comment';
-import { fetchReactionsInPost } from 'src/services/reaction-in-post';
 import { useAppDispatch } from 'src/store';
 import { updateComment } from 'src/store/posts';
-import { updatePost } from 'src/store/posts';
 import { BasicProfile } from 'src/types/lib';
-import {
-  ReactionSourceType,
-  ReactionType,
-  UpdatedFieldsInComment,
-  UpdatedFieldsInPost,
-} from 'src/types/post';
+import { ReactionType } from 'src/types/post';
 import { formatCount } from 'src/utils/helpers';
 import { reactionIcons } from './shared';
 

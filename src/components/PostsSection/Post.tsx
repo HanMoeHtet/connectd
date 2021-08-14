@@ -12,21 +12,15 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { Comment, Public } from '@material-ui/icons';
+import { Comment } from '@material-ui/icons';
 import { formatDistance } from 'date-fns';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import CommentEditor from './CommentEditor';
-import Comments from './Comments';
+import { Post as PostType } from 'src/types/post';
+import CommentsSection from './CommentsSection';
 import ReactInPostButton from './ReactInPostButton';
 import ReactionsInPostButton from './ReactionsInPostButton';
 import ShareButton from './ShareButton';
-import {
-  Post as PostType,
-  ReactionSourceType,
-  UpdatedFieldsInPost,
-} from 'src/types/post';
-import { BasicProfile } from 'src/types/lib';
 import { privacyIcons } from './shared';
 
 const useStyles = makeStyles((theme) => ({
@@ -117,7 +111,9 @@ const Post: React.FC<PostProps> = React.memo(
             <Box flexGrow="1" display="flex" justifyContent="center">
               <Button
                 style={{ padding: '5px 10px' }}
-                onClick={() => setIsShowingComments((old) => !old)}
+                onClick={() => {
+                  setIsShowingComments((old) => !old);
+                }}
               >
                 <Comment style={{ marginRight: 10 }} />
                 <Typography>{commentCount}</Typography>
@@ -129,10 +125,12 @@ const Post: React.FC<PostProps> = React.memo(
           </CardActions>
           <Collapse in={isShowingComments} timeout={500}>
             <Divider style={{ margin: '0 15px' }} />
-            <CommentEditor />
-            <Comments postId={_id} />
-            <CommentEditor />
+            <CommentsSection
+              postId={_id}
+              isShowingComments={isShowingComments}
+            />
           </Collapse>
+          <Box height="10px" />
         </Card>
         <Box height="10px" />
       </>
