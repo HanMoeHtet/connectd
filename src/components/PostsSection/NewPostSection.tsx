@@ -9,18 +9,23 @@ import {
 } from '@material-ui/core';
 import { Image, Videocam, VideoLibrary } from '@material-ui/icons';
 import React, { useContext } from 'react';
-import avatarImg from 'src/assets/images/avatar2.png';
 import { ModalContext } from 'src/composables/AppModal';
+import useAuth from 'src/composables/useAuth';
 import NewPostModalContent from './NewPostModalContent';
 
 const NewPostSection: React.FC = () => {
   const { setContent } = useContext(ModalContext);
+  const { profile } = useAuth();
+
+  if (!profile) return null;
+
+  const { username, avatar } = profile;
 
   return (
     <Card>
       <CardContent style={{ paddingBottom: 10 }}>
         <Box display="flex" alignItems="center">
-          <Avatar src={avatarImg} />
+          <Avatar src={avatar}>{username[0].toUpperCase()}</Avatar>
           <Button
             color="inherit"
             style={{
@@ -33,7 +38,7 @@ const NewPostSection: React.FC = () => {
             }}
             onClick={() => setContent(<NewPostModalContent />)}
           >
-            <Typography>What's on your mind, Han Moe Htet?</Typography>
+            <Typography>What's on your mind, {username}?</Typography>
           </Button>
         </Box>
         <Divider style={{ margin: '10px 0' }} />

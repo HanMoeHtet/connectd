@@ -1,5 +1,5 @@
 import { Comment } from 'src/services/comment';
-import { Pronouns } from './lib';
+import { Profile, Pronouns } from './lib';
 import { Post } from './post';
 
 export interface AuthState {
@@ -12,13 +12,7 @@ export interface VerificationState {
 }
 
 export interface ProfileState {
-  _id: string;
-  username: string;
-  avatar: string;
-  email?: string;
-  phoneNumber?: string;
-  birthday?: string;
-  pronouns?: Pronouns;
+  profile: Profile | null;
 }
 
 export interface PostsState {

@@ -81,4 +81,11 @@ export const updateComment =
     }
   };
 
+export const addCreatedPost =
+  (createdPost: Post): AppThunk<Promise<void>> =>
+  async (dispatch, getState) => {
+    const { posts } = getState().postsStore;
+    dispatch(setPosts([createdPost, ...posts]));
+  };
+
 export default postsSlice.reducer;

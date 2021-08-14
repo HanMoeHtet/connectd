@@ -1,3 +1,5 @@
+import { NormalPost } from './post';
+
 export interface Pronouns {
   subjective: string;
   objective: string;
@@ -71,8 +73,31 @@ export interface BasicProfile {
   avatar?: string;
 }
 
+export interface Profile extends BasicProfile {
+  email?: string;
+  phoneNumber?: string;
+  birthday?: string;
+  pronouns?: Pronouns;
+}
+
 export interface BasicProfileResponse {
   data: {
     user: BasicProfile;
   };
+}
+
+export interface CreatePostFormData {
+  privacy: string;
+  content: string;
+}
+
+export interface CreatePostSuccessResponse {
+  data: {
+    post: NormalPost;
+  };
+}
+
+export interface CreatePostError {
+  content?: string[];
+  privacy?: string[];
 }

@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@material-ui/core';
 import React, { useContext } from 'react';
 import { ModalContext } from 'src/composables/AppModal';
-import { ReactionSourceType, ReactionType } from 'src/types/post';
+import { ReactionType } from 'src/types/post';
 import ReactionsInComment from './ReactionsInComment';
 import { reactionIcons } from './shared';
 

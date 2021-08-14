@@ -1,14 +1,9 @@
-import {
-  configureStore,
-  ThunkAction,
-  Action,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import authStore from './auth';
-import verificationStore from './verification';
-import profileStore from './profile';
 import postsStore from './posts';
+import profileStore from './profile';
+import verificationStore from './verification';
 
 export const store = configureStore({
   reducer: {

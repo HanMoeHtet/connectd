@@ -89,7 +89,9 @@ const Post: React.FC<PostProps> = React.memo(
             }
           />
           <CardContent style={{ paddingTop: 0, paddingBottom: 5 }}>
-            <Typography>{content}</Typography>
+            <Typography style={{ whiteSpace: 'pre-wrap' }}>
+              {content}
+            </Typography>
           </CardContent>
           {/* <CardMedia image={avatarImg} component="img" /> */}
           <Divider style={{ margin: '0 15px', marginTop: 10 }} />
@@ -129,8 +131,8 @@ const Post: React.FC<PostProps> = React.memo(
               postId={_id}
               isShowingComments={isShowingComments}
             />
+            <Box height="10px" />
           </Collapse>
-          <Box height="10px" />
         </Card>
         <Box height="10px" />
       </>
