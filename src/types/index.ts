@@ -1,5 +1,4 @@
-import { Comment } from 'src/services/comment';
-import { Profile, Pronouns } from './lib';
+import { Profile } from './lib';
 import { Post } from './post';
 
 export interface AuthState {
@@ -17,8 +16,4 @@ export interface ProfileState {
 
 export interface PostsState {
   posts: Post[];
-}
-
-export interface CommentsState {
-  comments: Map<string, Comment[]>;
 }

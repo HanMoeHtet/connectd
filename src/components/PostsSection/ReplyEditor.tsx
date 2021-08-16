@@ -9,9 +9,9 @@ import {
 import { Image, Send, VideoLibrary } from '@material-ui/icons';
 import React, { useState } from 'react';
 import useAuth from 'src/composables/useAuth';
-import { createComment } from 'src/services/comment';
+import { createReply } from 'src/services/reply';
 import { useAppDispatch } from 'src/store';
-import { addCreatedComment, updatePost } from 'src/store/posts';
+import { addCreatedReply, updateComment } from 'src/store/posts';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,11 +40,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface CommentEditorProps {
+interface ReplyEditorProps {
+  commentId: string;
   postId: string;
 }
 
-const CommentEditor: React.FC<CommentEditorProps> = ({ postId }) => {
+const ReplyEditor: React.FC<ReplyEditorProps> = ({ commentId, postId }) => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
 
@@ -61,10 +62,10 @@ const CommentEditor: React.FC<CommentEditorProps> = ({ postId }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await createComment(postId, { content });
-      const { post, comment: createdComment } = response.data.data;
-      await dispatch(addCreatedComment(postId, createdComment));
-      dispatch(updatePost(postId, post));
+      const response = await createReply(commentId, { content });
+      const { comment, reply: createdReply } = response.data.data;
+      await dispatch(addCreatedReply(commentId, postId, createdReply));
+      dispatch(updateComment(commentId, postId, comment));
       setContent('');
     } catch (e) {
     } finally {
@@ -130,4 +131,4 @@ const CommentEditor: React.FC<CommentEditorProps> = ({ postId }) => {
   );
 };
 
-export default CommentEditor;
+export default ReplyEditor;

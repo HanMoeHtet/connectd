@@ -60,6 +60,7 @@ export interface UpdatedFieldsInPost {
 export enum ReactionSourceType {
   POST = 'Post',
   COMMENT = 'Comment',
+  REPLY = 'Reply',
 }
 
 export interface UpdatedFieldsInComment {
@@ -68,5 +69,13 @@ export interface UpdatedFieldsInComment {
     [key in ReactionType]: number;
   };
   replyCount?: number;
+  userReactedReactionType?: ReactionType;
+}
+
+export interface UpdatedFieldsInReply {
+  content?: string;
+  reactionCounts?: {
+    [key in ReactionType]: number;
+  };
   userReactedReactionType?: ReactionType;
 }

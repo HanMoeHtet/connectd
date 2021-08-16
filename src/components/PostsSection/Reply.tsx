@@ -7,9 +7,12 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { formatDistance } from 'date-fns';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import avatarImg from 'src/assets/images/avatar2.png';
+import { Reply as ReplyType } from 'src/services/reply';
+import ReactInReplyButton from './ReactInReplyButton';
+import ReactionsInReplyButton from './ReactionsInReplyButton';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -19,35 +22,58 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Reply: React.FC = () => {
+interface ReplyProps extends ReplyType {
+  postId: string;
+}
+
+const Reply: React.FC<ReplyProps> = ({
+  _id,
+  commentId,
+  postId,
+  content,
+  createdAt,
+  reactionCounts,
+  user,
+  userId,
+  userReactedReactionType,
+}) => {
   const classes = useStyles();
 
   return (
     <CardContent>
       <Box display="flex">
         <Link to="/" component={RouterLink}>
-          <Avatar src={avatarImg} />
+          <Avatar src={user.avatar}>{user.username[0].toUpperCase()}</Avatar>
         </Link>
         <Box>
           <CardContent style={{ paddingTop: 0, paddingBottom: 10 }}>
             <Link to="/" component={RouterLink} className={classes.author}>
-              <span>Han Moe Htet</span>
+              <span>{user.username}</span>
             </Link>
             <Typography variant="body2" color="textSecondary">
-              a few minutes ago
+              {formatDistance(new Date(createdAt), new Date(), {
+                addSuffix: true,
+              })}
             </Typography>
           </CardContent>
           <CardContent style={{ paddingTop: 0, paddingBottom: 5 }}>
-            <Typography>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis
-              quaerat, inventore dignissimos fugiat pariatur consequatur,
-              distinctio vel autem quia blanditiis officiis asperiores illo,
-              officia ea expedita iure a? Voluptatem, doloremque.
+            <Typography style={{ whiteSpace: 'pre-wrap' }}>
+              {content}
             </Typography>
           </CardContent>
           <CardActions>
-            {/* <ReactionsButton /> */}
-            {/* <ReactButton /> */}
+            <ReactionsInReplyButton
+              replyId={_id}
+              commentId={commentId}
+              postId={postId}
+              counts={reactionCounts}
+            />
+            <ReactInReplyButton
+              replyId={_id}
+              commentId={commentId}
+              postId={postId}
+              userReactedReactionType={userReactedReactionType}
+            />
           </CardActions>
         </Box>
       </Box>

@@ -6,7 +6,7 @@ import {
   Collapse,
   Link,
   makeStyles,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { formatDistance } from 'date-fns';
 import React, { useState } from 'react';
@@ -15,7 +15,7 @@ import { Comment as CommentType } from 'src/services/comment';
 import ReactInCommentButton from './ReactInCommentButton';
 import ReactionsInCommentButton from './ReactionsInCommentButton';
 import RepliesButton from './RepliesButton';
-import Reply from './Reply';
+import RepliesSection from './RepliesSection';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -60,7 +60,9 @@ export const Comment: React.FC<CommentProps> = ({
             </Typography>
           </CardContent>
           <CardContent style={{ paddingTop: 0, paddingBottom: 5 }}>
-            <Typography style={{ whiteSpace: 'pre-wrap' }}>{content}</Typography>
+            <Typography style={{ whiteSpace: 'pre-wrap' }}>
+              {content}
+            </Typography>
           </CardContent>
           <CardActions>
             <ReactionsInCommentButton
@@ -74,14 +76,18 @@ export const Comment: React.FC<CommentProps> = ({
               commentId={_id}
             />
             <RepliesButton
+              replyCount={replyCount}
               onClick={() => {
                 setIsShowingReplies((prev) => !prev);
               }}
             />
           </CardActions>
           <Collapse in={isShowingReplies} timeout="auto">
-            <Reply />
-            {/* <CommentEditor postId={postId} /> */}
+            <RepliesSection
+              commentId={_id}
+              postId={postId}
+              isShowingReplies={isShowingReplies}
+            />
           </Collapse>
         </Box>
       </Box>

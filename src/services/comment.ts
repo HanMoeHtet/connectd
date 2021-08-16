@@ -1,6 +1,7 @@
 import { BasicProfile } from 'src/types/lib';
 import { ReactionType, UpdatedFieldsInPost } from 'src/types/post';
 import api from './api';
+import { Reply } from './reply';
 
 interface FetchCommentsInPostOptions {
   postId: string;
@@ -17,6 +18,7 @@ export interface Comment {
   };
   userReactedReactionType: ReactionType;
   replyCount: number;
+  replies?: Reply[];
   user: BasicProfile;
   createdAt: Date;
 }
