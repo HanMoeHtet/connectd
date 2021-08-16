@@ -47,7 +47,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
   return (
     <>
-      <CommentEditor />
+      <CommentEditor postId={postId} />
       {comments.map((comment) => (
         <Comment {...comment} key={comment._id} />
       ))}
@@ -58,7 +58,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
           <Button onClick={loadMore}>Load more</Button>
         )}
       </Box>
-      {comments.length >= MAX_COMMENTS_PER_REQUEST && <CommentEditor />}
+      {comments.length >= MAX_COMMENTS_PER_REQUEST && (
+        <CommentEditor postId={postId} />
+      )}
     </>
   );
 };

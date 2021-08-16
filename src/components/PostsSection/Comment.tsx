@@ -6,13 +6,12 @@ import {
   Collapse,
   Link,
   makeStyles,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import { formatDistance } from 'date-fns';
 import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Comment as CommentType } from 'src/services/comment';
-import CommentEditor from './CommentEditor';
 import ReactInCommentButton from './ReactInCommentButton';
 import ReactionsInCommentButton from './ReactionsInCommentButton';
 import RepliesButton from './RepliesButton';
@@ -61,7 +60,7 @@ export const Comment: React.FC<CommentProps> = ({
             </Typography>
           </CardContent>
           <CardContent style={{ paddingTop: 0, paddingBottom: 5 }}>
-            <Typography>{content}</Typography>
+            <Typography style={{ whiteSpace: 'pre-wrap' }}>{content}</Typography>
           </CardContent>
           <CardActions>
             <ReactionsInCommentButton
@@ -82,7 +81,7 @@ export const Comment: React.FC<CommentProps> = ({
           </CardActions>
           <Collapse in={isShowingReplies} timeout="auto">
             <Reply />
-            <CommentEditor />
+            {/* <CommentEditor postId={postId} /> */}
           </Collapse>
         </Box>
       </Box>

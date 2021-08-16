@@ -37,3 +37,30 @@ export const fetchCommentsInPost = ({
     }&limit=${limit}`
   );
 };
+
+export interface CreateCommentFormData {
+  content: string;
+}
+
+export interface CreateCommentSuccessResponse {
+  data: {
+    comment: Comment;
+    post: UpdatedFieldsInPost;
+  };
+}
+
+export interface CreateCommentError {
+  content?: string[];
+  postId?: string[];
+}
+
+interface CreateCommentPayload extends CreateCommentFormData {}
+export const createComment = (
+  postId: string,
+  payload: CreateCommentPayload
+) => {
+  return api.post<CreateCommentSuccessResponse>(
+    `/posts/${postId}/comments`,
+    payload
+  );
+};

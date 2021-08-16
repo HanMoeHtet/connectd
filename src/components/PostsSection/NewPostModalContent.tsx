@@ -76,10 +76,15 @@ const NewPostModalContent = React.forwardRef(() => {
   const onFormSubmitted = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const response = await createPost({ content, privacy });
-    const { post: createdPost } = response.data.data;
-    await dispatch(addCreatedPost(createdPost));
-    setIsLoading(false);
+    try {
+      const response = await createPost({ content, privacy });
+      const { post: createdPost } = response.data.data;
+      await dispatch(addCreatedPost(createdPost));
+      setModalContent(null);
+    } catch (e) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -176,7 +181,7 @@ const NewPostModalContent = React.forwardRef(() => {
                 size="large"
                 variant="contained"
                 color="primary"
-                disabled={isLoading}
+                disabled={isLoading || content.length === 0}
               >
                 Post
               </Button>
