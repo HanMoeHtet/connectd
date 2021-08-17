@@ -34,7 +34,6 @@ const Reply: React.FC<ReplyProps> = ({
   createdAt,
   reactionCounts,
   user,
-  userId,
   userReactedReactionType,
 }) => {
   const classes = useStyles();

@@ -54,18 +54,29 @@ const postsSlice = createSlice({
   },
 });
 
-export const selectComments = (postId: string) => (state: RootState) => {
+export const selectPost = (postId: string) => (state: RootState) => {
   const post = state.postsStore.posts.find((post) => post._id === postId);
+  return post;
+};
+
+export const selectComments = (postId: string) => (state: RootState) => {
+  const post = selectPost(postId)(state);
   return post?.comments || [];
 };
 
+export const selectComment =
+  (commentId: string, postId: string) => (state: RootState) => {
+    const post = selectPost(postId)(state);
+    const comment = post?.comments?.find(
+      (comment) => comment._id === commentId
+    );
+    return comment;
+  };
+
 export const selectReplies =
   (commentId: string, postId: string) => (state: RootState) => {
-    const post = state.postsStore.posts.find((post) => post._id === postId);
-    return (
-      post?.comments?.find((comment) => comment._id === commentId)?.replies ||
-      []
-    );
+    const comment = selectComment(commentId, postId)(state);
+    return comment?.replies || [];
   };
 
 export const { setPosts, setComments, setReplies } = postsSlice.actions;

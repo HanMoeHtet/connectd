@@ -1,11 +1,23 @@
 import { Button, Divider, Menu, MenuItem, Typography } from '@material-ui/core';
-import { Share } from '@material-ui/icons';
-import React from 'react';
+import { Share, Edit, Facebook } from '@material-ui/icons';
+import React, { useContext } from 'react';
+import { ModalContext } from 'src/composables/AppModal';
+import { showToast } from 'src/services/notification';
+import { createShare } from 'src/services/post';
+import { useAppDispatch } from 'src/store';
+import { addCreatedPost } from 'src/store/posts';
+import { Privacy } from 'src/types/post';
+import NewPostModalContent from './NewPostModalContent';
 
 interface ShareButtonProps {
   count: number;
+  postId: string;
 }
-const ShareButton: React.FC<ShareButtonProps> = ({ count }) => {
+const ShareButton: React.FC<ShareButtonProps> = ({ count, postId }) => {
+  const dispatch = useAppDispatch();
+
+  const { setContent } = useContext(ModalContext);
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -14,6 +26,27 @@ const ShareButton: React.FC<ShareButtonProps> = ({ count }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const onShareNowClicked = async () => {
+    try {
+      const response = await createShare(postId, {
+        privacy: Privacy.PUBLIC,
+        content: '',
+      });
+      const { post } = response.data.data;
+      await dispatch(addCreatedPost(post));
+      // FIXME: translate the string
+      showToast('success', `You've have shared a post.`);
+    } catch (e) {
+    } finally {
+      handleMenuClose();
+    }
+  };
+
+  const onWritePostClicked = () => {
+    setContent(<NewPostModalContent sourceId={postId} />);
+    handleMenuClose();
   };
 
   const menuId = 'share-menu';
@@ -28,9 +61,20 @@ const ShareButton: React.FC<ShareButtonProps> = ({ count }) => {
       open={Boolean(anchorEl)}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>hello</MenuItem>
+      <MenuItem onClick={onShareNowClicked}>
+        <Share style={{ marginRight: 5 }} />
+        <Typography>Share now</Typography>
+      </MenuItem>
       <Divider />
-      <MenuItem onClick={handleMenuClose}>world</MenuItem>
+      <MenuItem onClick={onWritePostClicked}>
+        <Edit style={{ marginRight: 5 }} />
+        <Typography>Write post</Typography>
+      </MenuItem>
+      <Divider />
+      <MenuItem onClick={handleMenuClose}>
+        <Facebook style={{ marginRight: 5 }} />
+        <Typography>Share on facebook</Typography>
+      </MenuItem>
     </Menu>
   );
 

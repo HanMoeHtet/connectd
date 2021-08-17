@@ -1,4 +1,4 @@
-import { NormalPost } from './post';
+import { NormalPost, SharedPost } from './post';
 
 export interface Pronouns {
   subjective: string;
@@ -98,6 +98,22 @@ export interface CreatePostSuccessResponse {
 }
 
 export interface CreatePostError {
+  content?: string[];
+  privacy?: string[];
+}
+
+export interface CreateShareFormData {
+  privacy: string;
+  content: string;
+}
+
+export interface CreateShareSuccessResponse {
+  data: {
+    post: SharedPost;
+  };
+}
+
+export interface CreateShareError {
   content?: string[];
   privacy?: string[];
 }

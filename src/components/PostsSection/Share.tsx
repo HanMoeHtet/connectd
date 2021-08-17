@@ -16,12 +16,13 @@ import { Comment } from '@material-ui/icons';
 import { formatDistance } from 'date-fns';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { NormalPost as PostType } from 'src/types/post';
+import { SharedPost as PostType } from 'src/types/post';
 import CommentsSection from './CommentsSection';
 import ReactInPostButton from './ReactInPostButton';
 import ReactionsInPostButton from './ReactionsInPostButton';
 import ShareButton from './ShareButton';
 import { privacyIcons } from './shared';
+import SourcePost from './SourcePost';
 
 const useStyles = makeStyles((theme) => ({
   author: {
@@ -44,6 +45,7 @@ const Post: React.FC<PostProps> = React.memo(
     reactionCounts,
     commentCount,
     shareCount,
+    source,
     user,
     userReactedReactionType,
   }) => {
@@ -94,6 +96,7 @@ const Post: React.FC<PostProps> = React.memo(
             </Typography>
           </CardContent>
           {/* <CardMedia image={avatarImg} component="img" /> */}
+          <SourcePost {...source} />
           <Divider style={{ margin: '0 15px', marginTop: 10 }} />
           <CardActions>
             {Object.values(reactionCounts).reduce(

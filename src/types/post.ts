@@ -32,9 +32,20 @@ export interface NormalPost extends BasePost {
   type: PostType.POST;
 }
 
+export interface Source {
+  _id: string;
+  userId: string;
+  user: BasicProfile;
+  createdAt: Date;
+  privacy: Privacy;
+  content: string;
+  type: PostType;
+}
+
 export interface SharedPost extends BasePost {
   type: PostType.SHARE;
   sourceId: string;
+  source: Source;
 }
 
 export type Post = NormalPost | SharedPost;

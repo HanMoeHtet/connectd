@@ -3,8 +3,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { fetchNewsfeedPosts } from 'src/services/newsfeed';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { setPosts } from 'src/store/posts';
+import { PostType } from 'src/types/post';
 import NewPostSection from './NewPostSection';
 import PostComponent from './Post';
+import Share from './Share';
 
 const PostsSection: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -57,9 +59,13 @@ const PostsSection: React.FC = () => {
     <Box width="512px" margin="auto" padding="15px 0">
       <NewPostSection />
       <Divider style={{ margin: '15px auto', width: '80px' }} />
-      {posts.map((post) => (
-        <PostComponent {...post} key={post._id} />
-      ))}
+      {posts.map((post) =>
+        post.type === PostType.POST ? (
+          <PostComponent {...post} key={post._id} />
+        ) : (
+          <Share {...post} key={post._id} />
+        )
+      )}
       <Box display="flex" justifyContent="center">
         <CircularProgress color="primary" ref={loadMoreRef} />
       </Box>
