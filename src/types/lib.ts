@@ -89,6 +89,7 @@ export interface BasicProfileResponse {
 export interface CreatePostFormData {
   privacy: string;
   content: string;
+  media?: File;
 }
 
 export interface CreatePostSuccessResponse {
@@ -105,6 +106,7 @@ export interface CreatePostError {
 export interface CreateShareFormData {
   privacy: string;
   content: string;
+  media?: File;
 }
 
 export interface CreateShareSuccessResponse {

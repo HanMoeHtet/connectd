@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CardMedia,
   ClickAwayListener,
   Divider,
   IconButton,
@@ -14,14 +15,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import {
-  Close,
-  Image,
-  Lock,
-  People,
-  Public,
-  VideoLibrary,
-} from '@material-ui/icons';
+import { Close, Image, Lock, People, Public } from '@material-ui/icons';
 import React, { useContext, useState } from 'react';
 import { ModalContext } from 'src/composables/AppModal';
 import useAuth from 'src/composables/useAuth';
@@ -31,6 +25,9 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { addCreatedPost, selectPost } from 'src/store/posts';
 import { Privacy } from 'src/types/post';
 import SourcePost from './SourcePost';
+import VideoInputButton from './VideoInputButton';
+import PhotoInputButton from './PhotoInputButton';
+import { isImage, isVideo } from 'src/utils/media-type';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -79,6 +76,27 @@ const NewPostModalContent: React.FC<NewPostModalContentProps> =
     const [isLoading, setIsLoading] = useState(false);
     const [privacy, setPrivacy] = useState<Privacy>(Privacy.PUBLIC);
     const [content, setContent] = useState('');
+    const [media, setMedia] = useState<File | undefined>(undefined);
+
+    const renderMedia = React.useMemo(() => {
+      if (!media) return null;
+
+      if (isImage(media.type)) {
+        return <CardMedia src={URL.createObjectURL(media)} component="img" />;
+      }
+
+      if (isVideo(media.type)) {
+        return (
+          <CardMedia
+            src={URL.createObjectURL(media)}
+            component="video"
+            controls
+          />
+        );
+      }
+
+      return null;
+    }, [media]);
 
     if (!profile) return null;
 
@@ -89,8 +107,8 @@ const NewPostModalContent: React.FC<NewPostModalContentProps> =
       setIsLoading(true);
       try {
         const response = sourceId
-          ? await createShare(sourceId, { content, privacy })
-          : await createPost({ content, privacy });
+          ? await createShare(sourceId, { content, privacy, media })
+          : await createPost({ content, privacy, media });
         const { post: createdPost } = response.data.data;
         await dispatch(addCreatedPost(createdPost));
         setModalContent(null);
@@ -101,6 +119,18 @@ const NewPostModalContent: React.FC<NewPostModalContentProps> =
       } finally {
         setIsLoading(false);
       }
+    };
+
+    const isButtonDisabled = () => {
+      if (isLoading) return true;
+
+      if (sourceId) return false;
+
+      console.log(content, media);
+
+      if (content.length === 0 && !media) return true;
+
+      return false;
     };
 
     return (
@@ -173,6 +203,12 @@ const NewPostModalContent: React.FC<NewPostModalContentProps> =
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                   />
+                  {media && (
+                    <>
+                      <Box height="15px" />
+                      {renderMedia}
+                    </>
+                  )}
                   {source && (
                     <>
                       <Box height="15px" /> <SourcePost {...source} />
@@ -180,20 +216,8 @@ const NewPostModalContent: React.FC<NewPostModalContentProps> =
                   )}
                 </Box>
                 <Box display="flex" justifyContent="flex-end" marginY="5px">
-                  <IconButton>
-                    <VideoLibrary
-                      style={{
-                        color: '#52bd62',
-                      }}
-                    />
-                  </IconButton>
-                  <IconButton>
-                    <Image
-                      style={{
-                        color: '#1877f2',
-                      }}
-                    />
-                  </IconButton>
+                  <VideoInputButton onChange={(media) => setMedia(media)} />
+                  <PhotoInputButton onChange={(media) => setMedia(media)} />
                 </Box>
                 <Button
                   type="submit"
@@ -201,9 +225,7 @@ const NewPostModalContent: React.FC<NewPostModalContentProps> =
                   size="large"
                   variant="contained"
                   color="primary"
-                  disabled={
-                    isLoading || (source === undefined && content.length === 0)
-                  }
+                  disabled={isButtonDisabled()}
                 >
                   Post
                 </Button>

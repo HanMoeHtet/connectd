@@ -6,7 +6,7 @@ const Guest: React.FC = ({ children }) => {
   const history = useHistory();
 
   const { isLoading } = useAppSelector((state) => state.authStore);
-  const profile = useAppSelector((state) => state.profileStore);
+  const profile = useAppSelector((state) => state.profileStore.profile);
 
   if (isLoading) return null;
 

@@ -12,6 +12,16 @@ export enum PostType {
   SHARE = 'SHARE',
 }
 
+export enum MediaType {
+  IMAGE = 'IMAGE',
+  VIDEO = 'VIDEO',
+}
+
+export interface Media {
+  type: MediaType;
+  url: string;
+}
+
 export interface BasePost {
   _id: string;
   userId: string;
@@ -19,6 +29,7 @@ export interface BasePost {
   createdAt: Date;
   privacy: Privacy;
   content: string;
+  media?: Media;
   reactionCounts: {
     [key in ReactionType]: number;
   };
@@ -39,6 +50,7 @@ export interface Source {
   createdAt: Date;
   privacy: Privacy;
   content: string;
+  media?: Media;
   type: PostType;
 }
 

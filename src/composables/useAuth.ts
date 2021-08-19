@@ -10,9 +10,7 @@ const useAuth = () => {
 
   useEffect(() => {
     if (!isLoading && !profile) {
-      if (!profile) {
-        history.replace('/login');
-      }
+      history.replace('/login');
     }
   }, [isLoading, profile, history]);
 

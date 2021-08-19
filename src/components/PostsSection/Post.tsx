@@ -6,6 +6,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  CardMedia,
   Collapse,
   Divider,
   Link,
@@ -16,7 +17,7 @@ import { Comment } from '@material-ui/icons';
 import { formatDistance } from 'date-fns';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { NormalPost as PostType } from 'src/types/post';
+import { Media, MediaType, NormalPost as PostType } from 'src/types/post';
 import CommentsSection from './CommentsSection';
 import ReactInPostButton from './ReactInPostButton';
 import ReactionsInPostButton from './ReactionsInPostButton';
@@ -41,6 +42,7 @@ const Post: React.FC<PostProps> = React.memo(
     createdAt,
     privacy,
     content,
+    media,
     reactionCounts,
     commentCount,
     shareCount,
@@ -52,6 +54,18 @@ const Post: React.FC<PostProps> = React.memo(
     const [isShowingComments, setIsShowingComments] = React.useState(false);
 
     const PrivacyIcon = privacyIcons.get(privacy)!.Icon;
+
+    const renderMedia = (media: Media) => {
+      if (media.type === MediaType.IMAGE) {
+        return <CardMedia src={media.url} component="img" />;
+      }
+
+      if (media.type === MediaType.VIDEO) {
+        return <CardMedia src={media.url} component="video" controls />;
+      }
+
+      return null;
+    };
 
     return (
       <>
@@ -93,7 +107,7 @@ const Post: React.FC<PostProps> = React.memo(
               {content}
             </Typography>
           </CardContent>
-          {/* <CardMedia image={avatarImg} component="img" /> */}
+          {media && renderMedia(media)}
           <Divider style={{ margin: '0 15px', marginTop: 10 }} />
           <CardActions>
             {Object.values(reactionCounts).reduce(

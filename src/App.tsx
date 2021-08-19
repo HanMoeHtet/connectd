@@ -12,6 +12,7 @@ import PhoneNumberVerification from './pages/PhoneNumberVerification';
 import EmailVerificationEndPoint from './pages/EmailVerificationEndPoint';
 import Newsfeed from './pages/Newsfeed';
 import Guest from './composables/Guest';
+import PostPage from './pages/Post';
 
 const App: React.FC = () => {
   return (
@@ -35,6 +36,9 @@ const App: React.FC = () => {
           </Route>
           <Route path="/" exact>
             <Newsfeed />
+          </Route>
+          <Route path="/posts/:postId" exact>
+            <PostPage />
           </Route>
         </Switch>
       </Router>
