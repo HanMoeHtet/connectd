@@ -1,14 +1,8 @@
+import { Box } from '@material-ui/core';
 import React from 'react';
 import Post from 'src/components/PostsSection/Post';
 import Main from 'src/layouts/Main';
-import {
-  MediaType,
-  NormalPost,
-  PostType,
-  Privacy,
-  ReactionType,
-} from 'src/types/post';
-import { Box } from '@material-ui/core';
+import { NormalPost, PostType, Privacy, ReactionType } from 'src/types/post';
 
 const post: NormalPost = {
   _id: '123',

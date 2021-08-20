@@ -8,11 +8,17 @@ import {
 } from '@material-ui/core';
 import { Settings } from '@material-ui/icons';
 import React from 'react';
-import avatarImg from 'src/assets/images/avatar2.png';
 import Logout from './icons/Logout';
+import useAuth from 'src/composables/useAuth';
 
 const SettingsIconButton: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const { profile } = useAuth();
+
+  if (!profile) return null;
+
+  const { username, avatar } = profile;
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -35,8 +41,10 @@ const SettingsIconButton: React.FC = () => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>
-        <Avatar src={avatarImg} style={{ marginRight: 5 }} />
-        <Typography style={{ textTransform: 'none' }}>Han Moe Htet</Typography>
+        <Avatar src={avatar} style={{ marginRight: 5 }}>
+          {username[0].toUpperCase()}
+        </Avatar>
+        <Typography style={{ textTransform: 'none' }}>{username}</Typography>
       </MenuItem>
       <Divider />
       <MenuItem onClick={handleMenuClose}>

@@ -59,9 +59,12 @@ const NewPostSection: React.FC = () => {
               textTransform: 'none',
               padding: '8px',
             }}
+            onClick={() =>
+              setContent(<NewPostModalContent isChoosingVideo={true} />)
+            }
           >
             <VideoLibrary style={{ color: '#52bd62', marginRight: 10 }} />
-            <Typography>Videos</Typography>
+            <Typography>Video</Typography>
           </Button>
           <Button
             style={{
@@ -69,9 +72,10 @@ const NewPostSection: React.FC = () => {
               textTransform: 'none',
               padding: '8px',
             }}
+            onClick={() => setContent(<NewPostModalContent isChoosingPhoto />)}
           >
             <Image style={{ color: '#1877f2', marginRight: 10 }} />
-            <Typography>Photos</Typography>
+            <Typography>Photo</Typography>
           </Button>
         </Box>
       </CardContent>

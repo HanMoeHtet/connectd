@@ -15,7 +15,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { Close, Image, Lock, People, Public } from '@material-ui/icons';
+import { Close, Lock, People, Public } from '@material-ui/icons';
 import React, { useContext, useState } from 'react';
 import { ModalContext } from 'src/composables/AppModal';
 import useAuth from 'src/composables/useAuth';
@@ -24,10 +24,10 @@ import { createPost, createShare } from 'src/services/post';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { addCreatedPost, selectPost } from 'src/store/posts';
 import { Privacy } from 'src/types/post';
+import { isImage, isVideo } from 'src/utils/media-type';
+import PhotoInputButton from './PhotoInputButton';
 import SourcePost from './SourcePost';
 import VideoInputButton from './VideoInputButton';
-import PhotoInputButton from './PhotoInputButton';
-import { isImage, isVideo } from 'src/utils/media-type';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -59,9 +59,11 @@ const useStyles = makeStyles((theme) => ({
 
 interface NewPostModalContentProps {
   sourceId?: string;
+  isChoosingVideo?: boolean;
+  isChoosingPhoto?: boolean;
 }
 const NewPostModalContent: React.FC<NewPostModalContentProps> =
-  React.forwardRef(({ sourceId }) => {
+  React.forwardRef(({ sourceId, isChoosingPhoto, isChoosingVideo }) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
 
@@ -125,8 +127,6 @@ const NewPostModalContent: React.FC<NewPostModalContentProps> =
       if (isLoading) return true;
 
       if (sourceId) return false;
-
-      console.log(content, media);
 
       if (content.length === 0 && !media) return true;
 
@@ -211,13 +211,20 @@ const NewPostModalContent: React.FC<NewPostModalContentProps> =
                   )}
                   {source && (
                     <>
-                      <Box height="15px" /> <SourcePost {...source} />
+                      <Box height="15px" />
+                      <SourcePost {...source} />
                     </>
                   )}
                 </Box>
                 <Box display="flex" justifyContent="flex-end" marginY="5px">
-                  <VideoInputButton onChange={(media) => setMedia(media)} />
-                  <PhotoInputButton onChange={(media) => setMedia(media)} />
+                  <VideoInputButton
+                    isOpen={isChoosingVideo}
+                    onChange={(media) => setMedia(media)}
+                  />
+                  <PhotoInputButton
+                    isOpen={isChoosingPhoto}
+                    onChange={(media) => setMedia(media)}
+                  />
                 </Box>
                 <Button
                   type="submit"

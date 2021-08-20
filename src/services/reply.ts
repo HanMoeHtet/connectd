@@ -1,5 +1,6 @@
 import { BasicProfile } from 'src/types/lib';
-import { ReactionType, UpdatedFieldsInComment } from 'src/types/post';
+import { Media, ReactionType, UpdatedFieldsInComment } from 'src/types/post';
+import { getFormData } from 'src/utils/formData';
 import api from './api';
 
 interface FetchRepliesInCommentOptions {
@@ -12,6 +13,7 @@ export interface Reply {
   commentId: string;
   userId: string;
   content: string;
+  media: Media;
   reactionCounts: {
     [key in ReactionType]: number;
   };
@@ -39,6 +41,7 @@ export const fetchRepliesInComment = ({
 
 export interface CreateReplyFormData {
   content: string;
+  media?: File;
 }
 
 export interface CreateReplySuccessResponse {
@@ -55,8 +58,14 @@ export interface CreateReplyError {
 
 interface CreateReplyPayload extends CreateReplyFormData {}
 export const createReply = (replyId: string, payload: CreateReplyPayload) => {
+  const formData = getFormData(payload);
   return api.post<CreateReplySuccessResponse>(
     `/comments/${replyId}/replies`,
-    payload
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
   );
 };

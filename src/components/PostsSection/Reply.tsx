@@ -3,6 +3,7 @@ import {
   Box,
   CardActions,
   CardContent,
+  CardMedia,
   Link,
   makeStyles,
   Typography,
@@ -11,6 +12,7 @@ import { formatDistance } from 'date-fns';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Reply as ReplyType } from 'src/services/reply';
+import { Media, MediaType } from 'src/types/post';
 import ReactInReplyButton from './ReactInReplyButton';
 import ReactionsInReplyButton from './ReactionsInReplyButton';
 
@@ -31,6 +33,7 @@ const Reply: React.FC<ReplyProps> = ({
   commentId,
   postId,
   content,
+  media,
   createdAt,
   reactionCounts,
   user,
@@ -38,13 +41,25 @@ const Reply: React.FC<ReplyProps> = ({
 }) => {
   const classes = useStyles();
 
+  const renderMedia = (media: Media) => {
+    if (media.type === MediaType.IMAGE) {
+      return <CardMedia src={media.url} component="img" />;
+    }
+
+    if (media.type === MediaType.VIDEO) {
+      return <CardMedia src={media.url} component="video" controls />;
+    }
+
+    return null;
+  };
+
   return (
     <CardContent>
       <Box display="flex">
         <Link to="/" component={RouterLink}>
           <Avatar src={user.avatar}>{user.username[0].toUpperCase()}</Avatar>
         </Link>
-        <Box>
+        <Box flexGrow="1">
           <CardContent style={{ paddingTop: 0, paddingBottom: 10 }}>
             <Link to="/" component={RouterLink} className={classes.author}>
               <span>{user.username}</span>
@@ -60,6 +75,7 @@ const Reply: React.FC<ReplyProps> = ({
               {content}
             </Typography>
           </CardContent>
+          {media && renderMedia(media)}
           <CardActions>
             <ReactionsInReplyButton
               replyId={_id}

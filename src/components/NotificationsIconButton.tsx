@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { Notifications as NotificationsIcon } from '@material-ui/icons';
 import React from 'react';
-import avatarImg from 'src/assets/images/avatar2.png';
+import useAuth from 'src/composables/useAuth';
 
 const useStyles = makeStyles((theme) => ({
   menu: {
@@ -25,6 +25,12 @@ const NotificationsIconButton: React.FC = () => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const { profile } = useAuth();
+
+  if (!profile) return null;
+
+  const { username, avatar } = profile;
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -49,9 +55,11 @@ const NotificationsIconButton: React.FC = () => {
     >
       <MenuItem onClick={handleMenuClose} style={{ whiteSpace: 'normal' }}>
         <Avatar
-          src={avatarImg}
+          src={avatar}
           style={{ marginRight: 10, alignSelf: 'flex-start' }}
-        />
+        >
+          {username[0].toUpperCase()}
+        </Avatar>
         <Box>
           <Typography style={{}}>
             Han Moe Htet sent you a friend request.Han Moe Htet sent you a
@@ -64,9 +72,11 @@ const NotificationsIconButton: React.FC = () => {
       </MenuItem>
       <MenuItem onClick={handleMenuClose} style={{ whiteSpace: 'normal' }}>
         <Avatar
-          src={avatarImg}
+          src={avatar}
           style={{ marginRight: 10, alignSelf: 'flex-start' }}
-        />
+        >
+          {username[0].toUpperCase()}
+        </Avatar>
         <Box>
           <Typography style={{}}>
             Han Moe Htet sent you a friend request.Han Moe Htet sent you a
@@ -79,9 +89,11 @@ const NotificationsIconButton: React.FC = () => {
       </MenuItem>
       <MenuItem onClick={handleMenuClose} style={{ whiteSpace: 'normal' }}>
         <Avatar
-          src={avatarImg}
+          src={avatar}
           style={{ marginRight: 10, alignSelf: 'flex-start' }}
-        />
+        >
+          {username[0].toUpperCase()}
+        </Avatar>
         <Box>
           <Typography style={{}}>
             Han Moe Htet sent you a friend request.Han Moe Htet sent you a
@@ -94,9 +106,11 @@ const NotificationsIconButton: React.FC = () => {
       </MenuItem>
       <MenuItem onClick={handleMenuClose} style={{ whiteSpace: 'normal' }}>
         <Avatar
-          src={avatarImg}
+          src={avatar}
           style={{ marginRight: 10, alignSelf: 'flex-start' }}
-        />
+        >
+          {username[0].toUpperCase()}
+        </Avatar>
         <Box>
           <Typography style={{}}>
             Han Moe Htet sent you a friend request.Han Moe Htet sent you a

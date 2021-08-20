@@ -21,6 +21,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
   const [limit] = React.useState(MAX_COMMENTS_PER_REQUEST);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [hasLoaded, setHasLoaded] = React.useState(false);
   const comments = useAppSelector(selectComments(postId));
 
   const loadMore = useCallback(async () => {
@@ -39,11 +40,12 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
   useEffect(() => {
     (async () => {
-      if (isShowingComments && comments.length === 0) {
-        loadMore();
+      if (isShowingComments && !hasLoaded) {
+        await loadMore();
+        setHasLoaded(true);
       }
     })();
-  }, [isShowingComments, loadMore, comments]);
+  }, [isShowingComments, loadMore, hasLoaded]);
 
   return (
     <>

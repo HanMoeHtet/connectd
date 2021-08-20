@@ -1,5 +1,6 @@
 import { BasicProfile } from 'src/types/lib';
-import { ReactionType, UpdatedFieldsInPost } from 'src/types/post';
+import { Media, ReactionType, UpdatedFieldsInPost } from 'src/types/post';
+import { getFormData } from 'src/utils/formData';
 import api from './api';
 import { Reply } from './reply';
 
@@ -13,6 +14,7 @@ export interface Comment {
   postId: string;
   userId: string;
   content: string;
+  media?: Media;
   reactionCounts: {
     [key in ReactionType]: number;
   };
@@ -42,6 +44,7 @@ export const fetchCommentsInPost = ({
 
 export interface CreateCommentFormData {
   content: string;
+  media?: File;
 }
 
 export interface CreateCommentSuccessResponse {
@@ -61,8 +64,14 @@ export const createComment = (
   postId: string,
   payload: CreateCommentPayload
 ) => {
+  const formData = getFormData(payload);
   return api.post<CreateCommentSuccessResponse>(
     `/posts/${postId}/comments`,
-    payload
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
   );
 };

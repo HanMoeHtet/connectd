@@ -1,11 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { IconButton } from '@material-ui/core';
 import { VideoLibrary } from '@material-ui/icons';
 
 interface VideoInputButtonProps {
   onChange: (media: File) => void;
+  isOpen?: boolean;
 }
-const VideoInputButton: React.FC<VideoInputButtonProps> = ({ onChange }) => {
+const VideoInputButton: React.FC<VideoInputButtonProps> = ({
+  onChange,
+  isOpen = false,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -17,6 +21,12 @@ const VideoInputButton: React.FC<VideoInputButtonProps> = ({ onChange }) => {
     const file = (e.target.files || [])[0];
     onChange(file);
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      handleClick();
+    }
+  }, [isOpen]);
 
   return (
     <>

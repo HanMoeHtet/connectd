@@ -2,16 +2,20 @@ import {
   Avatar,
   Box,
   CardContent,
+  CardMedia,
   IconButton,
   makeStyles,
   TextField,
 } from '@material-ui/core';
-import { Image, Send, VideoLibrary } from '@material-ui/icons';
+import { Send } from '@material-ui/icons';
 import React, { useState } from 'react';
 import useAuth from 'src/composables/useAuth';
 import { createComment } from 'src/services/comment';
 import { useAppDispatch } from 'src/store';
 import { addCreatedComment, updatePost } from 'src/store/posts';
+import { isImage, isVideo } from 'src/utils/media-type';
+import PhotoInputButton from './PhotoInputButton';
+import VideoInputButton from './VideoInputButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +55,28 @@ const CommentEditor: React.FC<CommentEditorProps> = ({ postId }) => {
   const { profile } = useAuth();
 
   const [content, setContent] = useState('');
+  const [media, setMedia] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
+
+  const renderMedia = React.useMemo(() => {
+    if (!media) return null;
+
+    if (isImage(media.type)) {
+      return <CardMedia src={URL.createObjectURL(media)} component="img" />;
+    }
+
+    if (isVideo(media.type)) {
+      return (
+        <CardMedia
+          src={URL.createObjectURL(media)}
+          component="video"
+          controls
+        />
+      );
+    }
+
+    return null;
+  }, [media]);
 
   if (!profile) return null;
 
@@ -61,15 +86,24 @@ const CommentEditor: React.FC<CommentEditorProps> = ({ postId }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await createComment(postId, { content });
+      const response = await createComment(postId, { content, media });
       const { post, comment: createdComment } = response.data.data;
       await dispatch(addCreatedComment(postId, createdComment));
       dispatch(updatePost(postId, post));
       setContent('');
+      setMedia(undefined);
     } catch (e) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const isButtonDisabled = () => {
+    if (isLoading) return true;
+
+    if (content.length === 0 && !media) return true;
+
+    return false;
   };
 
   return (
@@ -93,34 +127,29 @@ const CommentEditor: React.FC<CommentEditorProps> = ({ postId }) => {
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />
+            {media && (
+              <>
+                <Box height="15px" />
+                {renderMedia}
+              </>
+            )}
             <Box display="flex" justifyContent="flex-end">
               <Box>
-                <IconButton
-                  type="submit"
-                  disabled={isLoading || content.length === 0}
-                >
+                <IconButton type="submit" disabled={isButtonDisabled()}>
                   <Send
-                    style={{
-                      color: '#9c27b0',
-                    }}
+                    style={
+                      !isButtonDisabled()
+                        ? {
+                            color: '#9c27b0',
+                          }
+                        : {}
+                    }
                   />
                 </IconButton>
               </Box>
               <Box justifySelf="flex-end">
-                <IconButton>
-                  <VideoLibrary
-                    style={{
-                      color: '#52bd62',
-                    }}
-                  />
-                </IconButton>
-                <IconButton>
-                  <Image
-                    style={{
-                      color: '#1877f2',
-                    }}
-                  />
-                </IconButton>
+                <VideoInputButton onChange={(media) => setMedia(media)} />
+                <PhotoInputButton onChange={(media) => setMedia(media)} />
               </Box>
             </Box>
           </form>

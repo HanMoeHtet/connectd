@@ -23,6 +23,7 @@ const RepliesSection: React.FC<RepliesSectionProps> = ({
 
   const [limit] = React.useState(MAX_REPLIES_PER_REQUEST);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [hasLoaded, setHasLoaded] = React.useState(false);
   const replies = useAppSelector(selectReplies(commentId, postId));
 
   const loadMore = useCallback(async () => {
@@ -43,11 +44,12 @@ const RepliesSection: React.FC<RepliesSectionProps> = ({
 
   useEffect(() => {
     (async () => {
-      if (isShowingReplies && replies.length === 0) {
-        loadMore();
+      if (isShowingReplies && !hasLoaded) {
+        await loadMore();
+        setHasLoaded(true);
       }
     })();
-  }, [isShowingReplies, loadMore, replies]);
+  }, [isShowingReplies, loadMore, hasLoaded]);
 
   return (
     <>
