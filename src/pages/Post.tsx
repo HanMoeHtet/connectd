@@ -1,37 +1,50 @@
 import { Box } from '@material-ui/core';
-import React from 'react';
-import Post from 'src/components/PostsSection/Post';
+import React, { useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import PostComponent from 'src/components/PostsSection/Post';
+import ShareComponent from 'src/components/PostsSection/Share';
 import Main from 'src/layouts/Main';
-import { NormalPost, PostType, Privacy, ReactionType } from 'src/types/post';
+import { getPost } from 'src/services/post';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { selectPost, setPosts } from 'src/store/posts';
+import { PostType } from 'src/types/post';
 
-const post: NormalPost = {
-  _id: '123',
-  userId: '123',
-  type: PostType.POST,
-  createdAt: new Date(),
-  privacy: Privacy.PUBLIC,
-  content: 'Hello, world!',
-  reactionCounts: {
-    LIKE: 0,
-    FAVORITE: 0,
-    SATISFIED: 0,
-    DISSATISFIED: 0,
-  },
-  commentCount: 10,
-  shareCount: 10,
-  user: {
-    _id: '123',
-    username: 'Han Moe Htet',
-    avatar: '',
-  },
-  userReactedReactionType: ReactionType.LIKE,
-};
+interface PostPageParams {
+  postId?: string;
+}
 
 const PostPage: React.FC = () => {
+  const { postId } = useParams<PostPageParams>();
+  const history = useHistory();
+  const dispatch = useAppDispatch();
+
+  const post = useAppSelector((state) => {
+    if (!postId) return null;
+    return selectPost(postId)(state);
+  });
+
+  useEffect(() => {
+    (async () => {
+      if (!postId) {
+        history.push('/');
+      } else {
+        const response = await getPost(postId);
+        const { post } = response.data.data;
+        dispatch(setPosts([post]));
+      }
+    })();
+  }, [postId, history, dispatch]);
+
+  if (!post) return null;
+
   return (
     <Main>
       <Box width="512px" margin="auto" padding="15px 0">
-        <Post {...post} />
+        {post.type === PostType.POST ? (
+          <PostComponent {...post} />
+        ) : (
+          <ShareComponent {...post} />
+        )}
       </Box>
     </Main>
   );

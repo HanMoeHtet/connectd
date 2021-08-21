@@ -13,6 +13,7 @@ import EmailVerificationEndPoint from './pages/EmailVerificationEndPoint';
 import Newsfeed from './pages/Newsfeed';
 import Guest from './composables/Guest';
 import PostPage from './pages/Post';
+import UserPage from './pages/User';
 
 const App: React.FC = () => {
   return (
@@ -39,6 +40,9 @@ const App: React.FC = () => {
           </Route>
           <Route path="/posts/:postId" exact>
             <PostPage />
+          </Route>
+          <Route path="/users/:userId" exact>
+            <UserPage />
           </Route>
         </Switch>
       </Router>

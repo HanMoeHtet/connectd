@@ -4,6 +4,7 @@ import {
   CreateShareFormData,
   CreateShareSuccessResponse,
 } from 'src/types/lib';
+import { Post } from 'src/types/post';
 import { getFormData } from 'src/utils/formData';
 import api from './api';
 
@@ -22,4 +23,13 @@ export const createShare = (postId: string, payload: CreateShareFormData) => {
     `/posts/${postId}/shares`,
     payload
   );
+};
+
+export interface GetPostSuccessResponse {
+  data: {
+    post: Post;
+  };
+}
+export const getPost = (postId: string) => {
+  return api.get<GetPostSuccessResponse>(`/posts/${postId}`);
 };

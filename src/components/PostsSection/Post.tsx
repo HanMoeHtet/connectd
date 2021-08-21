@@ -72,7 +72,7 @@ const Post: React.FC<PostProps> = React.memo(
         <Card>
           <CardHeader
             avatar={
-              <Link to="/" component={RouterLink}>
+              <Link to="/" component={RouterLink} underline="none">
                 <Avatar src={user.avatar}>
                   {user.username[0].toUpperCase()}
                 </Avatar>
@@ -89,15 +89,18 @@ const Post: React.FC<PostProps> = React.memo(
             }
             subheader={
               <Box display="flex" alignItems="center">
-                <Typography
-                  variant="body2"
+                <Link
+                  to={`/posts/${_id}`}
+                  component={RouterLink}
                   color="textSecondary"
-                  style={{ marginRight: 10 }}
                 >
-                  {formatDistance(new Date(createdAt), new Date(), {
-                    addSuffix: true,
-                  })}
-                </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {formatDistance(new Date(createdAt), new Date(), {
+                      addSuffix: true,
+                    })}
+                  </Typography>
+                </Link>
+                <Box width="10px"></Box>
                 <PrivacyIcon fontSize="small" />
               </Box>
             }
