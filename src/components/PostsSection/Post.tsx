@@ -72,7 +72,11 @@ const Post: React.FC<PostProps> = React.memo(
         <Card>
           <CardHeader
             avatar={
-              <Link to="/" component={RouterLink} underline="none">
+              <Link
+                to={`/users/${userId}`}
+                component={RouterLink}
+                underline="none"
+              >
                 <Avatar src={user.avatar}>
                   {user.username[0].toUpperCase()}
                 </Avatar>
@@ -80,7 +84,7 @@ const Post: React.FC<PostProps> = React.memo(
             }
             title={
               <Link
-                to="/"
+                to={`/users/${userId}`}
                 component={RouterLink}
                 className={`${classes.author}`}
               >

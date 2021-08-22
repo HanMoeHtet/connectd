@@ -33,3 +33,26 @@ export interface GetPostSuccessResponse {
 export const getPost = (postId: string) => {
   return api.get<GetPostSuccessResponse>(`/posts/${postId}`);
 };
+
+interface GetPostsByUserOptions {
+  userId: string;
+  lastPostId: string;
+  limit: number;
+}
+
+interface GetPostsByUserSuccessResponse {
+  data: {
+    posts: Post[];
+    hasMore: boolean;
+  };
+}
+
+export const getPostsByUser = ({
+  userId,
+  lastPostId,
+  limit,
+}: GetPostsByUserOptions) => {
+  return api.get<GetPostsByUserSuccessResponse>(
+    `/users/${userId}/posts?lastPostId=${lastPostId || ''}&limit=${limit}`
+  );
+};
