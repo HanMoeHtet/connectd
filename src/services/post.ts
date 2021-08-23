@@ -36,7 +36,7 @@ export const getPost = (postId: string) => {
 
 interface GetPostsByUserOptions {
   userId: string;
-  lastPostId: string;
+  lastPostId?: string;
   limit: number;
 }
 

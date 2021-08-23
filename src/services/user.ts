@@ -26,3 +26,37 @@ interface GetUserSuccessResponse {
 export const getUser = (userId: string) => {
   return api.get<GetUserSuccessResponse>(`/users/${userId}`);
 };
+
+interface GetFriendsByUserOptions {
+  userId: string;
+  lastFriendId?: string;
+  limit: number;
+}
+
+export interface Friend {
+  _id: string;
+  user: {
+    _id: string;
+    username: string;
+    avatar?: string;
+    areUsersFriends: boolean;
+  };
+  createdAt: Date;
+}
+
+interface GetFriendsByUserSuccessResponse {
+  data: {
+    friends: Friend[];
+    hasMore: boolean;
+  };
+}
+
+export const getFriendsByUser = ({
+  userId,
+  lastFriendId,
+  limit,
+}: GetFriendsByUserOptions) => {
+  return api.get<GetFriendsByUserSuccessResponse>(
+    `/users/${userId}/friends?lastFriendId=${lastFriendId || ''}&limit=${limit}`
+  );
+};

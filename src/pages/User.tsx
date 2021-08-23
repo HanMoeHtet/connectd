@@ -27,6 +27,7 @@ import { GetUserResponseData } from 'src/services/user';
 import { useAppDispatch } from 'src/store';
 import Main from 'src/layouts/Main';
 import { getUser } from 'src/services/user';
+import Friends from 'src/components/UserPage/Friends';
 
 enum TabType {
   POSTS = 'POSTS',
@@ -161,8 +162,11 @@ const UserPage: React.FC = () => {
           />
         </Tabs>
         <Box height="24px" />
-        <TabPanel value={TabType.POSTS} index={openedTab}>
+        <TabPanel value={openedTab} index={TabType.POSTS}>
           <Posts userId={user._id} />
+        </TabPanel>
+        <TabPanel value={openedTab} index={TabType.FRIENDS}>
+          <Friends userId={user._id} />
         </TabPanel>
       </Box>
     </Main>
