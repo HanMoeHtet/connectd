@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { PersonAdd } from '@material-ui/icons';
 import React, { useCallback, useEffect, useState } from 'react';
+import { createFriendRequest } from 'src/services/friend';
 import { Friend, getFriendsByUser } from 'src/services/user';
 
 interface FriendsProps {
@@ -60,6 +61,10 @@ const Friends: React.FC<FriendsProps> = ({ userId }) => {
     }
   }, [isLoading, loadMore]);
 
+  const handleClick = async (userId: string) => {
+    await createFriendRequest({ userId });
+  };
+
   return (
     <>
       <List disablePadding>
@@ -72,7 +77,11 @@ const Friends: React.FC<FriendsProps> = ({ userId }) => {
             </ListItemAvatar>
             <ListItemText primary={friend.user.username} />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
+              <IconButton
+                edge="end"
+                aria-label="add friend"
+                onClick={() => handleClick(friend.user._id)}
+              >
                 <PersonAdd />
               </IconButton>
             </ListItemSecondaryAction>

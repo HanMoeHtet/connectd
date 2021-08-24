@@ -11,6 +11,7 @@ import {
 import { Notifications as NotificationsIcon } from '@material-ui/icons';
 import React from 'react';
 import useAuth from 'src/composables/useAuth';
+import { useAppSelector } from 'src/store';
 
 const useStyles = makeStyles((theme) => ({
   menu: {
@@ -25,6 +26,10 @@ const NotificationsIconButton: React.FC = () => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const { newNotificationsCount } = useAppSelector(
+    (state) => state.notificationsStore
+  );
 
   const { profile } = useAuth();
 
@@ -42,7 +47,7 @@ const NotificationsIconButton: React.FC = () => {
 
   const menuId = 'notificatinos-menu';
 
-  const renderSettings = (
+  const renderNotifications = (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -127,17 +132,17 @@ const NotificationsIconButton: React.FC = () => {
   return (
     <>
       <IconButton
-        aria-label="show new notifications"
+        aria-label="show notifications"
         aria-controls={menuId}
         aria-haspopup="true"
         color="inherit"
         onClick={handleMenuOpen}
       >
-        <Badge badgeContent={0} color="secondary">
+        <Badge badgeContent={newNotificationsCount} max={9} color="secondary">
           <NotificationsIcon />
         </Badge>
       </IconButton>
-      {renderSettings}
+      {renderNotifications}
     </>
   );
 };

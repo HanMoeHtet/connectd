@@ -4,11 +4,13 @@ import authStore from './auth';
 import postsStore from './posts';
 import profileStore from './profile';
 import verificationStore from './verification';
+import notificationsStore from './notifications';
 
 export const store = configureStore({
   reducer: {
     authStore,
     verificationStore,
+    notificationsStore,
     profileStore,
     postsStore,
   },

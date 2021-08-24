@@ -28,6 +28,7 @@ import { useAppDispatch } from 'src/store';
 import Main from 'src/layouts/Main';
 import { getUser } from 'src/services/user';
 import Friends from 'src/components/UserPage/Friends';
+import { createFriendRequest } from 'src/services/friend';
 
 enum TabType {
   POSTS = 'POSTS',
@@ -61,6 +62,12 @@ const UserPage: React.FC = () => {
   if (!data) return null;
 
   const { user, areUsersFriends, isAuthUser } = data;
+
+  const sendFriendRequest = async () => {
+    await createFriendRequest({ userId: user._id });
+  };
+
+  const unfriend = () => {};
 
   return (
     <Main>
@@ -126,6 +133,7 @@ const UserPage: React.FC = () => {
                   }}
                   variant="contained"
                   color="primary"
+                  onClick={areUsersFriends ? unfriend : sendFriendRequest}
                 >
                   {areUsersFriends ? <PersonAddDisabled /> : <PersonAdd />}
                   <Box width="8px"></Box>
