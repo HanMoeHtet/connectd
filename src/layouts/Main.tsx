@@ -4,7 +4,10 @@ import AppBar from 'src/components/AppBar';
 import { AppModalProvider } from 'src/composables/AppModal';
 import useAuth from 'src/composables/useAuth';
 import Page from 'src/layouts/Page';
-import { listenForFriendRequestReceived } from 'src/services/friend';
+import {
+  listenForFriendRequestAccepted,
+  listenForFriendRequestReceived,
+} from 'src/services/friend';
 import { showToast } from 'src/services/notification';
 import { useAppDispatch } from 'src/store';
 import { addNewNotification } from 'src/store/notifications';
@@ -16,13 +19,27 @@ const Main: React.FC = ({ children }) => {
 
   useEffect(() => {
     listenForFriendRequestReceived((data) => {
-      const { _id, friendRequest, createdAt, isRead } = data;
+      const { friendRequest } = data;
+      // TODO: add support for i18n
       showToast(
         'info',
         `${friendRequest.sender.username} sent you a friend request`
       );
 
-      dispatch(addNewNotification({ _id, friendRequest, createdAt, isRead }));
+      dispatch(addNewNotification(data));
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    listenForFriendRequestAccepted((data) => {
+      const { friendRequest } = data;
+      // TODO: add support for i18n
+      showToast(
+        'info',
+        `You and ${friendRequest.sender.username} are now friends.`
+      );
+
+      dispatch(addNewNotification(data));
     });
   }, [dispatch]);
 

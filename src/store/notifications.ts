@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FriendRequestReceivedData } from 'src/services/friend';
+import {
+  FriendRequestAcceptedData,
+  FriendRequestReceivedData,
+} from 'src/services/friend';
 
-export interface FriendRequestReceivedNotification
-  extends FriendRequestReceivedData {}
-
-type Notification = FriendRequestReceivedNotification;
+export type Notification =
+  | FriendRequestReceivedData
+  | FriendRequestAcceptedData;
 
 export interface NotificationsState {
   notifications: Notification[];

@@ -119,3 +119,8 @@ export interface CreateShareError {
   content?: string[];
   privacy?: string[];
 }
+
+export enum NotificationType {
+  FRIEND_REQUEST_RECEIVED = 'FRIEND_REQUEST_RECEIVED',
+  FRIEND_REQUEST_ACCEPTED = 'FRIEND_REQUEST_ACCEPTED',
+}
