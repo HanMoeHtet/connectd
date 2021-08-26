@@ -78,7 +78,7 @@ const Post: React.FC<PostProps> = React.memo(
                 underline="none"
               >
                 <Avatar src={user.avatar}>
-                  {user.username[0].toUpperCase()}
+                  {(user.username[0] || '').toUpperCase()}
                 </Avatar>
               </Link>
             }

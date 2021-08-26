@@ -124,3 +124,11 @@ export enum NotificationType {
   FRIEND_REQUEST_RECEIVED = 'FRIEND_REQUEST_RECEIVED',
   FRIEND_REQUEST_ACCEPTED = 'FRIEND_REQUEST_ACCEPTED',
 }
+
+export interface BaseNotification {
+  _id: string;
+  isRead: boolean;
+  hasBeenSeen: boolean;
+  type: NotificationType;
+  createdAt: Date;
+}

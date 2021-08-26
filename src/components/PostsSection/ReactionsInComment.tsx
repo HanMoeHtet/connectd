@@ -75,7 +75,7 @@ function TabPanel(props: TabPanelProps) {
       const observer = new IntersectionObserver(
         async (entries) => {
           const firstEntry = entries[0];
-          if (firstEntry.isIntersecting && !isLoading) {
+          if (firstEntry && firstEntry.isIntersecting && !isLoading) {
             await loadMore();
           }
         },
@@ -141,7 +141,7 @@ function TabPanel(props: TabPanelProps) {
                     }}
                   >
                     <Avatar src={reaction.user.avatar}>
-                      {reaction.user.username[0].toUpperCase()}
+                      {(reaction.user.username[0] || '').toUpperCase()}
                     </Avatar>
                   </Badge>
                 </ListItemAvatar>

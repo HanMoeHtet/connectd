@@ -3,7 +3,7 @@ import { IconButton } from '@material-ui/core';
 import { Image } from '@material-ui/icons';
 
 interface PhotoInputButtonProps {
-  onChange: (media: File) => void;
+  onChange: (media: File | undefined) => void;
   isOpen?: boolean;
 }
 const PhotoInputButton: React.FC<PhotoInputButtonProps> = ({
@@ -18,7 +18,7 @@ const PhotoInputButton: React.FC<PhotoInputButtonProps> = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = (e.target.files || [])[0];
+    const file = e.target.files ? e.target.files[0] : undefined;
     onChange(file);
   };
 

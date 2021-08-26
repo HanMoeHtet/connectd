@@ -37,7 +37,12 @@ const PostsSection: React.FC = () => {
       const observer = new IntersectionObserver(
         async (entries) => {
           const firstEntry = entries[0];
-          if (firstEntry.isIntersecting && !isLoading) {
+          if (
+            firstEntry &&
+            firstEntry &&
+            firstEntry.isIntersecting &&
+            !isLoading
+          ) {
             await loadMore();
           }
         },

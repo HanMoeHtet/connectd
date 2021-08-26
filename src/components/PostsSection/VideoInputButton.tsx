@@ -3,7 +3,7 @@ import { IconButton } from '@material-ui/core';
 import { VideoLibrary } from '@material-ui/icons';
 
 interface VideoInputButtonProps {
-  onChange: (media: File) => void;
+  onChange: (media: File | undefined) => void;
   isOpen?: boolean;
 }
 const VideoInputButton: React.FC<VideoInputButtonProps> = ({
@@ -18,7 +18,7 @@ const VideoInputButton: React.FC<VideoInputButtonProps> = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = (e.target.files || [])[0];
+    const file = e.target.files ? e.target.files[0] : undefined;
     onChange(file);
   };
 

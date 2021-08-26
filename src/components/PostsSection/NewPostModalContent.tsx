@@ -159,7 +159,7 @@ const NewPostModalContent: React.FC<NewPostModalContentProps> =
               <form onSubmit={onFormSubmitted}>
                 <Box display="flex" alignItems="center">
                   <Avatar src={avatar} style={{ marginRight: 5 }}>
-                    {username[0].toUpperCase()}
+                    {(username[0] || '').toUpperCase()}
                   </Avatar>
                   <Box flexGrow="1">
                     <Typography>{username}</Typography>

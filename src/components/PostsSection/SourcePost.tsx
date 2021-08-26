@@ -35,7 +35,7 @@ const Post: React.FC<PostProps> = React.memo(
           avatar={
             <Link to="/" component={RouterLink}>
               <Avatar src={user.avatar}>
-                {user.username[0].toUpperCase()}
+                {(user.username[0] || '').toUpperCase()}
               </Avatar>
             </Link>
           }

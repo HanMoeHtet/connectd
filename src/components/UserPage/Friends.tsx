@@ -43,7 +43,7 @@ const Friends: React.FC<FriendsProps> = ({ userId }) => {
       const observer = new IntersectionObserver(
         async (entries) => {
           const firstEntry = entries[0];
-          if (firstEntry.isIntersecting && !isLoading) {
+          if (firstEntry && firstEntry.isIntersecting && !isLoading) {
             await loadMore();
           }
         },
@@ -72,7 +72,7 @@ const Friends: React.FC<FriendsProps> = ({ userId }) => {
           <ListItem key={friend._id}>
             <ListItemAvatar>
               <Avatar src={friend.user.avatar}>
-                {friend.user.username[0].toUpperCase()}
+                {(friend.user.username[0] || '').toUpperCase()}
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={friend.user.username} />

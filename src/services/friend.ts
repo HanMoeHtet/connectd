@@ -1,6 +1,6 @@
 import api from 'src/services/api';
 import socket from 'src/services/ws';
-import { NotificationType } from 'src/types/lib';
+import { BaseNotification, NotificationType } from 'src/types/lib';
 
 interface CreateFriendRequestOptions {
   userId: string;
@@ -8,6 +8,27 @@ interface CreateFriendRequestOptions {
 
 export const createFriendRequest = ({ userId }: CreateFriendRequestOptions) => {
   return api.post(`/users/${userId}/friends`);
+};
+
+export interface FriendRequestReceivedData extends BaseNotification {
+  type: NotificationType.FRIEND_REQUEST_RECEIVED;
+  friendRequest: {
+    _id: string;
+    sender: {
+      _id: string;
+      username: string;
+      avatar?: string;
+    };
+    receiverId: string;
+    createdAt: Date;
+  };
+}
+export const listenForFriendRequestReceived = (
+  cb: (data: FriendRequestReceivedData) => void
+) => {
+  socket.on('friend-request-received', (data: FriendRequestReceivedData) => {
+    cb(data);
+  });
 };
 
 interface AcceptFriendRequestOptions {
@@ -20,33 +41,7 @@ export const acceptFriendRequest = ({
   return api.post(`/friend-requests/${friendRequestId}/accept`);
 };
 
-export interface FriendRequestReceivedData {
-  _id: string;
-  isRead: boolean;
-  type: NotificationType.FRIEND_REQUEST_RECEIVED;
-  friendRequest: {
-    _id: string;
-    sender: {
-      _id: string;
-      username: string;
-      avatar?: string;
-    };
-    receiverId: string;
-    createdAt: Date;
-  };
-  createdAt: Date;
-}
-export const listenForFriendRequestReceived = (
-  cb: (data: FriendRequestReceivedData) => void
-) => {
-  socket.on('friend-request-received', (data: FriendRequestReceivedData) => {
-    cb(data);
-  });
-};
-
-export interface FriendRequestAcceptedData {
-  _id: string;
-  isRead: boolean;
+export interface FriendRequestAcceptedData extends BaseNotification {
   type: NotificationType.FRIEND_REQUEST_ACCEPTED;
   friendRequest: {
     _id: string;
@@ -62,7 +57,6 @@ export interface FriendRequestAcceptedData {
     };
     createdAt: Date;
   };
-  createdAt: Date;
 }
 export const listenForFriendRequestAccepted = (
   cb: (data: FriendRequestAcceptedData) => void
@@ -70,4 +64,14 @@ export const listenForFriendRequestAccepted = (
   socket.on('friend-request-accepted', (data: FriendRequestAcceptedData) => {
     cb(data);
   });
+};
+
+interface RejectFriendRequestOptions {
+  friendRequestId: string;
+}
+
+export const rejectFriendRequest = ({
+  friendRequestId,
+}: RejectFriendRequestOptions) => {
+  return api.post(`/friend-requests/${friendRequestId}/reject`);
 };

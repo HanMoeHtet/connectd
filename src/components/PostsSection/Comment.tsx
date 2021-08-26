@@ -61,7 +61,9 @@ export const Comment: React.FC<CommentProps> = ({
     <CardContent>
       <Box display="flex">
         <Link to="/" component={RouterLink}>
-          <Avatar src={user.avatar}>{user.username[0].toUpperCase()}</Avatar>
+          <Avatar src={user.avatar}>
+            {(user.username[0] || '').toUpperCase()}
+          </Avatar>
         </Link>
         <Box flexGrow="1">
           <CardContent style={{ paddingTop: 0, paddingBottom: 10 }}>

@@ -13,7 +13,7 @@ const ProfileIconButton: React.FC = () => {
     <Box display={{ xs: 'none', md: 'block' }}>
       <Button style={{ borderRadius: 8, display: 'flex' }}>
         <Avatar src={avatar} style={{ marginRight: 5 }}>
-          {username[0].toUpperCase()}
+          {(username[0] || '').toUpperCase()}
         </Avatar>
         <Typography style={{ textTransform: 'none' }}>{username}</Typography>
       </Button>

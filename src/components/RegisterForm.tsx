@@ -69,10 +69,11 @@ const RegisterForm: React.FC<Props> = ({ setIsLogginIn }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const propName = event.target.name;
     const value = event.target.value;
-    if (propName.split('.')[0] === 'pronouns') {
+    const [p0, p1] = propName.split('.');
+    if (p0 === 'pronouns' && p1 && p1 in formData.pronouns) {
       setFormData({
         ...formData,
-        pronouns: { ...formData.pronouns, [propName.split('.')[1]]: value },
+        pronouns: { ...formData.pronouns, [p1]: value },
       });
     } else {
       setFormData((prevData) => ({

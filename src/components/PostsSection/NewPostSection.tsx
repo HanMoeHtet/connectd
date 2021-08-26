@@ -25,7 +25,7 @@ const NewPostSection: React.FC = () => {
     <Card>
       <CardContent style={{ paddingBottom: 10 }}>
         <Box display="flex" alignItems="center">
-          <Avatar src={avatar}>{username[0].toUpperCase()}</Avatar>
+          <Avatar src={avatar}>{(username[0] || '').toUpperCase()}</Avatar>
           <Button
             color="inherit"
             style={{

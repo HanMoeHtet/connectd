@@ -77,7 +77,7 @@ const UserPage: React.FC = () => {
             <Grid container>
               <Grid item xs={6}>
                 <Avatar src={user.avatar} style={{ width: 120, height: 120 }}>
-                  {user.username[0].toUpperCase()}
+                  {(user.username[0] || '').toUpperCase()}
                 </Avatar>
               </Grid>
               <Grid item xs={6}>

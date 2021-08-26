@@ -33,12 +33,16 @@ const FriendRequestAccepted: React.FC<FriendRequestAcceptedProps> = ({
           src={friendRequest.receiver.avatar}
           style={{ marginRight: 10, alignSelf: 'flex-start' }}
         >
-          {friendRequest.receiver.username[0].toUpperCase()}
+          {(friendRequest.receiver.username[0] || '').toUpperCase()}
         </Avatar>
       </Link>
       <Box>
         <Typography>
-          <Link to="/" component={RouterLink} className={`${classes.author}`}>
+          <Link
+            to={`/users/${friendRequest.receiver._id}`}
+            component={RouterLink}
+            className={`${classes.author}`}
+          >
             {friendRequest.receiver.username}
           </Link>{' '}
           accepted your friend request.

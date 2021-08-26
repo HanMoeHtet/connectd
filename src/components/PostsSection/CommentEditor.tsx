@@ -110,7 +110,7 @@ const CommentEditor: React.FC<CommentEditorProps> = ({ postId }) => {
     <CardContent style={{ paddingBottom: 0 }}>
       <Box display="flex" alignItems="center">
         <Avatar src={avatar} style={{ alignSelf: 'flex-start' }}>
-          {username[0].toUpperCase()}
+          {(username[0] || '').toUpperCase()}
         </Avatar>
         <CardContent style={{ flexGrow: 1, paddingTop: 0, paddingBottom: 0 }}>
           <form onSubmit={onFormSubmitted}>

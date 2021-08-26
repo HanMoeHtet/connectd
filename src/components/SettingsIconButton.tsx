@@ -42,7 +42,7 @@ const SettingsIconButton: React.FC = () => {
     >
       <MenuItem onClick={handleMenuClose}>
         <Avatar src={avatar} style={{ marginRight: 5 }}>
-          {username[0].toUpperCase()}
+          {(username[0] || '').toUpperCase()}
         </Avatar>
         <Typography style={{ textTransform: 'none' }}>{username}</Typography>
       </MenuItem>
