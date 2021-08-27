@@ -1,5 +1,6 @@
-import { Box, Button, Avatar, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, Typography } from '@material-ui/core';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import useAuth from 'src/composables/useAuth';
 
 const ProfileIconButton: React.FC = () => {
@@ -7,11 +8,15 @@ const ProfileIconButton: React.FC = () => {
 
   if (!profile) return null;
 
-  const { username, avatar } = profile;
+  const { username, avatar, _id } = profile;
 
   return (
     <Box display={{ xs: 'none', md: 'block' }}>
-      <Button style={{ borderRadius: 8, display: 'flex' }}>
+      <Button
+        component={Link}
+        to={`/users/${_id}`}
+        style={{ borderRadius: 8, display: 'flex', textDecoration: 'none' }}
+      >
         <Avatar src={avatar} style={{ marginRight: 5 }}>
           {(username[0] || '').toUpperCase()}
         </Avatar>

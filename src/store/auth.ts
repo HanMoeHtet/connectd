@@ -25,8 +25,9 @@ import {
   UNAUTHORIZED,
 } from 'src/constants';
 import { showToast } from 'src/services/notification';
-import { fetchBasicProfile } from './profile';
-import { getToken, setToken } from 'src/services/jwt';
+import { fetchBasicProfile, setProfile } from './profile';
+import { getToken, removeToken, setToken } from 'src/services/jwt';
+import { fetNewNotificationsCount } from './notifications';
 
 const initialState: AuthState = {
   isLoading: false,
@@ -135,6 +136,13 @@ export const logInWithEmail =
       return;
     }
 
+    try {
+      await dispatch(fetNewNotificationsCount());
+    } catch (e) {
+      dispatch(setIsLoading(false));
+      return;
+    }
+
     history.push('/');
     dispatch(setIsLoading(false));
   };
@@ -183,6 +191,13 @@ export const logInWithPhoneNumber =
     } catch (e) {
       // FIXME: replace with i18next
       showToast('error', 'Failed to load user profile');
+      dispatch(setIsLoading(false));
+      return;
+    }
+
+    try {
+      await dispatch(fetNewNotificationsCount());
+    } catch (e) {
       dispatch(setIsLoading(false));
       return;
     }
@@ -247,7 +262,21 @@ export const checkAuth = (): AppThunk<Promise<void>> => async (dispatch) => {
     dispatch(setIsLoading(false));
     return;
   }
+
+  try {
+    await dispatch(fetNewNotificationsCount());
+  } catch (e) {
+    dispatch(setIsLoading(false));
+    return;
+  }
+
   dispatch(setIsLoading(false));
+};
+
+export const logOut = (): AppThunk<Promise<void>> => async (dispatch) => {
+  setProfile(null);
+  removeToken();
+  history.replace('/login');
 };
 
 export default authSlice.reducer;

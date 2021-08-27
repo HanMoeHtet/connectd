@@ -3,6 +3,8 @@ import {
   FriendRequestAcceptedData,
   FriendRequestReceivedData,
 } from 'src/services/friend';
+import { getNewNotificationsCount } from 'src/services/profile';
+import { AppThunk } from '.';
 
 export type Notification =
   | FriendRequestReceivedData
@@ -10,11 +12,13 @@ export type Notification =
 
 export interface NotificationsState {
   notifications: Notification[];
+  hasMore: boolean;
   newNotificationsCount: number;
 }
 
 const initialState: NotificationsState = {
   notifications: [],
+  hasMore: true,
   newNotificationsCount: 0,
 };
 
@@ -22,8 +26,16 @@ const notificationsSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
+    addNotifications(state, action: PayloadAction<Notification[]>) {
+      state.notifications.unshift(...action.payload);
+    },
+
+    setHasMore(state, action: PayloadAction<boolean>) {
+      state.hasMore = action.payload;
+    },
+
     addNewNotification(state, action: PayloadAction<Notification>) {
-      state.notifications.push(action.payload);
+      state.notifications.unshift(action.payload);
       state.newNotificationsCount += 1;
     },
 
@@ -54,10 +66,26 @@ const notificationsSlice = createSlice({
   },
 });
 
+export const fetNewNotificationsCount =
+  (): AppThunk<Promise<void>> => async (dispatch, getState) => {
+    let response;
+
+    try {
+      response = await getNewNotificationsCount();
+    } catch (e) {
+      throw e;
+    }
+
+    const { newNotificationsCount } = response.data.data;
+    dispatch(setNewNotificationsCount(newNotificationsCount));
+  };
+
 export const {
   addNewNotification,
   setNewNotificationsCount,
   removeNotification,
+  addNotifications,
+  setHasMore,
 } = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

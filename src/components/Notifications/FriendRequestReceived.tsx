@@ -31,7 +31,7 @@ const FriendRequestReceived: React.FC<FriendRequestReceivedProps> = ({
   _id,
   friendRequest,
   createdAt,
-  isRead,
+  hasBeenRead,
 }) => {
   const classes = useStyles();
   const dispatch = useAppDispatch();

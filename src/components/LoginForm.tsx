@@ -108,10 +108,11 @@ const LoginForm: React.FC<Props> = ({ setIsLogginIn }) => {
               aria-label="toggle password visibility"
               onClick={() => setIsShowingPassword(!isShowingPassword)}
             >
-              {isShowingPassword ? <Visibility /> : <VisibilityOff />}
+              {isShowingPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           ),
         }}
+        type={isShowingPassword ? 'text' : 'password'}
         label="Password"
         name="password"
         value={formData.password}

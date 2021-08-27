@@ -18,7 +18,7 @@ const FriendRequestAccepted: React.FC<FriendRequestAcceptedProps> = ({
   _id,
   friendRequest,
   createdAt,
-  isRead,
+  hasBeenRead,
 }) => {
   const classes = useStyles();
 

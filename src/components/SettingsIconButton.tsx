@@ -8,17 +8,22 @@ import {
 } from '@material-ui/core';
 import { Settings } from '@material-ui/icons';
 import React from 'react';
-import Logout from './icons/Logout';
+import { Link } from 'react-router-dom';
 import useAuth from 'src/composables/useAuth';
+import { useAppDispatch } from 'src/store';
+import { logOut } from 'src/store/auth';
+import Logout from './icons/Logout';
 
 const SettingsIconButton: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const { profile } = useAuth();
 
   if (!profile) return null;
 
-  const { username, avatar } = profile;
+  const { username, avatar, _id } = profile;
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -26,6 +31,10 @@ const SettingsIconButton: React.FC = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const onLogOutClicked = () => {
+    dispatch(logOut());
   };
 
   const menuId = 'settings-menu';
@@ -40,14 +49,18 @@ const SettingsIconButton: React.FC = () => {
       open={Boolean(anchorEl)}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem
+        component={Link}
+        to={`/users/${_id}`}
+        style={{ textDecoration: 'none' }}
+      >
         <Avatar src={avatar} style={{ marginRight: 5 }}>
           {(username[0] || '').toUpperCase()}
         </Avatar>
         <Typography style={{ textTransform: 'none' }}>{username}</Typography>
       </MenuItem>
       <Divider />
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem onClick={onLogOutClicked}>
         <Logout style={{ marginRight: 5 }} />
         <Typography style={{ textTransform: 'none' }}>Logout</Typography>
       </MenuItem>

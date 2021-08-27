@@ -127,7 +127,7 @@ export enum NotificationType {
 
 export interface BaseNotification {
   _id: string;
-  isRead: boolean;
+  hasBeenRead: boolean;
   hasBeenSeen: boolean;
   type: NotificationType;
   createdAt: Date;
