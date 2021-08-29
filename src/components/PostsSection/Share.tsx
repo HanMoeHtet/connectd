@@ -6,6 +6,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  CardMedia,
   Collapse,
   Divider,
   Link,
@@ -16,7 +17,7 @@ import { Comment } from '@material-ui/icons';
 import { formatDistance } from 'date-fns';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { SharedPost as PostType } from 'src/types/post';
+import { Media, MediaType, SharedPost as PostType } from 'src/types/post';
 import CommentsSection from './CommentsSection';
 import ReactInPostButton from './ReactInPostButton';
 import ReactionsInPostButton from './ReactionsInPostButton';
@@ -45,6 +46,7 @@ const Post: React.FC<PostProps> = React.memo(
     reactionCounts,
     commentCount,
     shareCount,
+    media,
     source,
     user,
     userReactedReactionType,
@@ -55,12 +57,28 @@ const Post: React.FC<PostProps> = React.memo(
 
     const PrivacyIcon = privacyIcons.get(privacy)!.Icon;
 
+    const renderMedia = (media: Media) => {
+      if (media.type === MediaType.IMAGE) {
+        return <CardMedia src={media.url} component="img" />;
+      }
+
+      if (media.type === MediaType.VIDEO) {
+        return <CardMedia src={media.url} component="video" controls />;
+      }
+
+      return null;
+    };
+
     return (
       <>
         <Card>
           <CardHeader
             avatar={
-              <Link to="/" component={RouterLink}>
+              <Link
+                to={`/users/${userId}`}
+                component={RouterLink}
+                underline="none"
+              >
                 <Avatar src={user.avatar}>
                   {(user.username[0] || '').toUpperCase()}
                 </Avatar>
@@ -68,7 +86,7 @@ const Post: React.FC<PostProps> = React.memo(
             }
             title={
               <Link
-                to="/"
+                to={`/users/${userId}`}
                 component={RouterLink}
                 className={`${classes.author}`}
               >
@@ -77,15 +95,18 @@ const Post: React.FC<PostProps> = React.memo(
             }
             subheader={
               <Box display="flex" alignItems="center">
-                <Typography
-                  variant="body2"
+                <Link
+                  to={`/posts/${_id}`}
+                  component={RouterLink}
                   color="textSecondary"
-                  style={{ marginRight: 10 }}
                 >
-                  {formatDistance(new Date(createdAt), new Date(), {
-                    addSuffix: true,
-                  })}
-                </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {formatDistance(new Date(createdAt), new Date(), {
+                      addSuffix: true,
+                    })}
+                  </Typography>
+                </Link>
+                <Box width="10px"></Box>
                 <PrivacyIcon fontSize="small" />
               </Box>
             }
@@ -95,7 +116,7 @@ const Post: React.FC<PostProps> = React.memo(
               {content}
             </Typography>
           </CardContent>
-          {/* <CardMedia image={avatarImg} component="img" /> */}
+          {media && renderMedia(media)}
           <SourcePost {...source} />
           <Divider style={{ margin: '0 15px', marginTop: 10 }} />
           <CardActions>

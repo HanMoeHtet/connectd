@@ -41,6 +41,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   useEffect(() => {
     (async () => {
       if (isShowingComments && !hasLoaded) {
+        // TODO: fix redundant fetching when data is empty
         await loadMore();
         setHasLoaded(true);
       }

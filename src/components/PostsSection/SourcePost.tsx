@@ -3,6 +3,7 @@ import {
   Box,
   CardContent,
   CardHeader,
+  CardMedia,
   Link,
   makeStyles,
   Typography,
@@ -10,7 +11,7 @@ import {
 import { formatDistance } from 'date-fns';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Source as PostType } from 'src/types/post';
+import { Media, MediaType, Source as PostType } from 'src/types/post';
 import { privacyIcons } from './shared';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,37 +25,61 @@ const useStyles = makeStyles((theme) => ({
 type PostProps = PostType & {};
 
 const Post: React.FC<PostProps> = React.memo(
-  ({ _id, userId, type, createdAt, privacy, content, user }) => {
+  ({ _id, userId, type, createdAt, privacy, content, user, media }) => {
     const classes = useStyles();
 
     const PrivacyIcon = privacyIcons.get(privacy)!.Icon;
+
+    const renderMedia = (media: Media) => {
+      if (media.type === MediaType.IMAGE) {
+        return <CardMedia src={media.url} component="img" />;
+      }
+
+      if (media.type === MediaType.VIDEO) {
+        return <CardMedia src={media.url} component="video" controls />;
+      }
+
+      return null;
+    };
 
     return (
       <Box style={{ border: '1px solid #5f5f5f', margin: 'auto 8px' }}>
         <CardHeader
           avatar={
-            <Link to="/" component={RouterLink}>
+            <Link
+              to={`/users/${userId}`}
+              component={RouterLink}
+              underline="none"
+            >
               <Avatar src={user.avatar}>
                 {(user.username[0] || '').toUpperCase()}
               </Avatar>
             </Link>
           }
           title={
-            <Link to="/" component={RouterLink} className={`${classes.author}`}>
+            <Link
+              to={`/users/${userId}`}
+              component={RouterLink}
+              className={`${classes.author}`}
+            >
               <span>{user.username}</span>
             </Link>
           }
           subheader={
             <Box display="flex" alignItems="center">
-              <Typography
-                variant="body2"
+              <Link
+                to={`/posts/${_id}`}
+                component={RouterLink}
                 color="textSecondary"
-                style={{ marginRight: 10 }}
               >
-                {formatDistance(new Date(createdAt), new Date(), {
-                  addSuffix: true,
-                })}
-              </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {formatDistance(new Date(createdAt), new Date(), {
+                    addSuffix: true,
+                  })}
+                </Typography>
+              </Link>
+
+              <Box width="10px"></Box>
               <PrivacyIcon fontSize="small" />
             </Box>
           }
@@ -66,7 +91,7 @@ const Post: React.FC<PostProps> = React.memo(
         <CardContent style={{ padding: '0px 8px 5px 8px' }}>
           <Typography style={{ whiteSpace: 'pre-wrap' }}>{content}</Typography>
         </CardContent>
-        {/* <CardMedia image={avatarImg} component="img" /> */}
+        {media && renderMedia(media)}
       </Box>
     );
   }

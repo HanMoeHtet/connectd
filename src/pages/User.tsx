@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Card,
   CardContent,
   Divider,
@@ -21,14 +20,19 @@ import {
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import ActionButton, {
+  ActionButtonProps,
+} from 'src/components/UserPage/ActionButton';
+import Friends from 'src/components/UserPage/Friends';
+import MultiActionsButton, {
+  MultiActionsButtonProps,
+} from 'src/components/UserPage/MultiActionsButton';
 import Posts from 'src/components/UserPage/Posts';
 import TabPanel from 'src/components/UserPage/TabPanel';
-import { GetUserResponseData } from 'src/services/user';
-import { useAppDispatch } from 'src/store';
 import Main from 'src/layouts/Main';
-import { getUser } from 'src/services/user';
-import Friends from 'src/components/UserPage/Friends';
 import { createFriendRequest } from 'src/services/friend';
+import { getUser, GetUserResponseData } from 'src/services/user';
+import { useAppDispatch } from 'src/store';
 
 enum TabType {
   POSTS = 'POSTS',
@@ -61,11 +65,66 @@ const UserPage: React.FC = () => {
 
   if (!data) return null;
 
-  const { user, areUsersFriends, isAuthUser } = data;
+  const {
+    user,
+    areUsersFriends,
+    isAuthUser,
+    hasSentFriendRequest,
+    hasReceivedFriendRequest,
+  } = data;
+
+  const renderActionButton = () => {
+    let props: ActionButtonProps = {
+      text: '',
+      icon: null,
+      onClick: () => {},
+    };
+
+    if (areUsersFriends) {
+      props.text = 'Unfriend';
+      props.icon = <PersonAddDisabled />;
+      props.onClick = unfriend;
+    } else if (hasSentFriendRequest) {
+      props.text = 'Cancel';
+      props.icon = <PersonAddDisabled />;
+      props.onClick = cancelFriendRequest;
+    } else if (hasReceivedFriendRequest) {
+      const props: MultiActionsButtonProps = {
+        icon: <PersonAdd />,
+        text: 'Respond',
+        actions: [
+          {
+            text: 'Decline',
+            onClick: declineFriendRequest,
+            icon: <PersonAddDisabled />,
+          },
+          {
+            text: 'Accept',
+            onClick: acceptFriendRequest,
+            icon: <PersonAdd />,
+          },
+        ],
+      };
+
+      return <MultiActionsButton {...props} />;
+    } else {
+      props.text = 'Add Friend';
+      props.icon = <PersonAdd />;
+      props.onClick = sendFriendRequest;
+    }
+
+    return <ActionButton {...props} />;
+  };
 
   const sendFriendRequest = async () => {
     await createFriendRequest({ userId: user._id });
   };
+
+  const acceptFriendRequest = async () => {};
+
+  const declineFriendRequest = async () => {};
+
+  const cancelFriendRequest = () => {};
 
   const unfriend = () => {};
 
@@ -122,27 +181,8 @@ const UserPage: React.FC = () => {
                 </Box>
               </Grid>
             </Grid>
-            {!isAuthUser && (
-              <>
-                <Box height="16px" />
-                <Button
-                  style={{
-                    textTransform: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                  variant="contained"
-                  color="primary"
-                  onClick={areUsersFriends ? unfriend : sendFriendRequest}
-                >
-                  {areUsersFriends ? <PersonAddDisabled /> : <PersonAdd />}
-                  <Box width="8px"></Box>
-                  <Typography>
-                    {areUsersFriends ? 'Unfriend' : 'Add Friend'}
-                  </Typography>
-                </Button>
-              </>
-            )}
+            <Box height="16px" />
+            {!isAuthUser && renderActionButton()}
           </CardContent>
         </Card>
         <Divider style={{ margin: '15px auto', width: '80px' }} />
