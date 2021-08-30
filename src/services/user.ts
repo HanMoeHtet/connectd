@@ -18,8 +18,8 @@ export interface GetUserResponseData {
     postCount: number;
   };
   areUsersFriends?: boolean;
-  hasSentFriendRequest?: boolean;
-  hasReceivedFriendRequest?: boolean;
+  sentFriendRequestId?: string;
+  receivedFriendRequestId?: string;
   isAuthUser: boolean;
 }
 interface GetUserSuccessResponse {

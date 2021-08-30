@@ -63,7 +63,7 @@ interface NewPostModalContentProps {
   isChoosingPhoto?: boolean;
 }
 const NewPostModalContent: React.FC<NewPostModalContentProps> =
-  React.forwardRef(({ sourceId, isChoosingPhoto, isChoosingVideo }) => {
+  React.forwardRef(({ sourceId, isChoosingPhoto, isChoosingVideo }, ref) => {
     const classes = useStyles();
     const dispatch = useAppDispatch();
 

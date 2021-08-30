@@ -197,7 +197,7 @@ interface ReactionsInReplyProps {
 }
 
 const Reactions: React.FC<ReactionsInReplyProps> = React.forwardRef(
-  ({ postId, counts, commentId, replyId }) => {
+  ({ postId, counts, commentId, replyId }, ref) => {
     const { setContent } = useContext(ModalContext);
 
     const [openedTabIndex, setOpenedTabIndex] = useState(0);

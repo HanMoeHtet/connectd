@@ -56,6 +56,7 @@ const LoginForm: React.FC<Props> = ({ setIsLogginIn }) => {
         })
       );
 
+      // FIX: not displaying errors
       if (errors) {
         setErrors(errors);
       }

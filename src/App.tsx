@@ -13,7 +13,7 @@ import EmailVerificationEndPoint from './pages/EmailVerificationEndPoint';
 import Newsfeed from './pages/Newsfeed';
 import Guest from './composables/Guest';
 import PostPage from './pages/Post';
-import UserPage from './pages/User.mock';
+import UserPage from './pages/User';
 
 const App: React.FC = () => {
   return (

@@ -193,7 +193,7 @@ interface ReactionsInPostProps {
 }
 
 const ReactionsInPost: React.FC<ReactionsInPostProps> = React.forwardRef(
-  ({ postId, counts }) => {
+  ({ postId, counts }, ref) => {
     const { setContent } = useContext(ModalContext);
 
     const [openedTabIndex, setOpenedTabIndex] = useState(0);

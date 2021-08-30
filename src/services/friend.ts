@@ -31,6 +31,16 @@ export const listenForFriendRequestReceived = (
   });
 };
 
+interface CancelFriendRequestOptions {
+  friendRequestId: string;
+}
+
+export const cancelFriendRequest = ({
+  friendRequestId,
+}: CancelFriendRequestOptions) => {
+  return api.post(`/friend-requests/${friendRequestId}/cancel`);
+};
+
 interface AcceptFriendRequestOptions {
   friendRequestId: string;
 }

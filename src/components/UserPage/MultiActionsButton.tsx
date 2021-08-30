@@ -6,7 +6,7 @@ import {
   MenuItem,
   Typography,
 } from '@material-ui/core';
-import React from 'react';
+import React, { useRef } from 'react';
 
 export interface MultiActionsButtonProps {
   icon: React.ReactElement | null;
@@ -22,16 +22,15 @@ const MultiActionsButton: React.FC<MultiActionsButtonProps> = ({
   icon,
   text,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    console.log('opened');
     setAnchorEl(event.currentTarget);
     document.addEventListener('scroll', handleMenuClose);
   };
 
   const handleMenuClose = () => {
-    console.log('closed');
     setAnchorEl(null);
     document.removeEventListener('scroll', handleMenuClose);
   };
@@ -48,7 +47,7 @@ const MultiActionsButton: React.FC<MultiActionsButtonProps> = ({
       getContentAnchorEl={null}
       open={Boolean(anchorEl)}
       onClose={handleMenuClose}
-      container={anchorEl?.parentElement}
+      container={containerRef.current}
     >
       {actions.map((action, index) => [
         <MenuItem onClick={action.onClick}>
@@ -64,7 +63,7 @@ const MultiActionsButton: React.FC<MultiActionsButtonProps> = ({
   );
 
   return (
-    <Box>
+    <Box {...{ ref: containerRef }}>
       <Button
         style={{
           textTransform: 'none',
@@ -74,6 +73,8 @@ const MultiActionsButton: React.FC<MultiActionsButtonProps> = ({
         aria-label={text}
         aria-haspopup="true"
         aria-controls={menuId}
+        aria-describedby={Boolean(anchorEl) ? menuId : undefined}
+        aria-owns={menuId}
         onClick={handleMenuOpen}
         variant="contained"
         color="primary"

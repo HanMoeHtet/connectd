@@ -30,7 +30,12 @@ import MultiActionsButton, {
 import Posts from 'src/components/UserPage/Posts';
 import TabPanel from 'src/components/UserPage/TabPanel';
 import Main from 'src/layouts/Main';
-import { createFriendRequest } from 'src/services/friend';
+import {
+  createFriendRequest,
+  rejectFriendRequest,
+  acceptFriendRequest as _acceptFriendRequest,
+  cancelFriendRequest as _cancelFriendRequest,
+} from 'src/services/friend';
 import { getUser, GetUserResponseData } from 'src/services/user';
 import { useAppDispatch } from 'src/store';
 
@@ -69,8 +74,8 @@ const UserPage: React.FC = () => {
     user,
     areUsersFriends,
     isAuthUser,
-    hasSentFriendRequest,
-    hasReceivedFriendRequest,
+    sentFriendRequestId,
+    receivedFriendRequestId,
   } = data;
 
   const renderActionButton = () => {
@@ -84,24 +89,24 @@ const UserPage: React.FC = () => {
       props.text = 'Unfriend';
       props.icon = <PersonAddDisabled />;
       props.onClick = unfriend;
-    } else if (hasSentFriendRequest) {
+    } else if (sentFriendRequestId !== undefined) {
       props.text = 'Cancel';
       props.icon = <PersonAddDisabled />;
       props.onClick = cancelFriendRequest;
-    } else if (hasReceivedFriendRequest) {
+    } else if (receivedFriendRequestId !== undefined) {
       const props: MultiActionsButtonProps = {
         icon: <PersonAdd />,
         text: 'Respond',
         actions: [
           {
-            text: 'Decline',
-            onClick: declineFriendRequest,
-            icon: <PersonAddDisabled />,
-          },
-          {
             text: 'Accept',
             onClick: acceptFriendRequest,
             icon: <PersonAdd />,
+          },
+          {
+            text: 'Decline',
+            onClick: declineFriendRequest,
+            icon: <PersonAddDisabled />,
           },
         ],
       };
@@ -118,15 +123,33 @@ const UserPage: React.FC = () => {
 
   const sendFriendRequest = async () => {
     await createFriendRequest({ userId: user._id });
+    setData({ ...data, sentFriendRequestId: undefined });
   };
 
-  const acceptFriendRequest = async () => {};
+  const cancelFriendRequest = async () => {
+    if (sentFriendRequestId) {
+      await _cancelFriendRequest({ friendRequestId: sentFriendRequestId });
+      setData({ ...data, sentFriendRequestId: undefined });
+    }
+  };
 
-  const declineFriendRequest = async () => {};
+  const acceptFriendRequest = async () => {
+    if (sentFriendRequestId) {
+      await _acceptFriendRequest({ friendRequestId: sentFriendRequestId });
+      setData({ ...data, areUsersFriends: true });
+    }
+  };
 
-  const cancelFriendRequest = () => {};
+  const declineFriendRequest = async () => {
+    if (receivedFriendRequestId) {
+      await rejectFriendRequest({ friendRequestId: receivedFriendRequestId });
+      setData({ ...data, receivedFriendRequestId: undefined });
+    }
+  };
 
-  const unfriend = () => {};
+  const unfriend = () => {
+    setData({ ...data, areUsersFriends: false });
+  };
 
   return (
     <Main>
