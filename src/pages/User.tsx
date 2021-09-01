@@ -35,6 +35,7 @@ import {
   rejectFriendRequest,
   acceptFriendRequest as _acceptFriendRequest,
   cancelFriendRequest as _cancelFriendRequest,
+  unfriend as _unfriend,
 } from 'src/services/friend';
 import { getUser, GetUserResponseData } from 'src/services/user';
 import { useAppDispatch } from 'src/store';
@@ -72,7 +73,7 @@ const UserPage: React.FC = () => {
 
   const {
     user,
-    areUsersFriends,
+    friendId,
     isAuthUser,
     sentFriendRequestId,
     receivedFriendRequestId,
@@ -85,7 +86,7 @@ const UserPage: React.FC = () => {
       onClick: () => {},
     };
 
-    if (areUsersFriends) {
+    if (friendId !== undefined) {
       props.text = 'Unfriend';
       props.icon = <PersonAddDisabled />;
       props.onClick = unfriend;
@@ -122,8 +123,9 @@ const UserPage: React.FC = () => {
   };
 
   const sendFriendRequest = async () => {
-    await createFriendRequest({ userId: user._id });
-    setData({ ...data, sentFriendRequestId: undefined });
+    const response = await createFriendRequest({ userId: user._id });
+    const { friendRequestId } = response.data.data;
+    setData({ ...data, sentFriendRequestId: friendRequestId });
   };
 
   const cancelFriendRequest = async () => {
@@ -134,9 +136,12 @@ const UserPage: React.FC = () => {
   };
 
   const acceptFriendRequest = async () => {
-    if (sentFriendRequestId) {
-      await _acceptFriendRequest({ friendRequestId: sentFriendRequestId });
-      setData({ ...data, areUsersFriends: true });
+    if (receivedFriendRequestId) {
+      const response = await _acceptFriendRequest({
+        friendRequestId: receivedFriendRequestId,
+      });
+      const { friendId } = response.data.data;
+      setData({ ...data, friendId });
     }
   };
 
@@ -147,8 +152,11 @@ const UserPage: React.FC = () => {
     }
   };
 
-  const unfriend = () => {
-    setData({ ...data, areUsersFriends: false });
+  const unfriend = async () => {
+    if (friendId) {
+      await _unfriend({ friendId });
+      setData({ ...data, friendId: undefined });
+    }
   };
 
   return (

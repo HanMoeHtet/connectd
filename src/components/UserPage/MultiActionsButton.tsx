@@ -50,7 +50,12 @@ const MultiActionsButton: React.FC<MultiActionsButtonProps> = ({
       container={containerRef.current}
     >
       {actions.map((action, index) => [
-        <MenuItem onClick={action.onClick}>
+        <MenuItem
+          onClick={() => {
+            console.log('clicked');
+            action.onClick();
+          }}
+        >
           {action.icon}
           <Box width="5px" />
           <Typography style={{ textTransform: 'none' }}>

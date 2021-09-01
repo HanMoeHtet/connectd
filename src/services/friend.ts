@@ -6,8 +6,14 @@ interface CreateFriendRequestOptions {
   userId: string;
 }
 
+interface CreateFriendRequestResponse {
+  data: {
+    friendRequestId: string;
+  };
+}
+
 export const createFriendRequest = ({ userId }: CreateFriendRequestOptions) => {
-  return api.post(`/users/${userId}/friends`);
+  return api.post<CreateFriendRequestResponse>(`/users/${userId}/friends`);
 };
 
 export interface FriendRequestReceivedData extends BaseNotification {
@@ -45,10 +51,18 @@ interface AcceptFriendRequestOptions {
   friendRequestId: string;
 }
 
+interface AcceptFriendRequestResponse {
+  data: {
+    friendId: string;
+  };
+}
+
 export const acceptFriendRequest = ({
   friendRequestId,
 }: AcceptFriendRequestOptions) => {
-  return api.post(`/friend-requests/${friendRequestId}/accept`);
+  return api.post<AcceptFriendRequestResponse>(
+    `/friend-requests/${friendRequestId}/accept`
+  );
 };
 
 export interface FriendRequestAcceptedData extends BaseNotification {
@@ -84,4 +98,12 @@ export const rejectFriendRequest = ({
   friendRequestId,
 }: RejectFriendRequestOptions) => {
   return api.post(`/friend-requests/${friendRequestId}/reject`);
+};
+
+interface UnfriendOptions {
+  friendId: string;
+}
+
+export const unfriend = ({ friendId }: UnfriendOptions) => {
+  return api.delete(`/friends/${friendId}`);
 };

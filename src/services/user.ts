@@ -17,7 +17,7 @@ export interface GetUserResponseData {
     friendCount: number;
     postCount: number;
   };
-  areUsersFriends?: boolean;
+  friendId?: string;
   sentFriendRequestId?: string;
   receivedFriendRequestId?: string;
   isAuthUser: boolean;
