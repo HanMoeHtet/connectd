@@ -67,19 +67,10 @@ export const acceptFriendRequest = ({
 
 export interface FriendRequestAcceptedData extends BaseNotification {
   type: NotificationType.FRIEND_REQUEST_ACCEPTED;
-  friendRequest: {
+  friendUser: {
     _id: string;
-    receiver: {
-      _id: string;
-      username: string;
-      avatar?: string;
-    };
-    sender: {
-      _id: string;
-      username: string;
-      avatar?: string;
-    };
-    createdAt: Date;
+    username: string;
+    avatar?: string;
   };
 }
 export const listenForFriendRequestAccepted = (

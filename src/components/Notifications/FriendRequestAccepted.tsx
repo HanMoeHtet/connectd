@@ -16,7 +16,7 @@ interface FriendRequestAcceptedProps extends FriendRequestAcceptedData {}
 
 const FriendRequestAccepted: React.FC<FriendRequestAcceptedProps> = ({
   _id,
-  friendRequest,
+  friendUser,
   createdAt,
   hasBeenRead,
 }) => {
@@ -25,25 +25,25 @@ const FriendRequestAccepted: React.FC<FriendRequestAcceptedProps> = ({
   return (
     <>
       <Link
-        to={`/users/${friendRequest.receiver._id}`}
+        to={`/users/${friendUser._id}`}
         component={RouterLink}
         underline="none"
       >
         <Avatar
-          src={friendRequest.receiver.avatar}
+          src={friendUser.avatar}
           style={{ marginRight: 10, alignSelf: 'flex-start' }}
         >
-          {(friendRequest.receiver.username[0] || '').toUpperCase()}
+          {(friendUser.username[0] || '').toUpperCase()}
         </Avatar>
       </Link>
       <Box>
         <Typography>
           <Link
-            to={`/users/${friendRequest.receiver._id}`}
+            to={`/users/${friendUser._id}`}
             component={RouterLink}
             className={`${classes.author}`}
           >
-            {friendRequest.receiver.username}
+            {friendUser.username}
           </Link>{' '}
           accepted your friend request.
         </Typography>

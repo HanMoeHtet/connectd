@@ -32,12 +32,9 @@ const Main: React.FC = ({ children }) => {
 
   useEffect(() => {
     listenForFriendRequestAccepted((data) => {
-      const { friendRequest } = data;
+      const { friendUser } = data;
       // TODO: add support for i18n
-      showToast(
-        'info',
-        `You and ${friendRequest.sender.username} are now friends.`
-      );
+      showToast('info', `You and ${friendUser.username} are now friends.`);
 
       dispatch(addNewNotification(data));
     });

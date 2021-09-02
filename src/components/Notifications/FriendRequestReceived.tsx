@@ -40,6 +40,7 @@ const FriendRequestReceived: React.FC<FriendRequestReceivedProps> = ({
     await acceptFriendRequest({
       friendRequestId: friendRequest._id,
     });
+    dispatch(removeNotification(_id));
   };
 
   const onDeclineBtnClicked = async () => {
