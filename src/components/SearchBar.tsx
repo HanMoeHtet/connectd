@@ -64,12 +64,10 @@ const SearchBar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenuOpen = (event: any) => {
-    console.log('focused so opened');
     setAnchorEl(event.currentTarget);
   };
 
   const handleMenuClose = () => {
-    console.log('tried to close');
     setAnchorEl(null);
   };
 

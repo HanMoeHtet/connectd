@@ -14,6 +14,7 @@ export const store = configureStore({
     profileStore,
     postsStore,
   },
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
 export type AppDispatch = typeof store.dispatch;

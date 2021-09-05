@@ -132,13 +132,10 @@ export const updateReply =
   async (dispatch, getState) => {
     const { posts } = getState().postsStore;
     const post = posts.find((post) => post._id === updatedPostId);
-    console.log(updatedReplyId, updatedCommentId, updatedPostId);
-    console.log(post);
     if (post && post.comments) {
       const comment = post.comments.find(
         (comment) => comment._id === updatedCommentId
       );
-      console.log(comment);
       if (comment && comment.replies) {
         dispatch(
           setReplies({

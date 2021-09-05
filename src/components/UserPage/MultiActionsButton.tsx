@@ -52,7 +52,6 @@ const MultiActionsButton: React.FC<MultiActionsButtonProps> = ({
       {actions.map((action, index) => [
         <MenuItem
           onClick={() => {
-            console.log('clicked');
             action.onClick();
           }}
         >
