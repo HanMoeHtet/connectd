@@ -5,6 +5,7 @@ import postsStore from './posts';
 import profileStore from './profile';
 import verificationStore from './verification';
 import notificationsStore from './notifications';
+import onlineUsersStore from './online-users';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     notificationsStore,
     profileStore,
     postsStore,
+    onlineUsersStore,
   },
   devTools: process.env.NODE_ENV !== 'production',
 });

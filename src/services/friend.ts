@@ -1,6 +1,10 @@
 import api from 'src/services/api';
 import socket from 'src/services/ws';
-import { BaseNotification, NotificationType } from 'src/types/lib';
+import {
+  BaseNotification,
+  BasicProfile,
+  NotificationType,
+} from 'src/types/lib';
 
 interface CreateFriendRequestOptions {
   userId: string;
@@ -97,4 +101,20 @@ interface UnfriendOptions {
 
 export const unfriend = ({ friendId }: UnfriendOptions) => {
   return api.delete(`/friends/${friendId}`);
+};
+
+interface GetOnlineFriendsOptions {
+  notInUserIds: string[];
+}
+
+interface GetOnlineFriendsResponse {
+  data: {
+    onlineFriends: BasicProfile[];
+  };
+}
+
+export const getOnlineFriends = ({ notInUserIds }: GetOnlineFriendsOptions) => {
+  return api.post<GetOnlineFriendsResponse>('/friends/online', {
+    notInUserIds,
+  });
 };

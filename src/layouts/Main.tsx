@@ -1,7 +1,7 @@
 import { Grid, Hidden } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import AppBar from 'src/components/AppBar';
-import OnlineUsers from 'src/components/OnlineUsers';
+import RightPanel from 'src/components/RightPanel';
 import { AppModalProvider } from 'src/composables/AppModal';
 import useAuth from 'src/composables/useAuth';
 import Page from 'src/layouts/Page';
@@ -55,8 +55,16 @@ const Main: React.FC = ({ children }) => {
             {children}
           </Grid>
           <Hidden mdDown>
-            <Grid item md={3}>
-              <OnlineUsers />
+            <Grid
+              item
+              md={3}
+              style={{
+                position: 'sticky',
+                top: 'var(--appBarHeight)',
+                maxHeight: 'calc(100vh - var(--appBarHeight))',
+              }}
+            >
+              <RightPanel />
             </Grid>
           </Hidden>
         </Grid>

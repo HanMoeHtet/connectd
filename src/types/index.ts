@@ -1,4 +1,4 @@
-import { Profile } from './lib';
+import { BasicProfile, Profile } from './lib';
 import { Post } from './post';
 
 export interface AuthState {
@@ -16,4 +16,8 @@ export interface ProfileState {
 
 export interface PostsState {
   posts: Post[];
+}
+
+export interface OnlineUsersState {
+  users: BasicProfile[];
 }
