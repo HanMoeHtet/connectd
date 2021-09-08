@@ -55,15 +55,7 @@ const Main: React.FC = ({ children }) => {
             {children}
           </Grid>
           <Hidden mdDown>
-            <Grid
-              item
-              md={3}
-              style={{
-                position: 'sticky',
-                top: 'var(--appBarHeight)',
-                maxHeight: 'calc(100vh - var(--appBarHeight))',
-              }}
-            >
+            <Grid item md={3}>
               <RightPanel />
             </Grid>
           </Hidden>

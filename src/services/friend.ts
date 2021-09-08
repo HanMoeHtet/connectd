@@ -110,6 +110,7 @@ interface GetOnlineFriendsOptions {
 interface GetOnlineFriendsResponse {
   data: {
     onlineFriends: BasicProfile[];
+    hasMore: boolean;
   };
 }
 
