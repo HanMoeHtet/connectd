@@ -17,7 +17,10 @@ import { Comment } from '@material-ui/icons';
 import { formatDistance } from 'date-fns';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useAppSelector } from 'src/store';
+import { selectIsUserOnline } from 'src/store/online-status';
 import { Media, MediaType, SharedPost as PostType } from 'src/types/post';
+import StyledBadge from '../StyledBadge';
 import CommentsSection from './CommentsSection';
 import ReactInPostButton from './ReactInPostButton';
 import ReactionsInPostButton from './ReactionsInPostButton';
@@ -55,6 +58,8 @@ const Post: React.FC<PostProps> = React.memo(
 
     const [isShowingComments, setIsShowingComments] = React.useState(false);
 
+    const isUserOnline = useAppSelector(selectIsUserOnline(userId));
+
     const PrivacyIcon = privacyIcons.get(privacy)!.Icon;
 
     const renderMedia = (media: Media) => {
@@ -79,9 +84,19 @@ const Post: React.FC<PostProps> = React.memo(
                 component={RouterLink}
                 underline="none"
               >
-                <Avatar src={user.avatar}>
-                  {(user.username[0] || '').toUpperCase()}
-                </Avatar>
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  variant="dot"
+                  invisible={!isUserOnline}
+                >
+                  <Avatar src={user.avatar}>
+                    {(user.username[0] || '').toUpperCase()}
+                  </Avatar>
+                </StyledBadge>
               </Link>
             }
             title={

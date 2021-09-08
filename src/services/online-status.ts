@@ -1,4 +1,13 @@
+import api from './api';
 import socket from './ws';
+
+interface GetOnlineStatusResponse {
+  data: { userIds: string[] };
+}
+
+export const getOnlineStatus = () => {
+  return api.get<GetOnlineStatusResponse>('/online-status');
+};
 
 export enum StatusType {
   ONLINE = 'ONLINE',

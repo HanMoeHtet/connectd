@@ -20,6 +20,7 @@ import {
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import StyledBadgeLarge from 'src/components/StyledBadgeLarge';
 import ActionButton, {
   ActionButtonProps,
 } from 'src/components/UserPage/ActionButton';
@@ -38,7 +39,8 @@ import {
   unfriend as _unfriend,
 } from 'src/services/friend';
 import { getUser, GetUserResponseData } from 'src/services/user';
-import { useAppDispatch } from 'src/store';
+import { useAppDispatch, useAppSelector } from 'src/store';
+import { selectIsUserOnline } from 'src/store/online-status';
 
 enum TabType {
   POSTS = 'POSTS',
@@ -56,6 +58,10 @@ const UserPage: React.FC = () => {
 
   const [data, setData] = useState<GetUserResponseData>();
   const [openedTab, setOpenedTab] = useState<TabType>(TabType.POSTS);
+
+  const isUserOnline = useAppSelector((state) => {
+    return userId ? selectIsUserOnline(userId)(state) : false;
+  });
 
   useEffect(() => {
     (async () => {
@@ -166,9 +172,19 @@ const UserPage: React.FC = () => {
           <CardContent>
             <Grid container>
               <Grid item xs={6}>
-                <Avatar src={user.avatar} style={{ width: 120, height: 120 }}>
-                  {(user.username[0] || '').toUpperCase()}
-                </Avatar>
+                <StyledBadgeLarge
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  variant="dot"
+                  invisible={!isUserOnline}
+                >
+                  <Avatar src={user.avatar} style={{ width: 120, height: 120 }}>
+                    {(user.username[0] || '').toUpperCase()}
+                  </Avatar>
+                </StyledBadgeLarge>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="body1" color="textPrimary">

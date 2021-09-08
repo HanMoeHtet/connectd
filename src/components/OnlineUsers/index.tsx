@@ -16,10 +16,10 @@ import { fetchUserBasicProfile } from 'src/services/user';
 import {
   listenForUserOnlineStatus,
   StatusType,
-} from 'src/services/user-online-status';
+} from 'src/services/online-status';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { addUser, removeUser, setUsers } from 'src/store/online-users';
-import StyledBadge from './StyledBadge';
+import { addUser, removeUser, setUsers } from 'src/store/online-status';
+import StyledBadge from '../StyledBadge';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const OnlineUsers: React.FC = () => {
   const classes = useStyles();
 
-  const { users } = useAppSelector((state) => state.onlineUsersStore);
+  const { users } = useAppSelector((state) => state.onlineStatusStore);
   const dispatch = useAppDispatch();
 
   const [isLoading, setIsLoading] = useState(false);

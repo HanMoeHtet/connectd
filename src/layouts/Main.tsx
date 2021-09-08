@@ -10,8 +10,10 @@ import {
   listenForFriendRequestReceived,
 } from 'src/services/friend';
 import { showToast } from 'src/services/notification';
+import { getOnlineStatus } from 'src/services/online-status';
 import { useAppDispatch } from 'src/store';
 import { addNewNotification } from 'src/store/notifications';
+import { setUserIds } from 'src/store/online-status';
 
 const Main: React.FC = ({ children }) => {
   const { isLoading } = useAuth();
@@ -39,6 +41,14 @@ const Main: React.FC = ({ children }) => {
 
       dispatch(addNewNotification(data));
     });
+  }, [dispatch]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getOnlineStatus();
+      const { userIds } = response.data.data;
+      dispatch(setUserIds(userIds));
+    })();
   }, [dispatch]);
 
   if (isLoading) return null;

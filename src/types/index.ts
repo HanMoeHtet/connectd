@@ -18,6 +18,7 @@ export interface PostsState {
   posts: Post[];
 }
 
-export interface OnlineUsersState {
+export interface OnlineStatusState {
+  userIds: string[];
   users: BasicProfile[];
 }
