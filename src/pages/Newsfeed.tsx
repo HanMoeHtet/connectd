@@ -3,11 +3,7 @@ import PostsSection from 'src/components/PostsSection';
 import Main from 'src/layouts/Main';
 
 const Newsfeed: React.FC = () => {
-  return (
-    <Main>
-      <PostsSection />
-    </Main>
-  );
+  return <PostsSection />;
 };
 
 export default Newsfeed;

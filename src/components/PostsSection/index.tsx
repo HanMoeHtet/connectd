@@ -33,6 +33,10 @@ const PostsSection: React.FC = () => {
   }, [skip, limit, dispatch, posts]);
 
   useEffect(() => {
+    dispatch(setPosts([]));
+  }, [dispatch]);
+
+  useEffect(() => {
     if (!isLoading) {
       const observer = new IntersectionObserver(
         async (entries) => {

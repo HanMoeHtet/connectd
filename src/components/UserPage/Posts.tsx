@@ -34,6 +34,10 @@ const Posts: React.FC<PostsProps> = ({ userId }) => {
   }, [limit, dispatch, posts, userId]);
 
   useEffect(() => {
+    dispatch(setPosts([]));
+  }, [dispatch]);
+
+  useEffect(() => {
     if (!isLoading) {
       const observer = new IntersectionObserver(
         async (entries) => {

@@ -15,6 +15,7 @@ import PostPage from './pages/Post';
 import UserPage from './pages/User';
 import history from './services/history';
 import { darkTheme } from './theme';
+import Main from 'src/layouts/Main';
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,21 @@ const App: React.FC = () => {
       <CssBaseline />
       <Router history={history}>
         <Switch>
+          <Route exact path={['/', '/posts/:postId', '/users/:userId']}>
+            <Main>
+              <Switch>
+                <Route path="/" exact>
+                  <Newsfeed />
+                </Route>
+                <Route path="/posts/:postId" exact>
+                  <PostPage />
+                </Route>
+                <Route path="/users/:userId" exact>
+                  <UserPage />
+                </Route>
+              </Switch>
+            </Main>
+          </Route>
           <Route path="/login" exact>
             <Guest>
               <Login />
@@ -35,15 +51,6 @@ const App: React.FC = () => {
           </Route>
           <Route path="/verify/phone-number" exact>
             <PhoneNumberVerification />
-          </Route>
-          <Route path="/" exact>
-            <Newsfeed />
-          </Route>
-          <Route path="/posts/:postId" exact>
-            <PostPage />
-          </Route>
-          <Route path="/users/:userId" exact>
-            <UserPage />
           </Route>
         </Switch>
       </Router>

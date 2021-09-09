@@ -166,105 +166,103 @@ const UserPage: React.FC = () => {
   };
 
   return (
-    <Main>
-      <Box width="512px" margin="auto" padding="15px 0">
-        <Card>
-          <CardContent>
-            <Grid container>
-              <Grid item xs={6}>
-                <StyledBadgeLarge
-                  overlap="circular"
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  variant="dot"
-                  invisible={!isUserOnline}
-                >
-                  <Avatar src={user.avatar} style={{ width: 120, height: 120 }}>
-                    {(user.username[0] || '').toUpperCase()}
-                  </Avatar>
-                </StyledBadgeLarge>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="body1" color="textPrimary">
-                  {user.username}
-                </Typography>
-                <Box height="10px" />
-                {user.email && (
-                  <Box display="flex" alignItems="center">
-                    <Mail fontSize="small" />
-                    <Box width="8px"></Box>
-                    <Typography variant="body2" color="textPrimary">
-                      {user.email}
-                    </Typography>
-                  </Box>
-                )}
-                <Box height="5px" />
-                {user.phoneNumber && (
-                  <Box display="flex" alignItems="center">
-                    <Phone fontSize="small" />
-                    <Box width="8px"></Box>
-                    <Typography variant="body2" color="textPrimary">
-                      {user.phoneNumber}
-                    </Typography>
-                  </Box>
-                )}
-                <Box height="5px" />
-                <Box display="flex" alignItems="center">
-                  <Cake fontSize="small" />
-                  <Box width="8px"></Box>
-                  <Typography variant="body2" color="textPrimary">
-                    {format(new Date(user.birthday), 'MMM do, yyyy')}
-                  </Typography>
-                </Box>
-                <Box height="5px" />
-                <Box display="flex" alignItems="center">
-                  <Wc fontSize="small" />
-                  <Box width="8px"></Box>
-                  <Typography variant="body2" color="textPrimary">
-                    {Object.values(user.pronouns).join(', ')}
-                  </Typography>
-                </Box>
-              </Grid>
+    <Box width="512px" margin="auto" padding="15px 0">
+      <Card>
+        <CardContent>
+          <Grid container>
+            <Grid item xs={6}>
+              <StyledBadgeLarge
+                overlap="circular"
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                variant="dot"
+                invisible={!isUserOnline}
+              >
+                <Avatar src={user.avatar} style={{ width: 120, height: 120 }}>
+                  {(user.username[0] || '').toUpperCase()}
+                </Avatar>
+              </StyledBadgeLarge>
             </Grid>
-            <Box height="16px" />
-            {!isAuthUser && renderActionButton()}
-          </CardContent>
-        </Card>
-        <Divider style={{ margin: '15px auto', width: '80px' }} />
-        <Tabs
-          value={openedTab}
-          onChange={(_, newValue) => {
-            setOpenedTab(newValue);
-          }}
-          variant="fullWidth"
-          indicatorColor="primary"
-          textColor="primary"
-          aria-label="icon tabs example"
-        >
-          <Tab
-            style={{ minWidth: 'auto' }}
-            label="Posts"
-            aria-label={'reactionType'}
-            value={TabType.POSTS}
-          />
-          <Tab
-            style={{ minWidth: 'auto' }}
-            label="Friends"
-            aria-label={'reactionType'}
-            value={TabType.FRIENDS}
-          />
-        </Tabs>
-        <Box height="24px" />
-        <TabPanel value={openedTab} index={TabType.POSTS}>
-          <Posts userId={user._id} />
-        </TabPanel>
-        <TabPanel value={openedTab} index={TabType.FRIENDS}>
-          <Friends userId={user._id} />
-        </TabPanel>
-      </Box>
-    </Main>
+            <Grid item xs={6}>
+              <Typography variant="body1" color="textPrimary">
+                {user.username}
+              </Typography>
+              <Box height="10px" />
+              {user.email && (
+                <Box display="flex" alignItems="center">
+                  <Mail fontSize="small" />
+                  <Box width="8px"></Box>
+                  <Typography variant="body2" color="textPrimary">
+                    {user.email}
+                  </Typography>
+                </Box>
+              )}
+              <Box height="5px" />
+              {user.phoneNumber && (
+                <Box display="flex" alignItems="center">
+                  <Phone fontSize="small" />
+                  <Box width="8px"></Box>
+                  <Typography variant="body2" color="textPrimary">
+                    {user.phoneNumber}
+                  </Typography>
+                </Box>
+              )}
+              <Box height="5px" />
+              <Box display="flex" alignItems="center">
+                <Cake fontSize="small" />
+                <Box width="8px"></Box>
+                <Typography variant="body2" color="textPrimary">
+                  {format(new Date(user.birthday), 'MMM do, yyyy')}
+                </Typography>
+              </Box>
+              <Box height="5px" />
+              <Box display="flex" alignItems="center">
+                <Wc fontSize="small" />
+                <Box width="8px"></Box>
+                <Typography variant="body2" color="textPrimary">
+                  {Object.values(user.pronouns).join(', ')}
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+          <Box height="16px" />
+          {!isAuthUser && renderActionButton()}
+        </CardContent>
+      </Card>
+      <Divider style={{ margin: '15px auto', width: '80px' }} />
+      <Tabs
+        value={openedTab}
+        onChange={(_, newValue) => {
+          setOpenedTab(newValue);
+        }}
+        variant="fullWidth"
+        indicatorColor="primary"
+        textColor="primary"
+        aria-label="icon tabs example"
+      >
+        <Tab
+          style={{ minWidth: 'auto' }}
+          label="Posts"
+          aria-label={'reactionType'}
+          value={TabType.POSTS}
+        />
+        <Tab
+          style={{ minWidth: 'auto' }}
+          label="Friends"
+          aria-label={'reactionType'}
+          value={TabType.FRIENDS}
+        />
+      </Tabs>
+      <Box height="24px" />
+      <TabPanel value={openedTab} index={TabType.POSTS}>
+        <Posts userId={user._id} />
+      </TabPanel>
+      <TabPanel value={openedTab} index={TabType.FRIENDS}>
+        <Friends userId={user._id} />
+      </TabPanel>
+    </Box>
   );
 };
 

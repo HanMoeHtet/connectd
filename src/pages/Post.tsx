@@ -38,15 +38,13 @@ const PostPage: React.FC = () => {
   if (!post) return null;
 
   return (
-    <Main>
-      <Box width="512px" margin="auto" padding="15px 0">
-        {post.type === PostType.POST ? (
-          <PostComponent {...post} />
-        ) : (
-          <ShareComponent {...post} />
-        )}
-      </Box>
-    </Main>
+    <Box width="512px" margin="auto" padding="15px 0">
+      {post.type === PostType.POST ? (
+        <PostComponent {...post} />
+      ) : (
+        <ShareComponent {...post} />
+      )}
+    </Box>
   );
 };
 
