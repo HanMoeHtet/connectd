@@ -30,12 +30,11 @@ import MultiActionsButton, {
 } from 'src/components/UserPage/MultiActionsButton';
 import Posts from 'src/components/UserPage/Posts';
 import TabPanel from 'src/components/UserPage/TabPanel';
-import Main from 'src/layouts/Main';
 import {
-  createFriendRequest,
-  rejectFriendRequest,
   acceptFriendRequest as _acceptFriendRequest,
   cancelFriendRequest as _cancelFriendRequest,
+  createFriendRequest,
+  rejectFriendRequest,
   unfriend as _unfriend,
 } from 'src/services/friend';
 import { getUser, GetUserResponseData } from 'src/services/user';

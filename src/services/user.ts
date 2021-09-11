@@ -62,3 +62,21 @@ export const getFriendsByUser = ({
     `/users/${userId}/friends?lastFriendId=${lastFriendId || ''}&limit=${limit}`
   );
 };
+
+interface GetFriendsByUserOPtions {
+  userId: string;
+}
+
+interface GetConversationWithUserSuccessResponse {
+  data: {
+    conversationId: string;
+  };
+}
+
+export const getConversationWithUser = ({
+  userId,
+}: GetFriendsByUserOPtions) => {
+  return api.get<GetConversationWithUserSuccessResponse>(
+    `/users/${userId}/conversation`
+  );
+};

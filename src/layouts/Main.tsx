@@ -1,6 +1,7 @@
 import { Grid, Hidden } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import AppBar from 'src/components/AppBar';
+import LeftPanel from 'src/components/LeftPanel';
 import RightPanel from 'src/components/RightPanel';
 import { AppModalProvider } from 'src/composables/AppModal';
 import useAuth from 'src/composables/useAuth';
@@ -59,7 +60,9 @@ const Main: React.FC = ({ children }) => {
         <AppBar />
         <Grid container>
           <Hidden mdDown>
-            <Grid item md={3}></Grid>
+            <Grid item md={3}>
+              <LeftPanel />
+            </Grid>
           </Hidden>
           <Grid item xs={12} md={6}>
             {children}

@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import PostComponent from 'src/components/PostsSection/Post';
 import ShareComponent from 'src/components/PostsSection/Share';
-import Main from 'src/layouts/Main';
 import { getPost } from 'src/services/post';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { selectPost, setPosts } from 'src/store/posts';
