@@ -16,6 +16,7 @@ import {
   PersonAddDisabled,
   Phone,
   Wc,
+  Chat,
 } from '@material-ui/icons';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
@@ -37,8 +38,13 @@ import {
   rejectFriendRequest,
   unfriend as _unfriend,
 } from 'src/services/friend';
-import { getUser, GetUserResponseData } from 'src/services/user';
+import {
+  getConversationWithUser as _getConversationWithUser,
+  getUser,
+  GetUserResponseData,
+} from 'src/services/user';
 import { useAppDispatch, useAppSelector } from 'src/store';
+import { startConversation } from 'src/store/conversations';
 import { selectIsUserOnline } from 'src/store/online-status';
 
 enum TabType {
@@ -84,7 +90,7 @@ const UserPage: React.FC = () => {
     receivedFriendRequestId,
   } = data;
 
-  const renderActionButton = () => {
+  const renderFriendActionButton = () => {
     let props: ActionButtonProps = {
       text: '',
       icon: null,
@@ -164,6 +170,12 @@ const UserPage: React.FC = () => {
     }
   };
 
+  const getConversationWithUser = async () => {
+    const response = await _getConversationWithUser({ userId: user._id });
+    const { conversation } = response.data.data;
+    dispatch(startConversation({ ...conversation, messages: [] }));
+  };
+
   return (
     <Box width="512px" margin="auto" padding="15px 0">
       <Card>
@@ -227,7 +239,17 @@ const UserPage: React.FC = () => {
             </Grid>
           </Grid>
           <Box height="16px" />
-          {!isAuthUser && renderActionButton()}
+          <Box display="flex">
+            {!isAuthUser && renderFriendActionButton()}
+            <Box width="10px" />
+            {friendId && (
+              <ActionButton
+                text="Message"
+                icon={<Chat />}
+                onClick={getConversationWithUser}
+              />
+            )}
+          </Box>
         </CardContent>
       </Card>
       <Divider style={{ margin: '15px auto', width: '80px' }} />

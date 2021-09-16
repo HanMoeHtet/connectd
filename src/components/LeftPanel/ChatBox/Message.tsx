@@ -1,22 +1,34 @@
 import * as React from 'react';
 import { Box, Tooltip } from '@material-ui/core';
 import { format } from 'date-fns';
+import { Message as IMessage } from 'src/services/conversation';
+import useAuth from 'src/composables/useAuth';
 
-interface MessageProps {
-  placement: 'left' | 'right';
-  content: string;
-}
+interface MessageProps extends IMessage {}
 
-const Message: React.FC<MessageProps> = ({ placement, content }) => {
+const Message: React.FC<MessageProps> = ({
+  _id,
+  fromUser,
+  content,
+  createdAt,
+}) => {
+  const { profile } = useAuth();
+
+  if (!profile) {
+    return null;
+  }
+
+  const { _id: authUserId } = profile;
+
   return (
     <Box
       style={{
         display: 'flex',
-        justifyContent: placement === 'left' ? 'flex-start' : 'flex-end',
+        justifyContent: fromUser._id !== authUserId ? 'flex-start' : 'flex-end',
       }}
     >
       <Tooltip
-        title={format(new Date(), 'h:m a, MMM do, yyyy')}
+        title={format(new Date(createdAt), 'h:m a, MMM do, yyyy')}
         aria-label="message"
         arrow
         placement={'right'}

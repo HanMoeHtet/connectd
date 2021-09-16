@@ -6,6 +6,7 @@ import profileStore from './profile';
 import verificationStore from './verification';
 import notificationsStore from './notifications';
 import onlineStatusStore from './online-status';
+import conversationsStore from './conversations';
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     profileStore,
     postsStore,
     onlineStatusStore,
+    conversationsStore,
   },
   devTools: process.env.NODE_ENV !== 'production',
 });

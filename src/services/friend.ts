@@ -39,6 +39,10 @@ export const listenForFriendRequestReceived = (
   socket.on('friend-request-received', (data: FriendRequestReceivedData) => {
     cb(data);
   });
+
+  return () => {
+    socket.off('friend-request-received');
+  }
 };
 
 interface CancelFriendRequestOptions {
@@ -83,6 +87,10 @@ export const listenForFriendRequestAccepted = (
   socket.on('friend-request-accepted', (data: FriendRequestAcceptedData) => {
     cb(data);
   });
+
+  return () => {
+    socket.off('friend-request-accepted')
+  }
 };
 
 interface RejectFriendRequestOptions {

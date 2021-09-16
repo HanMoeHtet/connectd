@@ -22,7 +22,7 @@ const Main: React.FC = ({ children }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    listenForFriendRequestReceived((data) => {
+    const cancel = listenForFriendRequestReceived((data) => {
       const { friendRequest } = data;
       // TODO: add support for i18n
       showToast(
@@ -32,16 +32,20 @@ const Main: React.FC = ({ children }) => {
 
       dispatch(addNewNotification(data));
     });
+
+    return cancel;
   }, [dispatch]);
 
   useEffect(() => {
-    listenForFriendRequestAccepted((data) => {
+    const cancel = listenForFriendRequestAccepted((data) => {
       const { friendUser } = data;
       // TODO: add support for i18n
       showToast('info', `You and ${friendUser.username} are now friends.`);
 
       dispatch(addNewNotification(data));
     });
+
+    return cancel
   }, [dispatch]);
 
   useEffect(() => {

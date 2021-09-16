@@ -25,4 +25,8 @@ export const listenForUserOnlineStatus = (
   socket.on('user-online-status', (data: UserOnlineStatusData) => {
     cb(data);
   });
+
+  return () => {
+    socket.off('user-online-status')
+  }
 };

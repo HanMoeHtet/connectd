@@ -14,13 +14,7 @@ const LeftPanel: React.FC = () => {
       flexDirection="column"
     >
       <Box flexGrow="1" />
-      <Box
-        width="320px"
-        height="440px"
-        style={{ border: '1px solid yellow', marginLeft: 10, marginBottom: 10 }}
-      >
-        <ChatBox />
-      </Box>
+      <ChatBox />
     </Box>
   );
 };

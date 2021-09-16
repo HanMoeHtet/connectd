@@ -1,8 +1,10 @@
 import { BasicProfile } from 'src/types/lib';
 import api from './api';
+import socket from './ws';
 
 interface GetMessagesInConversationOptions {
   conversationId: string;
+  lastMessageId?: string;
 }
 
 export interface Message {
@@ -21,9 +23,12 @@ interface GetMessagesInConversationSuccessResponse {
 
 export const getMessagesInConversation = ({
   conversationId,
+  lastMessageId,
 }: GetMessagesInConversationOptions) => {
   return api.get<GetMessagesInConversationSuccessResponse>(
-    `conversations/${conversationId}/messages`
+    `conversations/${conversationId}/messages?lastMessageId=${
+      lastMessageId || ''
+    }`
   );
 };
 
@@ -48,4 +53,29 @@ export const createMessageInConversation = ({
       content,
     }
   );
+};
+
+export interface MessageCreatedData {
+  message: {
+    _id: string;
+    conversationId: string;
+    content: string;
+    fromUser: {
+      _id: string;
+      username: string;
+      avatar?: string;
+    };
+    createdAt: Date;
+  };
+}
+export const listenForMessageCreated = (
+  cb: (data: MessageCreatedData) => void
+) => {
+  socket.on('message-created', (data: MessageCreatedData) => {
+    cb(data);
+  });
+
+  return () => {
+    socket.off('message-created');
+  }
 };

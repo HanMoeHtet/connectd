@@ -79,7 +79,7 @@ const OnlineUsers: React.FC = () => {
   }, [loadMore, isLoading, loadMoreRef]);
 
   useEffect(() => {
-    listenForUserOnlineStatus(async (data) => {
+    const cancel = listenForUserOnlineStatus(async (data) => {
       const { status, userId } = data;
       if (status === StatusType.ONLINE) {
         const response = await fetchUserBasicProfile(userId);
@@ -89,6 +89,8 @@ const OnlineUsers: React.FC = () => {
         dispatch(removeUser(userId));
       }
     });
+
+    return cancel;
   }, [dispatch]);
 
   return (

@@ -1,4 +1,4 @@
-import { BasicProfileResponse, Pronouns } from 'src/types/lib';
+import { BasicProfile, BasicProfileResponse, Pronouns } from 'src/types/lib';
 import api from './api';
 
 export const fetchUserBasicProfile = (userId: string) => {
@@ -67,9 +67,15 @@ interface GetFriendsByUserOPtions {
   userId: string;
 }
 
+export interface Conversation {
+  _id: string;
+  userIds: [string, string];
+  user: BasicProfile;
+}
+
 interface GetConversationWithUserSuccessResponse {
   data: {
-    conversationId: string;
+    conversation: Conversation;
   };
 }
 
