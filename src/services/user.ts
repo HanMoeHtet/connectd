@@ -71,6 +71,7 @@ export interface Conversation {
   _id: string;
   userIds: [string, string];
   user: BasicProfile;
+  lastSeenAt: Date | null;
 }
 
 interface GetConversationWithUserSuccessResponse {

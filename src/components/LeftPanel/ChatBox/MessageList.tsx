@@ -33,6 +33,8 @@ const MessageList: React.FC<MessageListProps> = () => {
   const conversation = useAppSelector(selectCurrentConversation());
 
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const hasLoadedBefore = React.useRef<boolean>(false);
 
   const loadMore = React.useCallback(async () => {
     if (conversation) {
@@ -59,6 +61,15 @@ const MessageList: React.FC<MessageListProps> = () => {
           const firstEntry = entries[0];
           if (firstEntry && firstEntry.isIntersecting && !isLoading) {
             await loadMore();
+            if (containerRef.current) {
+              if (!hasLoadedBefore.current) {
+                containerRef.current.scrollTo(
+                  0,
+                  containerRef.current.scrollHeight
+                );
+                hasLoadedBefore.current = true;
+              }
+            }
           }
         },
         // FIXME: check if network is wifi or not and set the threshold accordingly
@@ -85,18 +96,21 @@ const MessageList: React.FC<MessageListProps> = () => {
     <Box
       style={{ flexGrow: 1, padding: 8, overflowY: 'auto' }}
       className={classes.container}
+      {...{ ref: containerRef }}
     >
-      {[...messages].reverse().map((message, index) => {
-        return [
-          <Message {...message} />,
-          index !== messages.length - 1 && <Box height="5px" />,
-        ];
-      })}
       {hasMore && (
         <Box display="flex" justifyContent="center" overflow="hidden">
           <CircularProgress color="primary" ref={loadMoreRef} />
         </Box>
       )}
+      {[...messages].reverse().map((message, index) => {
+        return (
+          <React.Fragment key={message._id}>
+            <Message {...message} />
+            {index !== messages.length - 1 && <Box height="5px" />}
+          </React.Fragment>
+        );
+      })}
     </Box>
   );
 };

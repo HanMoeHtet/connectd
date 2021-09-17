@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { Box } from '@material-ui/core';
 import ChatBox from './ChatBox/index.mock';
+import { useAppSelector } from 'src/store';
+import { selectCurrentConversation } from 'src/store/conversations';
 
 const LeftPanel: React.FC = () => {
+  const conversation = useAppSelector(selectCurrentConversation());
   return (
     <Box
       style={{
@@ -14,7 +17,7 @@ const LeftPanel: React.FC = () => {
       flexDirection="column"
     >
       <Box flexGrow="1" />
-      <ChatBox />
+      {conversation && <ChatBox conversation={conversation} />}
     </Box>
   );
 };
