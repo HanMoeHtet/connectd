@@ -4,7 +4,7 @@ import { getMessagesInConversation } from 'src/services/conversation';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import {
   selectCurrentConversation,
-  setMessages,
+  updateConversation,
 } from 'src/store/conversations';
 import Message from './Message';
 
@@ -28,13 +28,20 @@ const MessageList: React.FC<MessageListProps> = () => {
   const dispatch = useAppDispatch();
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [hasMore, setHasMore] = React.useState(true);
 
   const conversation = useAppSelector(selectCurrentConversation());
 
   const loadMoreRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const hasLoadedBefore = React.useRef<boolean>(false);
+
+  (window as any).container = containerRef.current;
+
+  React.useEffect(() => {
+    const containerEl = containerRef.current;
+    if (containerEl) {
+      containerEl.scrollTo(0, containerEl.scrollHeight);
+    }
+  }, [conversation]);
 
   const loadMore = React.useCallback(async () => {
     if (conversation) {
@@ -47,9 +54,13 @@ const MessageList: React.FC<MessageListProps> = () => {
       });
 
       const { messages: newMessages, hasMore } = response.data.data;
-      dispatch(setMessages([...conversation.messages, ...newMessages]));
-      setHasMore(hasMore);
-
+      dispatch(
+        updateConversation({
+          ...conversation,
+          messages: [...conversation.messages, ...newMessages],
+          hasMore,
+        })
+      );
       setIsLoading(false);
     }
   }, [conversation, dispatch]);
@@ -60,15 +71,16 @@ const MessageList: React.FC<MessageListProps> = () => {
         async (entries) => {
           const firstEntry = entries[0];
           if (firstEntry && firstEntry.isIntersecting && !isLoading) {
-            await loadMore();
-            if (containerRef.current) {
-              if (!hasLoadedBefore.current) {
-                containerRef.current.scrollTo(
-                  0,
-                  containerRef.current.scrollHeight
-                );
-                hasLoadedBefore.current = true;
-              }
+            const containerEl = containerRef.current;
+            if (containerEl) {
+              const prevScrollOffsetFromBottom =
+                containerEl.scrollHeight - containerEl.scrollTop;
+              await loadMore();
+              // Restore scroll from previous offset from bottom to override browser default behavior
+              containerEl.scrollTo(
+                0,
+                containerEl.scrollHeight - prevScrollOffsetFromBottom
+              );
             }
           }
         },
@@ -84,13 +96,13 @@ const MessageList: React.FC<MessageListProps> = () => {
         observer.disconnect();
       };
     }
-  }, [isLoading, loadMore]);
+  }, [isLoading, loadMore, dispatch]);
 
   if (!conversation) {
     return null;
   }
 
-  const { messages } = conversation;
+  const { hasMore, messages } = conversation;
 
   return (
     <Box

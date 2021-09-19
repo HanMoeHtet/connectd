@@ -3,21 +3,25 @@ import {
   Box,
   Button,
   CircularProgress,
+  IconButton,
   List,
   ListItem,
   ListItemAvatar,
+  ListItemSecondaryAction,
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
+import { Chat } from '@material-ui/icons';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getOnlineFriends } from 'src/services/friend';
-import { fetchUserBasicProfile } from 'src/services/user';
 import {
   listenForUserOnlineStatus,
   StatusType,
 } from 'src/services/online-status';
+import { fetchUserBasicProfile } from 'src/services/user';
 import { useAppDispatch, useAppSelector } from 'src/store';
+import { startConversation } from 'src/store/conversations';
 import { addUser, removeUser, setUsers } from 'src/store/online-status';
 import StyledBadge from '../StyledBadge';
 
@@ -93,6 +97,10 @@ const OnlineUsers: React.FC = () => {
     return cancel;
   }, [dispatch]);
 
+  const getConversationWithUser = async (userId: string) => {
+    dispatch(startConversation(userId));
+  };
+
   return (
     <Box className={classes.container}>
       <List>
@@ -127,6 +135,15 @@ const OnlineUsers: React.FC = () => {
 
               <ListItemText primary={user.username} />
             </Button>
+            <ListItemSecondaryAction>
+              <IconButton
+                edge="end"
+                aria-label="chat"
+                onClick={() => getConversationWithUser(user._id)}
+              >
+                <Chat />
+              </IconButton>
+            </ListItemSecondaryAction>
           </ListItem>
         ))}
       </List>

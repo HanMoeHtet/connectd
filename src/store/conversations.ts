@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Message } from 'src/services/conversation';
+import { getConversationWithUser } from 'src/services/user';
 import { Conversation, ConversationsState } from 'src/types';
 import { AppThunk, RootState } from '.';
 
@@ -46,12 +47,31 @@ export const {
 } = conversationsSlice.actions;
 
 export const startConversation =
-  (conversation: Conversation): AppThunk =>
+  (userId: string): AppThunk =>
   async (dispatch, getState) => {
+    const response = await getConversationWithUser({ userId });
+    const { conversation } = response.data.data;
+
     const { conversations } = getState().conversationsStore;
     const conversationCounts = conversations.length;
-    dispatch(addNewConversation(conversation));
-    dispatch(setCurrentConversationIndex(conversationCounts));
+
+    const conversationIndex = conversations.findIndex(
+      (c) => c._id === conversation._id
+    );
+
+    if (conversationIndex === -1) {
+      dispatch(
+        addNewConversation({
+          ...conversation,
+          messages: [],
+          hasMore: true,
+          hasLoadedBefore: false,
+        })
+      );
+      dispatch(setCurrentConversationIndex(conversationCounts));
+    } else {
+      dispatch(setCurrentConversationIndex(conversationIndex));
+    }
   };
 
 export const setMessages =

@@ -11,12 +11,12 @@ import {
 } from '@material-ui/core';
 import {
   Cake,
+  Chat,
   Mail,
   PersonAdd,
   PersonAddDisabled,
   Phone,
   Wc,
-  Chat,
 } from '@material-ui/icons';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
@@ -38,11 +38,7 @@ import {
   rejectFriendRequest,
   unfriend as _unfriend,
 } from 'src/services/friend';
-import {
-  getConversationWithUser as _getConversationWithUser,
-  getUser,
-  GetUserResponseData,
-} from 'src/services/user';
+import { getUser, GetUserResponseData } from 'src/services/user';
 import { useAppDispatch, useAppSelector } from 'src/store';
 import { startConversation } from 'src/store/conversations';
 import { selectIsUserOnline } from 'src/store/online-status';
@@ -171,9 +167,7 @@ const UserPage: React.FC = () => {
   };
 
   const getConversationWithUser = async () => {
-    const response = await _getConversationWithUser({ userId: user._id });
-    const { conversation } = response.data.data;
-    dispatch(startConversation({ ...conversation, messages: [] }));
+    dispatch(startConversation(user._id));
   };
 
   return (

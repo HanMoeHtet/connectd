@@ -27,6 +27,8 @@ export interface OnlineStatusState {
 
 export interface Conversation extends BaseConversation {
   messages: Message[];
+  hasMore: boolean;
+  hasLoadedBefore: boolean;
 }
 
 export interface ConversationsState {
