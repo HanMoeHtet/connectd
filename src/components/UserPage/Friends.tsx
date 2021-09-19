@@ -1,18 +1,7 @@
-import {
-  Avatar,
-  Box,
-  CircularProgress,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemSecondaryAction,
-  ListItemText,
-} from '@material-ui/core';
-import { PersonAdd } from '@material-ui/icons';
+import { Box, CircularProgress, List } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
-import { createFriendRequest } from 'src/services/friend';
 import { Friend, getFriendsByUser } from 'src/services/user';
+import User from '../User';
 
 interface FriendsProps {
   userId: string;
@@ -61,31 +50,11 @@ const Friends: React.FC<FriendsProps> = ({ userId }) => {
     }
   }, [isLoading, loadMore]);
 
-  const handleClick = async (userId: string) => {
-    await createFriendRequest({ userId });
-  };
-
   return (
     <>
       <List disablePadding>
         {friends.map((friend) => (
-          <ListItem key={friend._id}>
-            <ListItemAvatar>
-              <Avatar src={friend.user.avatar}>
-                {(friend.user.username[0] || '').toUpperCase()}
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={friend.user.username} />
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                aria-label="add friend"
-                onClick={() => handleClick(friend.user._id)}
-              >
-                <PersonAdd />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <User user={friend.user} key={friend._id} />
         ))}
       </List>
       {hasMore && (

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Box } from '@material-ui/core';
-import ChatBox from './ChatBox/index.mock';
+import ChatBox from './ChatBox';
 import { useAppSelector } from 'src/store';
 import { selectCurrentConversation } from 'src/store/conversations';
 

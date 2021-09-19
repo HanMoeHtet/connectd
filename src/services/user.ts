@@ -41,7 +41,8 @@ export interface Friend {
     _id: string;
     username: string;
     avatar?: string;
-    areUsersFriends: boolean;
+    friendId: string;
+    isAuthUser: boolean;
   };
   createdAt: Date;
 }

@@ -1,22 +1,20 @@
 import {
   alpha,
   Box,
+  IconButton,
+  InputAdornment,
   InputBase,
   makeStyles,
-  Popover,
-  Typography,
 } from '@material-ui/core';
-import { Search as SearchIcon } from '@material-ui/icons';
+import { ArrowForward, Search as SearchIcon } from '@material-ui/icons';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -60,43 +58,33 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchBar: React.FC = () => {
   const classes = useStyles();
+  const history = useHistory();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [text, setText] = React.useState('');
 
-  const handleMenuOpen = (event: any) => {
-    setAnchorEl(event.currentTarget);
+  const isButtonDisabled = () => {
+    if (text.length === 0) {
+      return true;
+    }
+
+    return false;
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isButtonDisabled()) {
+      goToSearch();
+    }
+  };
+
+  const goToSearch = async () => {
+    history.push({
+      pathname: '/search',
+      search: `?q=${text}`,
+    });
+    setText('');
   };
 
   const menuId = 'search-result-menu';
-
-  const renderSearchResult = (
-    <Popover
-      id={menuId}
-      open={Boolean(anchorEl)}
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-      onClose={handleMenuClose}
-      classes={{ paper: classes.menu }}
-      disableAutoFocus
-      disableEnforceFocus
-      disableRestoreFocus
-    >
-      <Box padding={1}>
-        <Typography>No recent searches.</Typography>
-      </Box>
-    </Popover>
-  );
 
   return (
     <Box className={`${classes.search}`} display={{ xs: 'none', md: 'block' }}>
@@ -113,9 +101,19 @@ const SearchBar: React.FC = () => {
           input: classes.inputInput,
         }}
         inputProps={{ 'aria-label': 'search' }}
-        onFocus={handleMenuOpen}
+        onKeyDown={handleKeyDown}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        endAdornment={
+          isButtonDisabled() ? undefined : (
+            <InputAdornment position="end">
+              <IconButton aria-label="search" size="small" onClick={goToSearch}>
+                <ArrowForward />
+              </IconButton>
+            </InputAdornment>
+          )
+        }
       />
-      {renderSearchResult}
     </Box>
   );
 };
