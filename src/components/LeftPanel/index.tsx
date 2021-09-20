@@ -3,8 +3,11 @@ import { Box } from '@material-ui/core';
 import ChatBox from './ChatBox';
 import { useAppSelector } from 'src/store';
 import { selectCurrentConversation } from 'src/store/conversations';
+import { useLocation } from 'react-router';
 
 const LeftPanel: React.FC = () => {
+  const { pathname } = useLocation();
+
   const conversation = useAppSelector(selectCurrentConversation());
   return (
     <Box
@@ -17,7 +20,9 @@ const LeftPanel: React.FC = () => {
       flexDirection="column"
     >
       <Box flexGrow="1" />
-      {conversation && <ChatBox conversation={conversation} />}
+      {!pathname.startsWith('/c/') && conversation && (
+        <ChatBox conversation={conversation} />
+      )}
     </Box>
   );
 };

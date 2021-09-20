@@ -21,7 +21,7 @@ import {
 } from 'src/services/online-status';
 import { fetchUserBasicProfile } from 'src/services/user';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { startConversation } from 'src/store/conversations';
+import { startConversationWithUser } from 'src/store/conversations';
 import { addUser, removeUser, setUsers } from 'src/store/online-status';
 import StyledBadge from '../StyledBadge';
 
@@ -98,7 +98,7 @@ const OnlineUsers: React.FC = () => {
   }, [dispatch]);
 
   const getConversationWithUser = async (userId: string) => {
-    dispatch(startConversation(userId));
+    dispatch(startConversationWithUser(userId));
   };
 
   return (

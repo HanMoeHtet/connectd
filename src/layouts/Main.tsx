@@ -45,11 +45,12 @@ const Main: React.FC = ({ children }) => {
       dispatch(addNewNotification(data));
     });
 
-    return cancel
+    return cancel;
   }, [dispatch]);
 
   useEffect(() => {
     (async () => {
+      console.log('main being rendered');
       const response = await getOnlineStatus();
       const { userIds } = response.data.data;
       dispatch(setUserIds(userIds));
@@ -68,7 +69,7 @@ const Main: React.FC = ({ children }) => {
               <LeftPanel />
             </Grid>
           </Hidden>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} style={{ margin: '0 auto' }}>
             {children}
           </Grid>
           <Hidden mdDown>

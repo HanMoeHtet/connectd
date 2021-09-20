@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import PostComponent from 'src/components/PostsSection/Post';
@@ -8,11 +8,24 @@ import { useAppDispatch, useAppSelector } from 'src/store';
 import { selectPost, setPosts } from 'src/store/posts';
 import { PostType } from 'src/types/post';
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: 512,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
+  },
+}));
+
 interface PostPageParams {
   postId?: string;
 }
 
 const PostPage: React.FC = () => {
+  const classes = useStyles();
+
   const { postId } = useParams<PostPageParams>();
   const history = useHistory();
   const dispatch = useAppDispatch();
@@ -37,7 +50,7 @@ const PostPage: React.FC = () => {
   if (!post) return null;
 
   return (
-    <Box width="512px" margin="auto" padding="15px 0">
+    <Box className={classes.container} margin="auto" padding="15px 0">
       {post.type === PostType.POST ? (
         <PostComponent {...post} />
       ) : (

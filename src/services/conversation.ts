@@ -1,6 +1,17 @@
 import { BasicProfile } from 'src/types/lib';
 import api from './api';
+import { Conversation } from './user';
 import socket from './ws';
+
+interface GetConversationResponse {
+  data: {
+    conversation: Conversation;
+  };
+}
+
+export const getConversation = (conversationId: string) => {
+  return api.get<GetConversationResponse>(`/conversations/${conversationId}`);
+};
 
 interface GetMessagesInConversationOptions {
   conversationId: string;
@@ -77,5 +88,5 @@ export const listenForMessageCreated = (
 
   return () => {
     socket.off('message-created');
-  }
+  };
 };

@@ -8,6 +8,9 @@ import {
   Tab,
   Tabs,
   Typography,
+  makeStyles,
+  useMediaQuery,
+  Theme,
 } from '@material-ui/core';
 import {
   Cake,
@@ -38,10 +41,25 @@ import {
   rejectFriendRequest,
   unfriend as _unfriend,
 } from 'src/services/friend';
-import { getUser, GetUserResponseData } from 'src/services/user';
+import {
+  getUser,
+  GetUserResponseData,
+  getConversationWithUser as _getConversationWithUser,
+} from 'src/services/user';
 import { useAppDispatch, useAppSelector } from 'src/store';
-import { startConversation } from 'src/store/conversations';
+import { startConversationWithUser } from 'src/store/conversations';
 import { selectIsUserOnline } from 'src/store/online-status';
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: 512,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
+  },
+}));
 
 enum TabType {
   POSTS = 'POSTS',
@@ -53,6 +71,11 @@ interface UserPageParams {
 }
 
 const UserPage: React.FC = () => {
+  const classes = useStyles();
+  const isMdDownScreen = useMediaQuery<Theme>((theme) =>
+    theme.breakpoints.down('md')
+  );
+
   const { userId } = useParams<UserPageParams>();
   const history = useHistory();
   const dispatch = useAppDispatch();
@@ -167,11 +190,18 @@ const UserPage: React.FC = () => {
   };
 
   const getConversationWithUser = async () => {
-    dispatch(startConversation(user._id));
+    if (isMdDownScreen) {
+      const response = await _getConversationWithUser({ userId: user._id });
+      const { conversation } = response.data.data;
+
+      history.push(`/c/${conversation._id}`);
+    } else {
+      dispatch(startConversationWithUser(user._id));
+    }
   };
 
   return (
-    <Box width="512px" margin="auto" padding="15px 0">
+    <Box className={classes.container} margin="auto" padding="15px 0">
       <Card>
         <CardContent>
           <Grid container>

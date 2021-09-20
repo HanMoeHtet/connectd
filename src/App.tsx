@@ -17,6 +17,7 @@ import history from './services/history';
 import { darkTheme } from './theme';
 import Main from 'src/layouts/Main';
 import Search from './pages/Search';
+import Conversation from './pages/Conversation';
 
 const App: React.FC = () => {
   return (
@@ -26,7 +27,13 @@ const App: React.FC = () => {
         <Switch>
           <Route
             exact
-            path={['/', '/posts/:postId', '/users/:userId', '/search']}
+            path={[
+              '/',
+              '/posts/:postId',
+              '/users/:userId',
+              '/search',
+              '/c/:conversationId',
+            ]}
           >
             <Main>
               <Switch>
@@ -41,6 +48,9 @@ const App: React.FC = () => {
                 </Route>
                 <Route path="/search" exact>
                   <Search />
+                </Route>
+                <Route path="/c/:conversationId" exact>
+                  <Conversation />
                 </Route>
               </Switch>
             </Main>

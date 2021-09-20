@@ -41,7 +41,7 @@ const MessageList: React.FC<MessageListProps> = () => {
     if (containerEl) {
       containerEl.scrollTo(0, containerEl.scrollHeight);
     }
-  }, [conversation]);
+  }, [conversation?._id]);
 
   const loadMore = React.useCallback(async () => {
     if (conversation) {

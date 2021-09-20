@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Divider } from '@material-ui/core';
+import { Box, CircularProgress, Divider, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { fetchNewsfeedPosts } from 'src/services/newsfeed';
 import { useAppDispatch, useAppSelector } from 'src/store';
@@ -8,8 +8,20 @@ import NewPostSection from './NewPostSection';
 import PostComponent from './Post';
 import Share from './Share';
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: 512,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
+  },
+}));
+
 const PostsSection: React.FC = () => {
   const dispatch = useAppDispatch();
+  const classes = useStyles();
 
   const { posts } = useAppSelector((state) => state.postsStore);
 
@@ -60,7 +72,7 @@ const PostsSection: React.FC = () => {
   }, [loadMore, isLoading, limit, posts]);
 
   return (
-    <Box width="512px" margin="auto" padding="15px 0">
+    <Box className={classes.container} margin="auto" padding="15px 0">
       <NewPostSection />
       <Divider style={{ margin: '15px auto', width: '80px' }} />
       {posts.map((post) =>

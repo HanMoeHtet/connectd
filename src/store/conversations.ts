@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Message } from 'src/services/conversation';
-import { getConversationWithUser } from 'src/services/user';
+import {
+  Conversation as BaseConversation,
+  getConversationWithUser,
+} from 'src/services/user';
 import { Conversation, ConversationsState } from 'src/types';
 import { AppThunk, RootState } from '.';
 
@@ -46,12 +49,18 @@ export const {
   updateConversation,
 } = conversationsSlice.actions;
 
-export const startConversation =
+export const startConversationWithUser =
   (userId: string): AppThunk =>
   async (dispatch, getState) => {
     const response = await getConversationWithUser({ userId });
     const { conversation } = response.data.data;
 
+    dispatch(startConversation(conversation));
+  };
+
+export const startConversation =
+  (conversation: BaseConversation): AppThunk =>
+  async (dispatch, getState) => {
     const { conversations } = getState().conversationsStore;
     const conversationCounts = conversations.length;
 

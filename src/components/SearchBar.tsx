@@ -84,8 +84,6 @@ const SearchBar: React.FC = () => {
     setText('');
   };
 
-  const menuId = 'search-result-menu';
-
   return (
     <Box className={`${classes.search}`} display={{ xs: 'none', md: 'block' }}>
       <div className={classes.searchIcon}>
@@ -93,7 +91,6 @@ const SearchBar: React.FC = () => {
       </div>
       <InputBase
         aria-label="Search"
-        aria-controls={menuId}
         aria-haspopup="true"
         placeholder="Search"
         classes={{

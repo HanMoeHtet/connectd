@@ -1,4 +1,4 @@
-import { Box, List, Typography } from '@material-ui/core';
+import { Box, List, Typography, makeStyles } from '@material-ui/core';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router';
 import Share from 'src/components/PostsSection/Share';
@@ -7,7 +7,19 @@ import User from 'src/components/User';
 import { search as _search, SearchResult } from 'src/services/search';
 import { PostType } from 'src/types/post';
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: 512,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
+  },
+}));
+
 const Search: React.FC = () => {
+  const classes = useStyles();
   const { search } = useLocation();
   const history = useHistory();
 
@@ -32,7 +44,7 @@ const Search: React.FC = () => {
   const { users, posts } = result;
 
   return (
-    <Box width="512px" margin="auto" padding="15px 0">
+    <Box className={classes.container} margin="auto" padding="15px 0">
       {users.length === 0 && posts.length === 0 && (
         <Typography variant="h5" style={{ textAlign: 'center' }}>
           No result found
