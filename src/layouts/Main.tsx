@@ -50,7 +50,6 @@ const Main: React.FC = ({ children }) => {
 
   useEffect(() => {
     (async () => {
-      console.log('main being rendered');
       const response = await getOnlineStatus();
       const { userIds } = response.data.data;
       dispatch(setUserIds(userIds));

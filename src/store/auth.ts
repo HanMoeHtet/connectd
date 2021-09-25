@@ -274,7 +274,7 @@ export const checkAuth = (): AppThunk<Promise<void>> => async (dispatch) => {
 };
 
 export const logOut = (): AppThunk<Promise<void>> => async (dispatch) => {
-  setProfile(null);
+  dispatch(setProfile(null));
   removeToken();
   history.replace('/login');
 };

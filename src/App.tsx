@@ -4,20 +4,20 @@ import { Route, Router, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import 'src/assets/css/react-toastify-override.css';
+import Main from 'src/layouts/Main';
 import './App.css';
 import Guest from './composables/Guest';
+import Conversation from './pages/Conversation';
 import EmailVerification from './pages/EmailVerification';
 import EmailVerificationEndPoint from './pages/EmailVerificationEndPoint';
 import Login from './pages/Login';
 import Newsfeed from './pages/Newsfeed';
 import PhoneNumberVerification from './pages/PhoneNumberVerification';
-import PostPage from './pages/Post';
-import UserPage from './pages/User';
+import Post from './pages/Post';
+import Search from './pages/Search';
+import User from './pages/User';
 import history from './services/history';
 import { darkTheme } from './theme';
-import Main from 'src/layouts/Main';
-import Search from './pages/Search';
-import Conversation from './pages/Conversation';
 
 const App: React.FC = () => {
   return (
@@ -41,10 +41,10 @@ const App: React.FC = () => {
                   <Newsfeed />
                 </Route>
                 <Route path="/posts/:postId" exact>
-                  <PostPage />
+                  <Post />
                 </Route>
                 <Route path="/users/:userId" exact>
-                  <UserPage />
+                  <User />
                 </Route>
                 <Route path="/search" exact>
                   <Search />
