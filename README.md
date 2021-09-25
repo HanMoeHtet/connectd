@@ -1,4 +1,4 @@
-## Connecd - server
+## Connecd
 
 A social media app built with React.
 
