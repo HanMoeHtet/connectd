@@ -19,7 +19,6 @@ import {
   PersonAdd,
   PersonAddDisabled,
   Phone,
-  Wc,
 } from '@material-ui/icons';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';

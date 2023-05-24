@@ -5,8 +5,6 @@ import {
   Button,
   Link,
   IconButton,
-  Grid,
-  FormHelperText,
   CircularProgress,
 } from '@material-ui/core';
 import {
@@ -59,7 +57,6 @@ const RegisterForm: React.FC<Props> = ({ setIsLogginIn }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const propName = event.target.name;
     const value = event.target.value;
-    const [p0, p1] = propName.split('.');
      
     setFormData((prevData) => ({
       ...prevData,
