@@ -32,11 +32,6 @@ interface FormData {
   emailOrPhoneNumber: string;
   password: string;
   birthday: Date;
-  pronouns: {
-    subjective: string;
-    objective: string;
-    possessive: string;
-  };
 }
 
 const initialFormData: FormData = {
@@ -44,11 +39,6 @@ const initialFormData: FormData = {
   emailOrPhoneNumber: '',
   password: '',
   birthday: maxDate,
-  pronouns: {
-    subjective: '',
-    objective: '',
-    possessive: '',
-  },
 };
 
 interface Props {
@@ -70,17 +60,12 @@ const RegisterForm: React.FC<Props> = ({ setIsLogginIn }) => {
     const propName = event.target.name;
     const value = event.target.value;
     const [p0, p1] = propName.split('.');
-    if (p0 === 'pronouns' && p1 && p1 in formData.pronouns) {
-      setFormData({
-        ...formData,
-        pronouns: { ...formData.pronouns, [p1]: value },
-      });
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [propName]: value,
-      }));
-    }
+     
+    setFormData((prevData) => ({
+      ...prevData,
+      [propName]: value,
+    }));
+    
   };
 
   const handleDateChange = (
@@ -97,7 +82,7 @@ const RegisterForm: React.FC<Props> = ({ setIsLogginIn }) => {
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { username, emailOrPhoneNumber, birthday, password, pronouns } =
+    const { username, emailOrPhoneNumber, birthday, password } =
       formData;
 
     const regex = /^\d+$/;
@@ -107,7 +92,6 @@ const RegisterForm: React.FC<Props> = ({ setIsLogginIn }) => {
           birthday,
           phoneNumber: emailOrPhoneNumber,
           password,
-          pronouns,
           username,
         })
       );
@@ -121,7 +105,6 @@ const RegisterForm: React.FC<Props> = ({ setIsLogginIn }) => {
           birthday,
           email: emailOrPhoneNumber,
           password,
-          pronouns,
           username,
         })
       );
@@ -214,69 +197,6 @@ const RegisterForm: React.FC<Props> = ({ setIsLogginIn }) => {
           maxDate={maxDate}
         />
       </MuiPickersUtilsProvider>
-      <Box marginTop="20px">
-        <Typography
-          color="primary"
-          variant="body2"
-          style={{ fontWeight: 'bold' }}
-        >
-          Tell us how we should call you.
-        </Typography>
-        <Grid container>
-          <Grid item container xs={12} sm={4} justifyContent="center">
-            <Box marginX="10px">
-              <TextField
-                color="primary"
-                variant="outlined"
-                margin="normal"
-                type="text"
-                placeholder="e.g. he"
-                name="pronouns.subjective"
-                required
-                value={formData.pronouns.subjective}
-                onChange={handleChange}
-              />
-            </Box>
-          </Grid>
-          <Grid item container xs={12} sm={4} justifyContent="center">
-            <Box marginX="10px">
-              <TextField
-                color="primary"
-                variant="outlined"
-                margin="normal"
-                type="text"
-                placeholder="e.g. him"
-                name="pronouns.objective"
-                required
-                value={formData.pronouns.objective}
-                onChange={handleChange}
-              />
-            </Box>
-          </Grid>
-          <Grid item container xs={12} sm={4} justifyContent="center">
-            <Box marginX="10px">
-              <TextField
-                color="primary"
-                variant="outlined"
-                margin="normal"
-                type="text"
-                required
-                placeholder="e.g. his"
-                name="pronouns.possessive"
-                value={formData.pronouns.possessive}
-                onChange={handleChange}
-              />
-            </Box>
-          </Grid>
-        </Grid>
-        {errors.pronouns && (
-          <FormHelperText
-            error={errors.pronouns && errors.pronouns.length !== 0}
-          >
-            {errors.pronouns.join(', ')}
-          </FormHelperText>
-        )}
-      </Box>
 
       <Link
         href="/login"

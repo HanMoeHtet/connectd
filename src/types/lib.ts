@@ -1,16 +1,9 @@
 import { NormalPost, SharedPost } from './post';
 
-export interface Pronouns {
-  subjective: string;
-  objective: string;
-  possessive: string;
-}
-
 export interface RegistrationFormData {
   username: string;
   password: string;
   birthday: Date;
-  pronouns: Pronouns;
 }
 
 export interface EmailRegistrationFormData extends RegistrationFormData {
@@ -27,7 +20,6 @@ export interface RegistrationError {
   phoneNumber?: string[];
   password?: string[];
   birthday?: string[];
-  pronouns?: string[];
 }
 
 export interface RegisterSuccessResponse {
@@ -77,7 +69,6 @@ export interface Profile extends BasicProfile {
   email?: string;
   phoneNumber?: string;
   birthday?: string;
-  pronouns?: Pronouns;
 }
 
 export interface BasicProfileResponse {

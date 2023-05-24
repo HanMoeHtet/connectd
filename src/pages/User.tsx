@@ -253,13 +253,6 @@ const UserPage: React.FC = () => {
                 </Typography>
               </Box>
               <Box height="5px" />
-              <Box display="flex" alignItems="center">
-                <Wc fontSize="small" />
-                <Box width="8px"></Box>
-                <Typography variant="body2" color="textPrimary">
-                  {Object.values(user.pronouns).join(', ')}
-                </Typography>
-              </Box>
             </Grid>
           </Grid>
           <Box height="16px" />
